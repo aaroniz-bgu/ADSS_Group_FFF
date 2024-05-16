@@ -5,6 +5,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,17 +14,17 @@ public class Shift {
     private EmbeddedShiftId id;
     private List<Employee> availableEmployees;
     private List<Employee> assignedEmployees;
+    private List<Role> requiredRoles;
     private boolean isLocked;
 
-    public Shift(LocalDateTime date, ShiftDayPart shift,
-                 List<Employee> availableEmployees,
-                 List<Employee> assignedEmployees,
-                 boolean isLocked) {
+    public Shift(LocalDateTime date, ShiftDayPart shift, boolean isLocked) {
         this.id = new EmbeddedShiftId(date, shift);
-        this.availableEmployees = availableEmployees;
-        this.assignedEmployees = assignedEmployees;
         this.isLocked = LocalDateTime.now()
                 .isBefore(date.minus(HumanResourceConfig.barrierTime));
+
+        this.availableEmployees = new ArrayList<>();
+        this.assignedEmployees = new ArrayList<>();
+        this.requiredRoles = new ArrayList<>();
     }
 
     public EmbeddedShiftId getEmbeddedId() {
@@ -42,16 +43,20 @@ public class Shift {
         return availableEmployees;
     }
 
-    public void setAvailableEmployees(List<Employee> availableEmployees) {
-        this.availableEmployees = availableEmployees;
-    }
-
     public List<Employee> getAssignedEmployees() {
         return assignedEmployees;
     }
 
-    public void setAssignedEmployees(List<Employee> assignedEmployees) {
-        this.assignedEmployees = assignedEmployees;
+    public EmbeddedShiftId getId() {
+        return id;
+    }
+
+    public List<Role> getRequiredRoles() {
+        return requiredRoles;
+    }
+
+    public void setRequiredRoles(List<Role> requiredRoles) {
+        this.requiredRoles = requiredRoles;
     }
 
     public boolean isLocked() {
