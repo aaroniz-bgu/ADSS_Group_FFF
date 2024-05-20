@@ -22,6 +22,7 @@ public class EmployeeController {
     /**
      * Establishes a new employee in the system.
      * @param request The request containing the following data: <br>
+     *                - {@code long id}: Employee's state identifier.<br>
      *                - {@code String name}: Employee's full name.<br>
      *                - {@code Role[]} roles: Array of roles assigned to the employee.<br>
      *                - {@code int bankId}: The identifier of the bank facilitating the employee's account.<br>
@@ -62,6 +63,7 @@ public class EmployeeController {
      * Updates an existing employee in the system.
      * @param id The ID of the employee to be updated.
      * @param request The request containing updated employee data: <br>
+     *                - {@code long id}: Employee's state identifier.<br>
      *                - {@code String name}: Employee's full name.<br>
      *                - {@code Role[]} roles: Array of roles assigned to the employee.<br>
      *                - {@code int bankId}: The identifier of the bank facilitating the employee's account.<br>
