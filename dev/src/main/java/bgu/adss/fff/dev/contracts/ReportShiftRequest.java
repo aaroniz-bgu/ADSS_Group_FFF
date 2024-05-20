@@ -1,9 +1,8 @@
 package bgu.adss.fff.dev.contracts;
 
+import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
-// TODO import the ShiftDayPart enum
 
 /**
  * Contract for requesting a report for a specific shift
@@ -12,14 +11,5 @@ import java.time.LocalDateTime;
  */
 public record ReportShiftRequest(
         @JsonProperty("date") LocalDateTime date,
-        @JsonProperty("shift") ShiftDayPart shift // Todo import the enum
-        ) {
-    public ReportShiftRequest {
-        if (date == null) {
-            throw new IllegalArgumentException("Invalid date");
-        }
-        if (shift == null) {
-            throw new IllegalArgumentException("Invalid shift");
-        }
-    }
-}
+        @JsonProperty("shift") ShiftDayPart shift
+        ) { }

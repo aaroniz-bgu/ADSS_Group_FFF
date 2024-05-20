@@ -1,7 +1,7 @@
 package bgu.adss.fff.dev.contracts;
 
+import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import com.fasterxml.jackson.annotation.JsonProperty;
-// TODO import the ShiftDayPart enum
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -16,19 +16,7 @@ import java.util.Collection;
  */
 public record RequireRoleRequest(
         @JsonProperty("date") LocalDateTime date,
-        @JsonProperty("shift") ShiftDayPart shift, // Todo import the enum
-        @JsonProperty("roles") Collection<RoleDto> roles,
+        @JsonProperty("shift") ShiftDayPart shift,
+        @JsonProperty("roles") RoleDto[] roles,
         @JsonProperty("addOrRemove") boolean addOrRemove // True for add, false for remove
-        ) {
-    public RequireRoleRequest {
-        if (date == null) {
-            throw new IllegalArgumentException("Invalid date");
-        }
-        if (shift == null) {
-            throw new IllegalArgumentException("Invalid shift");
-        }
-        if (roles == null || roles.isEmpty()) {
-            throw new IllegalArgumentException("Roles cannot be empty");
-        }
-    }
-}
+        ) { }

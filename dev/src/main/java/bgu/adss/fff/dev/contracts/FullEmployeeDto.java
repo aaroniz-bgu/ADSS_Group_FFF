@@ -10,14 +10,4 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record FullEmployeeDto(
         @JsonProperty("employee") EmployeeDto employee,
         @JsonProperty("terms") EmployeeTermsDto terms
-) {
-    public FullEmployeeDto {
-        if (employee == null) {
-            throw new IllegalArgumentException("Employee cannot be null");
-        }
-        // TODO Decide if this is necessary
-//        if (terms == null) {
-//            throw new IllegalArgumentException("Terms cannot be null");
-//        }
-    }
-}
+) { }
