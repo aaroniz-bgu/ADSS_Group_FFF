@@ -14,7 +14,7 @@ public class Employee {
     private int bankId;
     private int bankBranch;
     private int accountId;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // TODO MAP PK
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // TODO MAP PK
     private EmploymentTerms terms;
 
     public Employee(long id, String name, List<Role> roles, EmploymentTerms terms,
