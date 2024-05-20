@@ -15,7 +15,7 @@ import java.util.List;
 public record EmployeeDto(
         @JsonProperty("id") Long id,
         @JsonProperty("name") String name,
-        @JsonProperty("roles") List<RoleDto> roles,
+        @JsonProperty("roles") RoleDto[] roles,
         @JsonProperty("bankId") int bankId,
         @JsonProperty("bankBranch") int bankBranch,
         @JsonProperty("accountId") int accountId
