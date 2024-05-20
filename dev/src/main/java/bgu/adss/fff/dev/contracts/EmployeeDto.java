@@ -13,7 +13,7 @@ import java.util.List;
  * @param accountId
  */
 public record EmployeeDto(
-        @JsonProperty("id") Long id,
+        @JsonProperty("id") long id,
         @JsonProperty("name") String name,
         @JsonProperty("roles") RoleDto[] roles,
         @JsonProperty("bankId") int bankId,

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  * @param endDate Should be null if the employee is still active
  */
 public record EmployeeTermsDto(
-        @JsonProperty("id") Long id,
+        @JsonProperty("id") long id,
         @JsonProperty("startDate") LocalDateTime startDate,
         @JsonProperty("jobType") JobType jobType,
         @JsonProperty("monthlySalary") float monthlySalary,

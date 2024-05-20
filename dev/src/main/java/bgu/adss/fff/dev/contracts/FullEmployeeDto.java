@@ -10,7 +10,7 @@ import java.util.List;
  * Contract for the full employee details
  */
 public record FullEmployeeDto(
-        @JsonProperty("id") Long id,
+        @JsonProperty("id") long id,
         @JsonProperty("name") String name,
         @JsonProperty("roles") RoleDto[] roles,
         @JsonProperty("bankId") int bankId,
