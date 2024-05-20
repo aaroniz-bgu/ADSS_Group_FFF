@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-// TODO import the ShiftDayPart enum
 
 /**
  * Contract for a shift
