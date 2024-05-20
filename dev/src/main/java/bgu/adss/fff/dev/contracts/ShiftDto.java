@@ -1,0 +1,26 @@
+package bgu.adss.fff.dev.contracts;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+// TODO import the ShiftDayPart enum
+
+/**
+ * Contract for a shift
+ * @param date The date of the shift
+ * @param shift According to the {@link ShiftDayPart} enum
+ * @param isLocked True if the shift is locked and not prone to changes
+ * @param availableEmployees Employees available for the shift
+ * @param assignedEmployees Employees assigned to the shift
+ * @param requiredRoles The roles required for the shift
+ */
+public record ShiftDto(
+        @JsonProperty("date") LocalDateTime date,
+        @JsonProperty("shift") ShiftDayPart shift, // Todo import the enum
+        @JsonProperty("isLocked") boolean isLocked,
+        @JsonProperty("availableEmployees") Collection<EmployeeDto> availableEmployees,
+        @JsonProperty("assignedEmployees") Collection<EmployeeDto> assignedEmployees,
+        @JsonProperty("requiredRoles") Collection<RoleDto> requiredRoles
+        ) {
+}
