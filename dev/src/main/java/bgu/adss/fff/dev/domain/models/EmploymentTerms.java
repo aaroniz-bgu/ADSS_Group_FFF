@@ -36,6 +36,10 @@ public class EmploymentTerms {
      * The direct manager of the employee.
      */
     private Employee manager;
+    /**
+     * Signifies the end of employment date, when not applicable will be null.
+     */
+    private LocalDateTime endDate;
 
     public EmploymentTerms(LocalDateTime startDate, JobType jobType, Employee manager,
                            float monthlySalary, float hourlyRate, int daysOff) {
@@ -105,5 +109,13 @@ public class EmploymentTerms {
 
     public void setManager(Employee manager) {
         this.manager = manager;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }
