@@ -19,26 +19,4 @@ public record EmployeeDto(
         @JsonProperty("bankId") int bankId,
         @JsonProperty("bankBranch") int bankBranch,
         @JsonProperty("accountId") int accountId
-) {
-    public EmployeeDto {
-        if (id == null || id < 0) {
-            throw new IllegalArgumentException("Invalid id");
-        }
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Invalid name");
-        }
-        // TODO Decide if this is necessary
-//        if (roles == null || roles.isEmpty()) {
-//            throw new IllegalArgumentException("Roles cannot be empty");
-//        }
-        if (bankId <= 0) {
-            throw new IllegalArgumentException("Invalid bankId");
-        }
-        if (bankBranch <= 0) {
-            throw new IllegalArgumentException("Invalid bankBranch");
-        }
-        if (accountId <= 0) {
-            throw new IllegalArgumentException("Invalid accountId");
-        }
-    }
-}
+) { }
