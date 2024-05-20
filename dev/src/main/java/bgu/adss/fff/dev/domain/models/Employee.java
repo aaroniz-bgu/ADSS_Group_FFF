@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -8,12 +9,17 @@ import java.util.List;
 public class Employee {
     @Id
     private long id;
+    @Column
+    @NonNull
     private String name;
+    @Column
+    private int bankId;
+    @Column
+    private int bankBranch;
+    @Column
+    private int accountId;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-    private int bankId;
-    private int bankBranch;
-    private int accountId;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // TODO MAP PK
     private EmploymentTerms terms;
 
