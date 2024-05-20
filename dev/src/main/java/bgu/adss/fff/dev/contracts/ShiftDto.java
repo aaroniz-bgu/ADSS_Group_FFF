@@ -18,7 +18,7 @@ import java.util.Collection;
  */
 public record ShiftDto(
         @JsonProperty("date") LocalDateTime date,
-        @JsonProperty("shift") ShiftDayPart shift, // Todo import the enum
+        @JsonProperty("shift") ShiftDayPart shift,
         @JsonProperty("isLocked") boolean isLocked,
         @JsonProperty("availableEmployees") EmployeeDto[] availableEmployees,
         @JsonProperty("assignedEmployees") EmployeeDto[] assignedEmployees,
