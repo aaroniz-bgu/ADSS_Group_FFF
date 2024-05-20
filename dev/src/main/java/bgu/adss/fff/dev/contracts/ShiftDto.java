@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.contracts;
 
+import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -22,5 +23,4 @@ public record ShiftDto(
         @JsonProperty("availableEmployees") Collection<EmployeeDto> availableEmployees,
         @JsonProperty("assignedEmployees") Collection<EmployeeDto> assignedEmployees,
         @JsonProperty("requiredRoles") Collection<RoleDto> requiredRoles
-        ) {
-}
+        ) { }
