@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.EmployeeDto;
+import bgu.adss.fff.dev.contracts.EmployeeTermsDto;
 import bgu.adss.fff.dev.contracts.FullEmployeeDto;
 import bgu.adss.fff.dev.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,36 @@ public class EmployeeController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Retrieves the employment terms for an employee by their ID.
+     * @param id The ID of the employee whose employment terms are to be retrieved.
+     * @return ResponseEntity containing the employment terms of the employee if found, or no content if not found.
+     */
+    @GetMapping("/terms/{id}")
+    public ResponseEntity<EmployeeTermsDto> getEmploymentTerms(@PathVariable("id") long id) {
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Updates the employment terms for an employee in the system.
+     * @param id The ID of the employee whose employment terms are to be updated.
+     * @param request The request containing updated employment terms data: <br>
+     *                - {@code LocalDateTime startDate}: Start date of employment.<br>
+     *                - {@code JobType jobType}: Type of job (Full-time, Part-time, Contract).<br>
+     *                - {@code float monthlySalary}: Monthly salary of the employee.<br>
+     *                - {@code float hourlyRate}: Hourly rate of the employee.<br>
+     *                - {@code int daysOff}: Number of days off per year.<br>
+     *                - {@code EmployeeDto directManager}: Direct manager of the employee.<br>
+     *                - {@code LocalDateTime endDate}: End date of employment.<br>
+     * @return ResponseEntity containing the updated employment terms of the employee if successful, or no content if not found.
+     */
+    @PutMapping("/terms/{id}")
+    public ResponseEntity<EmployeeTermsDto> updateEmploymentTerms(
+            @PathVariable("id") long id,
+            @RequestBody EmployeeTermsDto request){
         return ResponseEntity.noContent().build();
     }
 }
