@@ -8,15 +8,11 @@ import java.util.List;
  * @param id
  * @param name
  * @param roles
- * @param bankId
- * @param bankBranch
- * @param accountId
+ * @param bankDetails
  */
 public record EmployeeDto(
         @JsonProperty("id") long id,
         @JsonProperty("name") String name,
         @JsonProperty("roles") RoleDto[] roles,
-        @JsonProperty("bankId") int bankId,
-        @JsonProperty("bankBranch") int bankBranch,
-        @JsonProperty("accountId") int accountId
+        @JsonProperty("bankDetails") String bankDetails
 ) { }
