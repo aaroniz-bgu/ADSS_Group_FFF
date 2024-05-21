@@ -1,18 +1,13 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(name="employee")
-public class Employee {
+public class Employee implements Serializable {
     @Id
     private long id;
     @Column
@@ -26,7 +21,7 @@ public class Employee {
     private int accountId;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // TODO MAP PK
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private EmploymentTerms terms;
 
     // For JPA:

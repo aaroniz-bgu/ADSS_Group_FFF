@@ -1,45 +1,58 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 
+import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
+
 @Entity(name="terms")
 public class EmploymentTerms {
-//FIXME    /**
-//     * The employee which is mapped to this terms object.
-//     */
-//    private Employee employee;
-    /**
-     * The date when the employee was employed.
-     */
+
+    @Id
+    private long id;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    private Employee employee;
+
+    @Column
+    @NonNull
     private LocalDateTime startDate;
     /**
      * Type of job: full-time/part-time/ contract. Read more at: {@link JobType}.
      */
+    @Column
+    @NonNull
     private JobType jobType;
     /**
      * The expected/agreed on monthly salary. May be initiated with -1.
      */
+    @Column
     private float monthlySalary;
     /**
      * The hourly rate of the employee which was agreed on. May be initiated with -1.<br>
      * However, {@code hourlyRate == monthlySalary == -1} <b>is not allowed</b>.
      */
+    @Column
     private float hourlyRate;
     /**
      * The number of days off the employee has.
      */
+    @Column
     private int daysOff;
     /**
      * The direct manager of the employee.
      */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "mgr_id", referencedColumnName = "id")
     private Employee manager;
     /**
      * Signifies the end of employment date, when not applicable will be null.
      */
     private LocalDateTime endDate;
+
+    public EmploymentTerms() { }
 
     public EmploymentTerms(LocalDateTime startDate, JobType jobType, Employee manager,
                            float monthlySalary, float hourlyRate, int daysOff) {
