@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Embeddable
+//@Embeddable
 public class EmbeddedShiftId implements Serializable {
     private LocalDateTime date;
     private ShiftDayPart shift;

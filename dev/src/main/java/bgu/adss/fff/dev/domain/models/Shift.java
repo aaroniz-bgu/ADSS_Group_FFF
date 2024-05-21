@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+//@Entity
 public class Shift {
-    @EmbeddedId
+//    @EmbeddedId
     private EmbeddedShiftId id;
     private List<Employee> availableEmployees;
     private List<Employee> assignedEmployees;
