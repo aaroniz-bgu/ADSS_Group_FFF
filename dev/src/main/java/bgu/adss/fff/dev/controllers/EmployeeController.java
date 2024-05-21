@@ -25,9 +25,11 @@ public class EmployeeController {
      *                - {@code long id}: Employee's state identifier.<br>
      *                - {@code String name}: Employee's full name.<br>
      *                - {@code Role[]} roles: Array of roles assigned to the employee.<br>
-     *                - {@code int bankId}: The identifier of the bank facilitating the employee's account.<br>
-     *                - {@code int bankBranch}: The 3-digit identifier of the bank branch facilitating the employee's account.<br>
-     *                - {@code int accountId}: The employee's bank account ID.<br>
+     *                - {@code int bankDetails}: Bank details of the employee supplied in th following manner:
+     *                {@code bank_id:bank_branch:account_id}, where:<br>
+     *                - - Bank ID - The identifier of the bank facilitating the employee's account.<br>
+     *                - - Bank Branch The 3-digit identifier of the bank branch facilitating the employee's account.<br>
+     *                - - Account ID - The employee's bank account ID.<br>
      *                - {@code LocalDateTime startDate}: The date when the employee started employment.<br>
      *                - {@code JobType jobType}: Enum Job type, represented as an integer (0-2) for FT/PT/Contract.<br>
      *                - {@code float monthlySalary}: Monthly salary, or -1 if not paid monthly.<br>
@@ -66,9 +68,12 @@ public class EmployeeController {
      *                - {@code long id}: Employee's state identifier.<br>
      *                - {@code String name}: Employee's full name.<br>
      *                - {@code Role[]} roles: Array of roles assigned to the employee.<br>
-     *                - {@code int bankId}: The identifier of the bank facilitating the employee's account.<br>
-     *                - {@code int bankBranch}: The 3-digit identifier of the bank branch facilitating the employee's account.<br>
-     *                - {@code int accountId}: The employee's bank account ID.<br>
+     *                - {@code int bankDetails}: Bank details of the employee supplied in th following manner:
+     *                {@code bank_id:bank_branch:account_id}, where:<br>
+     *                - - Bank ID - The identifier of the bank facilitating the employee's account.<br>
+     *                - - Bank Branch The 3-digit identifier of the bank branch facilitating the employee's account.<br>
+     *                - - Account ID - The employee's bank account ID.<br>
+     *
      * @return ResponseEntity containing the updated employee if successful, or a bad request status if the input is invalid.
      */
     @PutMapping("/{id}")
