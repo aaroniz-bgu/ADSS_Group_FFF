@@ -23,6 +23,9 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // TODO MAP PK
     private EmploymentTerms terms;
 
+    // For JPA:
+    public Employee() { }
+
     public Employee(long id, String name, List<Role> roles, EmploymentTerms terms,
                     int bankId, int bankBranch, int accountId) {
         this.id = id;
