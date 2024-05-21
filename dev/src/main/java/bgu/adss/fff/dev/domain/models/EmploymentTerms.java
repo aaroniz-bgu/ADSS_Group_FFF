@@ -43,7 +43,7 @@ public class EmploymentTerms {
 
     public EmploymentTerms(LocalDateTime startDate, JobType jobType, Employee manager,
                            float monthlySalary, float hourlyRate, int daysOff) {
-        if(monthlySalary == hourlyRate && hourlyRate == -1) {
+        if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
             throw new IllegalArgumentException("Salary / Rate must be specified!");
         }
         this.startDate = startDate;
@@ -76,7 +76,7 @@ public class EmploymentTerms {
     }
 
     public void setMonthlySalary(float monthlySalary) {
-        if(monthlySalary == hourlyRate && hourlyRate == -1) {
+        if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
             throw new IllegalArgumentException("Salary / Rate must be specified!");
         }
 
@@ -88,7 +88,7 @@ public class EmploymentTerms {
     }
 
     public void setHourlyRate(float hourlyRate) {
-        if(monthlySalary == hourlyRate && hourlyRate == -1) {
+        if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
             throw new IllegalArgumentException("Salary / Rate must be specified!");
         }
 
