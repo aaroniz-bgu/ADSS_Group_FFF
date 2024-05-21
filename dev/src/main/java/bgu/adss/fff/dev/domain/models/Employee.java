@@ -1,6 +1,12 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
