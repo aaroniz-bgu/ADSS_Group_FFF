@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Optional;
 
+import static bgu.adss.fff.dev.domain.models.Constants.BANK_DETAIL_FIELDS;
 import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
 
 @Service
@@ -66,7 +67,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee updateEmployee(long id, Employee employee) {
+        if(!(checkEmployeeFields(employee) && employee.getId() == id) ) {
+            // TODO Throw...
+        }
+        Employee toUpdate = repository.findById(id)
+                .orElseThrow(() -> null /*TODO Throw...*/);
+        toUpdate.setName(employee.getName());
+        toUpdate.setRoles(employee.getRoles());
+        int[] bank = getBankDetailsHelper(employee.getBank());
+        toUpdate.setBank(bank[0], bank[1], bank[2]);
         return null;
+    }
+
+    private int[] getBankDetailsHelper(String bankDetail) {
+        String[] details = bankDetail.split(":");
+        int i = 0;
+        int[] out = new int[BANK_DETAIL_FIELDS];
+        for(String s : details) {
+            out[i++] = Integer.parseInt(s);
+        }
+        return out;
     }
 
     @Override
