@@ -12,9 +12,17 @@ public class EmploymentTerms {
 
     @Id
     private long id;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 
     @Column
     @NonNull
@@ -44,8 +52,9 @@ public class EmploymentTerms {
     /**
      * The direct manager of the employee.
      */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "mgr_id", referencedColumnName = "id")
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "mgr_id", referencedColumnName = "id")
+    @Transient
     private Employee manager;
     /**
      * Signifies the end of employment date, when not applicable will be null.
