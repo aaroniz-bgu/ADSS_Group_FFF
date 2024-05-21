@@ -9,4 +9,10 @@ public class Constants {
      * The number of fields a bank account has.
      */
     public static final int BANK_DETAIL_FIELDS = 3;
+    /**
+     * Bank details parameters index:
+     */
+    public static final int BANK_ID_IND = 0;
+    public static final int BANK_BRANCH_IND = 1;
+    public static final int ACCOUNT_ID_IND = 2;
 }
