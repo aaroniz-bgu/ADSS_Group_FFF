@@ -17,6 +17,8 @@ public class Role {
         this.isShiftManager = isShiftManger;
     }
 
+    public Role() { }
+
     /**
      * Gets the name of the role.
      *
