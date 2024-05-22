@@ -3,7 +3,7 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
 
@@ -26,7 +26,7 @@ public class EmploymentTerms {
 
     @Column
     @NonNull
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     /**
      * Type of job: full-time/part-time/ contract. Read more at: {@link JobType}.
      */
@@ -58,11 +58,11 @@ public class EmploymentTerms {
     /**
      * Signifies the end of employment date, when not applicable will be null.
      */
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     public EmploymentTerms() { }
 
-    public EmploymentTerms(LocalDateTime startDate, JobType jobType, Employee manager,
+    public EmploymentTerms(LocalDate startDate, JobType jobType, Employee manager,
                            float monthlySalary, float hourlyRate, int daysOff) {
         if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
             throw new IllegalArgumentException("Salary / Rate must be specified!");
@@ -76,11 +76,11 @@ public class EmploymentTerms {
         this.daysOff = daysOff;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
@@ -132,11 +132,11 @@ public class EmploymentTerms {
         this.manager = manager;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 }
