@@ -101,7 +101,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     "Either starting date/ job type missing or payment / days off are illegal");
         }
 
-        Employee mgr = repository.findById(terms.getManager().getId()).orElseThrow(RuntimeException::new);
+        Employee mgr = getManager(emp);
         terms.setManager(mgr);
         emp.setTerms(terms);
         repository.save(emp);
