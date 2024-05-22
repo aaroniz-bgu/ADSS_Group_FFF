@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
 import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
@@ -29,6 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(!(checkEmployeeFields(employee) && checkTermsField(employee.getTerms())))  {
             // TODO Throw...
         }
+        // TODO find manager...
         return repository.save(employee);
     }
 
@@ -61,8 +61,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Optional<Employee> getEmployee(long id) {
-        return repository.findById(id);
+    public Employee getEmployee(long id) {
+        return repository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @Override
@@ -89,11 +89,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee updateEmployementTerms(long id, EmploymentTerms terms) {
-        Employee emp = repository.findById(id).orElseThrow(
-                () -> new RuntimeException(""));
+        Employee emp = repository.findById(id).orElseThrow(RuntimeException::new);
         if(!checkTermsField(terms)) {
             // TODO Throw...
         }
+        Employee mgr = repository.findById(terms.getManager().getId()).orElseThrow(RuntimeException::new);
+        terms.setManager(mgr);
         emp.setTerms(terms);
         repository.save(emp);
         return emp;
