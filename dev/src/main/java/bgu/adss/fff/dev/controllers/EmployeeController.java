@@ -3,10 +3,20 @@ package bgu.adss.fff.dev.controllers;
 import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.EmployeeTermsDto;
 import bgu.adss.fff.dev.contracts.FullEmployeeDto;
+import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
+import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/employee")
@@ -39,7 +49,8 @@ public class EmployeeController {
      */
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody FullEmployeeDto request) {
-        return ResponseEntity.noContent().build();
+        Employee emp = EmployeeMapper.fullMap(request);
+        return new ResponseEntity<>(EmployeeMapper.map(service.createEmployee(emp)), HttpStatus.CREATED);
     }
 
     /**
@@ -48,7 +59,13 @@ public class EmployeeController {
      */
     @GetMapping
     public ResponseEntity<EmployeeDto[]> getEmployees() {
-        return ResponseEntity.noContent().build();
+        EmployeeDto[] objects = new EmployeeDto[0];
+        return ResponseEntity.ok().body(service.getEmployees()
+                .stream()
+                .map(EmployeeMapper::map)
+                .toList()
+                .toArray(objects)
+        );
     }
 
     /**
