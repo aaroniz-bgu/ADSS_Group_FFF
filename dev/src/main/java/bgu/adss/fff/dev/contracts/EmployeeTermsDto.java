@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * The employee should either have a monthly salary or an hourly rate, but not both
  * @param id
  * @param startDate Should not be null
- * @param jobType According to the {@link JobType} enum
+ * @param jobType According to the {@link JobType} enum ordinal.
  * @param monthlySalary
  * @param hourlyRate
  * @param daysOff

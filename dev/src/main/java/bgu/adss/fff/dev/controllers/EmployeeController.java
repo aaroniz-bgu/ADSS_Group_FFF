@@ -43,7 +43,7 @@ public class EmployeeController {
      *                - - Bank Branch The 3-digit identifier of the bank branch facilitating the employee's account.<br>
      *                - - Account ID - The employee's bank account ID.<br>
      *                - {@code LocalDateTime startDate}: The date when the employee started employment.<br>
-     *                - {@code JobType jobType}: Enum Job type, represented as an integer (0-2) for FT/PT/Contract.<br>
+     *                - {@code int jobType}: Type of job according to {@link bgu.adss.fff.dev.domain.models.JobType} enum ordinal.<br>
      *                - {@code float monthlySalary}: Monthly salary, or -1 if not paid monthly.<br>
      *                - {@code float hourlyRate}: Hourly rate, must not be -1 if monthlySalary is -1.<br>
      *                - {@code int daysOff}: Yearly days off.<br>
@@ -132,7 +132,7 @@ public class EmployeeController {
      * @param id The ID of the employee whose employment terms are to be updated.
      * @param request The request containing updated employment terms data: <br>
      *                - {@code LocalDateTime startDate}: Start date of employment.<br>
-     *                - {@code JobType jobType}: Type of job (Full-time, Part-time, Contract).<br>
+     *                - {@code int jobType}: Type of job according to {@link bgu.adss.fff.dev.domain.models.JobType} enum ordinal.<br>
      *                - {@code float monthlySalary}: Monthly salary of the employee.<br>
      *                - {@code float hourlyRate}: Hourly rate of the employee.<br>
      *                - {@code int daysOff}: Number of days off per year.<br>
