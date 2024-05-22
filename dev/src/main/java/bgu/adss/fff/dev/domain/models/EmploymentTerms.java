@@ -52,9 +52,8 @@ public class EmploymentTerms {
     /**
      * The direct manager of the employee.
      */
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "mgr_id", referencedColumnName = "id")
-    @Transient
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "mgr_id", referencedColumnName = "id")
     private Employee manager;
     /**
      * Signifies the end of employment date, when not applicable will be null.
