@@ -6,6 +6,7 @@ import bgu.adss.fff.dev.contracts.FullEmployeeDto;
 import bgu.adss.fff.dev.contracts.RoleDto;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.domain.models.JobType;
 import bgu.adss.fff.dev.util.EmployeeUtilHelper;
 
 import java.util.Arrays;
@@ -50,8 +51,8 @@ public class EmployeeMapper {
         int accountId= details[ACCOUNT_ID_IND];
         EmploymentTerms trm = new EmploymentTerms(
                 dto.startDate(),
-                dto.jobType(),
-                map(dto.directManager()),
+                JobType.values()[dto.jobType()],
+                dto.directManager() != null ? map(dto.directManager()) : null,
                 dto.monthlySalary(),
                 dto.hourlyRate(),
                 dto.daysOff()
@@ -77,7 +78,7 @@ public class EmployeeMapper {
                         .toArray(RoleDto[]::new),
                 emp.getBank(),
                 trm.getStartDate(),
-                trm.getJobType(),
+                trm.getJobType().ordinal(),
                 trm.getMonthlySalary(),
                 trm.getHourlyRate(),
                 trm.getDaysOff(),
@@ -89,8 +90,8 @@ public class EmployeeMapper {
     public static EmploymentTerms map(EmployeeTermsDto dto) {
         return new EmploymentTerms(
                 dto.startDate(),
-                dto.jobType(),
-                map(dto.directManager()),
+                JobType.values()[dto.jobType()],
+                dto.directManager() != null ? map(dto.directManager()) : null,
                 dto.monthlySalary(),
                 dto.hourlyRate(),
                 dto.daysOff()
@@ -101,7 +102,7 @@ public class EmployeeMapper {
         return new EmployeeTermsDto(
                 id,
                 trm.getStartDate(),
-                trm.getJobType(),
+                trm.getJobType().ordinal(),
                 trm.getMonthlySalary(),
                 trm.getHourlyRate(),
                 trm.getDaysOff(),
