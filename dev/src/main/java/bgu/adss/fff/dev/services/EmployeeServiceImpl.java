@@ -40,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return true if and only if the employee is well set.
      */
     private boolean checkEmployeeFields(Employee employee) {
-        String exp = "^[a-zA-Z\\\\s]+";
+        String exp = "^[a-zA-Z\\s]+";
         return employee != null && employee.getName().matches(exp);
     }
 
