@@ -3,12 +3,13 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.EmployeeRepository;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 
-import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
+import static bgu.adss.fff.dev.domain.models.Constants.*;
 import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 
 @Service
@@ -23,12 +24,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee createEmployee(Employee employee) {
         if(repository.existsById(employee.getId())) {
-            // TODO Throw...
+            throw EmployeeException.alreadyExists(employee.getId());
         }
         if(!(checkEmployeeFields(employee) && checkTermsField(employee.getTerms())))  {
-            // TODO Throw...
+            throw EmployeeException.illegalField(employee.getId(),
+                    "Employee", "Bad request, can be any of the following:");
         }
-        // TODO find manager...
+        employee.getTerms().setManager(getManager(employee));
         return repository.save(employee);
     }
 
@@ -56,47 +58,71 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Collection<Employee> getEmployees() {
+    public List<Employee> getEmployees() {
         return repository.findAll();
     }
 
     @Override
     public Employee getEmployee(long id) {
-        return repository.findById(id).orElseThrow(RuntimeException::new);
+        return repository.findById(id).orElseThrow(() -> EmployeeException.notFound(id));
     }
 
     @Override
     public Employee updateEmployee(long id, Employee employee) {
         if(!(checkEmployeeFields(employee) && employee.getId() == id) ) {
-            // TODO Throw...
+            throw EmployeeException.illegalField(id, "Employee",
+                    "Either name/instance we're illegal or id mismatched");
         }
-        Employee toUpdate = repository.findById(id)
-                .orElseThrow(() -> null /*TODO Throw...*/);
+
+        Employee toUpdate = getEmployee(id);
         toUpdate.setName(employee.getName());
         toUpdate.setRoles(employee.getRoles());
+
         int[] bank = getBankDetailsHelper(employee.getBank());
-        toUpdate.setBank(bank[0], bank[1], bank[2]);
-        return null;
+        toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
+
+        return repository.save(toUpdate);
     }
 
     @Override
     public void removeEmployee(long id) {
         if(!repository.existsById(id)) {
-            // TODO Throw...
+            throw EmployeeException.notFound(id);
         }
         repository.deleteById(id);
     }
 
     @Override
     public Employee updateEmployementTerms(long id, EmploymentTerms terms) {
-        Employee emp = repository.findById(id).orElseThrow(RuntimeException::new);
+        Employee emp = getEmployee(id);
+
         if(!checkTermsField(terms)) {
-            // TODO Throw...
+            throw EmployeeException.illegalField(id, "Terms",
+                    "Either starting date/ job type missing or payment / days off are illegal");
         }
+
         Employee mgr = repository.findById(terms.getManager().getId()).orElseThrow(RuntimeException::new);
         terms.setManager(mgr);
         emp.setTerms(terms);
         repository.save(emp);
         return emp;
+    }
+
+    /**
+     * Gets the manager of the given employee which was supplied by the service layer.
+     * @param employee The employee which was supplied by the service layer.
+     * @return The manager instance of this employee or null if it doesn't have one.
+     * @throws EmployeeException if employee with the given id doesn't exist.
+     */
+    private Employee getManager(Employee employee) {
+        Employee mgr;
+        if((mgr = employee.getTerms().getManager()) != null) {
+            long mgrId = mgr.getId();
+            return repository.findById(mgrId).orElseThrow(
+                    () -> EmployeeException.illegalField(employee.getId(),
+                            "Terms:Manager", "Not exists manager with id " + mgrId)
+            );
+        }
+        return null;
     }
 }
