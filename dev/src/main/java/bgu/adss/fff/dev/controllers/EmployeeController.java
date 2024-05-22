@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static bgu.adss.fff.dev.controllers.mappers.EmployeeMapper.map;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -50,7 +52,7 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody FullEmployeeDto request) {
         Employee emp = EmployeeMapper.fullMap(request);
-        return new ResponseEntity<>(EmployeeMapper.map(service.createEmployee(emp)), HttpStatus.CREATED);
+        return new ResponseEntity<>(map(service.createEmployee(emp)), HttpStatus.CREATED);
     }
 
     /**
@@ -59,7 +61,9 @@ public class EmployeeController {
      */
     @GetMapping
     public ResponseEntity<EmployeeDto[]> getEmployees() {
+        // Just to avoid casting, since java has a problem instantiating generic types:
         EmployeeDto[] objects = new EmployeeDto[0];
+
         return ResponseEntity.ok().body(service.getEmployees()
                 .stream()
                 .map(EmployeeMapper::map)
@@ -75,7 +79,7 @@ public class EmployeeController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") long id) {
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(map(service.getEmployee(id)));
     }
 
     /**
@@ -95,6 +99,8 @@ public class EmployeeController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable long id, @RequestBody EmployeeDto request) {
+        service.updateEmployee(id, map(request));
+        // https://stackoverflow.com/a/827045/19275130 :
         return ResponseEntity.noContent().build();
     }
 
@@ -106,6 +112,7 @@ public class EmployeeController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable("id") long id) {
+        service.removeEmployee(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -116,7 +123,8 @@ public class EmployeeController {
      */
     @GetMapping("/terms/{id}")
     public ResponseEntity<EmployeeTermsDto> getEmploymentTerms(@PathVariable("id") long id) {
-        return ResponseEntity.noContent().build();
+        Employee res = service.getEmployee(id);
+        return ResponseEntity.ok(map(res.getId(), res.getTerms()));
     }
 
     /**
@@ -136,6 +144,8 @@ public class EmployeeController {
     public ResponseEntity<EmployeeTermsDto> updateEmploymentTerms(
             @PathVariable("id") long id,
             @RequestBody EmployeeTermsDto request){
+        service.updateEmployementTerms(id, map(request));
+        // https://stackoverflow.com/a/827045/19275130 :
         return ResponseEntity.noContent().build();
     }
 }
