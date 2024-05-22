@@ -5,7 +5,6 @@ import org.springframework.lang.NonNull;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name="employee")
 public class Employee implements Serializable {
@@ -20,6 +19,10 @@ public class Employee implements Serializable {
     private int bankBranch;
     @Column
     private int accountId;
+
+    /**
+     * Roles-Employee relation is managed by Employee.
+     */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "emps",
@@ -27,6 +30,9 @@ public class Employee implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "name")
     )
     private List<Role> roles;
+    /**
+     * The terms of the employment
+     */
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
     private EmploymentTerms terms;
 
