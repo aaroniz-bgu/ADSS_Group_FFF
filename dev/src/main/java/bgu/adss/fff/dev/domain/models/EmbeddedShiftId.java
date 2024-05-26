@@ -3,23 +3,23 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Embeddable
+//@Embeddable
 public class EmbeddedShiftId implements Serializable {
-    private LocalDateTime date;
+    private LocalDate date;
     private ShiftDayPart shift;
 
-    public EmbeddedShiftId(LocalDateTime date, ShiftDayPart shift) {
+    public EmbeddedShiftId(LocalDate date, ShiftDayPart shift) {
         this.date = date;
         this.shift = shift;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

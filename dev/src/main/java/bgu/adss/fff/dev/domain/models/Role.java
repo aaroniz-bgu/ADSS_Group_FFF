@@ -2,12 +2,16 @@ package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Represents a role within the organization.
  */
 @Entity(name="role")
-public class Role {
+public class Role implements Serializable {
     @Id
     private String name;
     private boolean isShiftManager;
@@ -16,6 +20,8 @@ public class Role {
         this.name = name;
         this.isShiftManager = isShiftManger;
     }
+
+    public Role() { }
 
     /**
      * Gets the name of the role.

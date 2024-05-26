@@ -1,21 +1,43 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity(name="employee")
-public class Employee {
+public class Employee implements Serializable {
     @Id
     private long id;
+    @Column
+    @NonNull
     private String name;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @Column
     private int bankId;
+    @Column
     private int bankBranch;
+    @Column
     private int accountId;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER) // TODO MAP PK
+
+    /**
+     * Roles-Employee relation is managed by Employee.
+     */
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "emps",
+            joinColumns = @JoinColumn(name = "id"),
+            inverseJoinColumns = @JoinColumn(name = "name")
+    )
+    private List<Role> roles;
+    /**
+     * The terms of the employment
+     */
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
     private EmploymentTerms terms;
+
+    // For JPA:
+    public Employee() { }
 
     public Employee(long id, String name, List<Role> roles, EmploymentTerms terms,
                     int bankId, int bankBranch, int accountId) {
