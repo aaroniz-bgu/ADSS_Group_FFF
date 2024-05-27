@@ -18,6 +18,5 @@ import java.util.Collection;
 public record RequireRoleRequest(
         @JsonProperty("date") LocalDateTime date,
         @JsonProperty("shift") ShiftDayPart shift,
-        @JsonProperty("roles") RoleDto[] roles
-        // @JsonProperty("addOrRemove") boolean addOrRemove // True for add, false for remove
+        @JsonProperty("roles") String role
         ) { }
