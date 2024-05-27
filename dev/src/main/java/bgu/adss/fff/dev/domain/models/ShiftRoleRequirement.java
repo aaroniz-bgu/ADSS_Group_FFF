@@ -21,11 +21,11 @@ public class ShiftRoleRequirement {
     }
 
     public DayOfWeek getDay() {
-        return id.day;
+        return id.weekDay;
     }
 
     public void setDay(DayOfWeek day) {
-        this.id.day = day;
+        this.id.weekDay = day;
     }
 
     public ShiftDayPart getPart() {
@@ -46,7 +46,7 @@ public class ShiftRoleRequirement {
 
     @Embeddable
     public static class ShiftRoleRequirementId implements Serializable {
-        private DayOfWeek day;
+        private DayOfWeek weekDay;
         private ShiftDayPart part;
         @ManyToOne
         private Role role;
@@ -55,7 +55,7 @@ public class ShiftRoleRequirement {
         }
 
         public ShiftRoleRequirementId(DayOfWeek day, ShiftDayPart part, Role role) {
-            this.day = day;
+            this.weekDay = day;
             this.part = part;
             this.role = role;
         }
