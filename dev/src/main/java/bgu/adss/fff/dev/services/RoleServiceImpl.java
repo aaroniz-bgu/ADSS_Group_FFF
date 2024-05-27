@@ -6,7 +6,10 @@ import bgu.adss.fff.dev.exceptions.RoleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -15,6 +18,11 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     public RoleServiceImpl(RoleRepository repository) { this.repository = repository; }
 
+    /**
+     * Creates a new role in the system.
+     * @param role
+     * @return The created role.
+     */
     @Override
     public Role createRole(Role role) {
         if(repository.existsById(role.getName())) {
@@ -23,42 +31,50 @@ public class RoleServiceImpl implements RoleService {
         return repository.save(role);
     }
 
+    /**
+     * Gets all roles in the system.
+     * @return A list of all roles in the system.
+     */
     @Override
     public List<Role> getRoles() { return repository.findAll(); }
 
+    /**
+     * Gets a role by its name.
+     * @param name
+     * @return The role with the given name.
+     */
     @Override
     public Role getRole(String name) {
         return repository.findById(name).orElseThrow(() -> RoleException.notFound(name));
     }
 
-    /*
-    TODO I'm worried that this method will cause problems, I don't know how to use SPRING well enough.
-    Is it ok to update here? Or does the employee service need to handle this? Or does the repository
-    save method call this method somehow?
+    /**
+     * Removes a role by its name.
+     * @param name
      */
-    @Override
-    public Role updateRole(String name, Role role) {
-        if(name == null || role == null) {
-            throw RoleException.illegalField(name, "Role",
-                    "the name and role must be set and not be null.");
-        }
-        if (!repository.existsById(name)) {
-            throw RoleException.notFound(name);
-        }
-        if (!name.equals(role.getName())) {
-            throw RoleException.illegalField(name, "Role", "the names must match.");
-        }
-
-        Role toUpdate = getRole(name);
-        toUpdate.setShiftManager(role.isShiftManager());
-        return repository.save(toUpdate);
-    }
-
     @Override
     public void removeRole(String name) {
         if(!repository.existsById(name)) {
             throw RoleException.notFound(name);
         }
         repository.deleteById(name);
+    }
+
+    /**
+     * Returns all the roles if and only if for all r in roles exist in the system.
+     * @param roles
+     * @return List of roles if all exist, null otherwise.
+     */
+    @Override
+    public List<Role> returnIfExists(Collection<String> roles) {
+        List<Role> foundRoles = new ArrayList<>();
+        for (String roleName : roles) {
+            Optional<Role> role = repository.findById(roleName);
+            if (role.isEmpty()) {
+                return null;
+            }
+            foundRoles.add(role.get());
+        }
+        return foundRoles;
     }
 }

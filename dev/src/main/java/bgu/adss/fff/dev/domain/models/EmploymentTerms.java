@@ -12,7 +12,6 @@ import static bgu.adss.fff.dev.domain.models.Constants.NOT_SET;
 public class EmploymentTerms {
 
     @Id
-    private long id;
     @OneToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
@@ -75,16 +74,7 @@ public class EmploymentTerms {
      * @return ID of the employee associated with this instance.
      */
     public long getId() {
-        return id;
-    }
-
-    /**
-     * Sets the ID of the employee associated with this instance.
-     *
-     * @param id the ID of the employee associated with this instance.
-     */
-    public void setId(long id) {
-        this.id = id;
+        return employee.getId();
     }
 
     /**
@@ -158,7 +148,7 @@ public class EmploymentTerms {
      */
     public void setMonthlySalary(float monthlySalary) {
         if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
-            throw EmployeeException.illegalField(id, "monthlySalary",
+            throw EmployeeException.illegalField(employee.getId(), "monthlySalary",
                     "monthlySalary and hourlyRate cannot be both not set");
         }
 
@@ -182,7 +172,7 @@ public class EmploymentTerms {
      */
     public void setHourlyRate(float hourlyRate) {
         if(monthlySalary == hourlyRate && hourlyRate == NOT_SET) {
-            throw EmployeeException.illegalField(id, "hourlyRate",
+            throw EmployeeException.illegalField(employee.getId(), "hourlyRate",
                     "monthlySalary and hourlyRate cannot be both not set");
         }
 
