@@ -16,7 +16,7 @@ import static bgu.adss.fff.dev.controllers.mappers.ShiftMapper.map;
 @RequestMapping("/shift")
 public class ShiftController {
 
-    private ShiftService service;
+    private final ShiftService service;
 
     @Autowired
     public ShiftController(ShiftService service) { this.service = service; }
