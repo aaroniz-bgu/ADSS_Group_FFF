@@ -2,11 +2,10 @@ package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
 import bgu.adss.fff.dev.domain.models.*;
-import bgu.adss.fff.dev.exceptions.ShiftRepository;
+import bgu.adss.fff.dev.data.ShiftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
