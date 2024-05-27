@@ -3,8 +3,7 @@ package bgu.adss.fff.dev.contracts;
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
+import java.time.LocalDate;
 
 /**
  * Contract for a shift
@@ -16,10 +15,10 @@ import java.util.Collection;
  * @param requiredRoles The roles required for the shift
  */
 public record ShiftDto(
-        @JsonProperty("date") LocalDateTime date,
-        @JsonProperty("shift") ShiftDayPart shift,
+        @JsonProperty("date") LocalDate date,
+        @JsonProperty("shift") int shift,
         @JsonProperty("isLocked") boolean isLocked,
         @JsonProperty("availableEmployees") EmployeeDto[] availableEmployees,
         @JsonProperty("assignedEmployees") EmployeeDto[] assignedEmployees,
-        @JsonProperty("requiredRoles") RoleDto[] requiredRoles
+        @JsonProperty("requiredRoles") String[] requiredRoles
         ) { }
