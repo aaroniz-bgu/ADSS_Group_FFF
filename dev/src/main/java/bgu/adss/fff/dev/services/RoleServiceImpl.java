@@ -15,6 +15,11 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     public RoleServiceImpl(RoleRepository repository) { this.repository = repository; }
 
+    /**
+     * Creates a new role in the system.
+     * @param role
+     * @return The created role.
+     */
     @Override
     public Role createRole(Role role) {
         if(repository.existsById(role.getName())) {
@@ -23,14 +28,27 @@ public class RoleServiceImpl implements RoleService {
         return repository.save(role);
     }
 
+    /**
+     * Gets all roles in the system.
+     * @return A list of all roles in the system.
+     */
     @Override
     public List<Role> getRoles() { return repository.findAll(); }
 
+    /**
+     * Gets a role by its name.
+     * @param name
+     * @return The role with the given name.
+     */
     @Override
     public Role getRole(String name) {
         return repository.findById(name).orElseThrow(() -> RoleException.notFound(name));
     }
 
+    /**
+     * Removes a role by its name.
+     * @param name
+     */
     @Override
     public void removeRole(String name) {
         if(!repository.existsById(name)) {
