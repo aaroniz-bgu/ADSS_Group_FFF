@@ -6,7 +6,10 @@ import bgu.adss.fff.dev.exceptions.RoleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -55,5 +58,23 @@ public class RoleServiceImpl implements RoleService {
             throw RoleException.notFound(name);
         }
         repository.deleteById(name);
+    }
+
+    /**
+     * Returns all the roles if and only if for all r in roles exist in the system.
+     * @param roles
+     * @return List of roles if all exist, null otherwise.
+     */
+    @Override
+    public List<Role> returnIfExists(Collection<String> roles) {
+        List<Role> foundRoles = new ArrayList<>();
+        for (String roleName : roles) {
+            Optional<Role> role = repository.findById(roleName);
+            if (role.isEmpty()) {
+                return null;
+            }
+            foundRoles.add(role.get());
+        }
+        return foundRoles;
     }
 }
