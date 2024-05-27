@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.domain.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
@@ -18,6 +19,7 @@ public class EmbeddedShiftId implements Serializable {
         this.shift = shift;
     }
 
+    @Column(name = "shift_date")
     public LocalDate getDate() {
         return date;
     }
@@ -26,6 +28,7 @@ public class EmbeddedShiftId implements Serializable {
         this.date = date;
     }
 
+    @Column(name = "day_part")
     public ShiftDayPart getShift() {
         return shift;
     }
