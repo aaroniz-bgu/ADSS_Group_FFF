@@ -31,29 +31,6 @@ public class RoleServiceImpl implements RoleService {
         return repository.findById(name).orElseThrow(() -> RoleException.notFound(name));
     }
 
-    /*
-    TODO I'm worried that this method will cause problems, I don't know how to use SPRING well enough.
-    Is it ok to update here? Or does the employee service need to handle this? Or does the repository
-    save method call this method somehow?
-     */
-    @Override
-    public Role updateRole(String name, Role role) {
-        if(name == null || role == null) {
-            throw RoleException.illegalField(name, "Role",
-                    "the name and role must be set and not be null.");
-        }
-        if (!repository.existsById(name)) {
-            throw RoleException.notFound(name);
-        }
-        if (!name.equals(role.getName())) {
-            throw RoleException.illegalField(name, "Role", "the names must match.");
-        }
-
-        Role toUpdate = getRole(name);
-        toUpdate.setShiftManager(role.isShiftManager());
-        return repository.save(toUpdate);
-    }
-
     @Override
     public void removeRole(String name) {
         if(!repository.existsById(name)) {

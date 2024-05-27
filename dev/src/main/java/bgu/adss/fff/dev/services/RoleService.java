@@ -7,6 +7,5 @@ public interface RoleService {
     Role createRole(Role role);
     List<Role> getRoles();
     Role getRole(String name);
-    Role updateRole(String name, Role role);
     void removeRole(String name);
 }

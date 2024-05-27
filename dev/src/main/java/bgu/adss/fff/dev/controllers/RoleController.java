@@ -40,12 +40,6 @@ public class RoleController {
         return ResponseEntity.ok(map(service.getRole(name)));
     }
 
-    @PutMapping("/{name}")
-    public ResponseEntity<RoleDto> updateRole(@PathVariable("name") String name, @RequestBody RoleDto role) {
-        service.updateRole(name, map(role));
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{name}")
     public ResponseEntity<?> removeRole(@PathVariable("name") String name) {
         service.removeRole(name);
