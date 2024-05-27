@@ -11,10 +11,12 @@ import java.time.LocalDate;
  * @param date The date of the shift
  * @param shift According to the {@link ShiftDayPart} enum ordinal
  * @param role The roles to add or remove
+ * @param reoccurring whether to delete only once or add as a reoccurring required role.
  * <!--@param addOrRemove True for add, false for remove-->
  */
 public record RequireRoleRequest(
         @JsonProperty("date") LocalDate date,
         @JsonProperty("shift") int shift,
-        @JsonProperty("roles") String role
+        @JsonProperty("roles") String role,
+        @JsonProperty("reoccurring") boolean reoccurring
         ) { }
