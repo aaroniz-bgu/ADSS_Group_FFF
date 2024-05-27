@@ -45,7 +45,7 @@ public class ShiftRoleRequirement {
     }
 
     @Embeddable
-    class ShiftRoleRequirementId implements Serializable {
+    public static class ShiftRoleRequirementId implements Serializable {
         private DayOfWeek day;
         private ShiftDayPart part;
         @ManyToOne
