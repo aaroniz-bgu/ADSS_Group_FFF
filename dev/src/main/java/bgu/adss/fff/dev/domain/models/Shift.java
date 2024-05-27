@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "shifts")
+@Entity(name = "shifts")
 public class Shift {
     @EmbeddedId
     private EmbeddedShiftId id;
