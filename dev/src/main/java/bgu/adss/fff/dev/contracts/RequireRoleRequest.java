@@ -12,7 +12,7 @@ import java.util.Collection;
  * Used for both adding and removing roles
  * @param date The date of the shift
  * @param shift According to the {@link ShiftDayPart} enum
- * @param roles The roles to add or remove
+ * @param role The roles to add or remove
  * <!--@param addOrRemove True for add, false for remove-->
  */
 public record RequireRoleRequest(
