@@ -76,7 +76,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee toUpdate = getEmployee(id);
         toUpdate.setName(employee.getName());
-        toUpdate.setRoles(employee.getRoles());
+        toUpdate.setRoles(employee.getRoles()); // FIXME, I'm dumb
 
         int[] bank = getBankDetailsHelper(employee.getBank());
         toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
