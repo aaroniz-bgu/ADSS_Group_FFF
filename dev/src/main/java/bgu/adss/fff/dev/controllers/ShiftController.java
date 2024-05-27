@@ -27,7 +27,7 @@ public class ShiftController {
      * @param request ShiftDto object which must only contain the date & day-part enum ordinal.
      * @return the shift details that occurs/ occurred at the given date.
      */
-    @GetMapping
+    @GetMapping("/single")
     public ResponseEntity<ShiftDto> getShift(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         return ResponseEntity.ok(map(service.getShift(request.date(), part)));
