@@ -49,8 +49,9 @@ public class Shift {
 
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked) {
         this.id = new EmbeddedShiftId(date, shift);
-        this.isLocked = LocalDate.now()
-                .isBefore(date.minus(HumanResourceConfig.barrierTime));
+//        this.isLocked = LocalDate.now() atm like this...
+//                .isBefore(date.minus(HumanResourceConfig.barrierTime));
+        this.isLocked = date.isBefore(LocalDate.now());
 
         this.availableEmployees = new ArrayList<>();
         this.assignedEmployees = new ArrayList<>();
