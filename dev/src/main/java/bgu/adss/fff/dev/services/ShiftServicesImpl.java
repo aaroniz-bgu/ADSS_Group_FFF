@@ -85,7 +85,12 @@ public class ShiftServicesImpl implements ShiftService {
 
     @Override
     public List<Shift> getShifts(LocalDate from, LocalDate to) {
-        return null;
+        List<Shift> shifts = repository.getRangeOfShifts(from, to);
+        for(Shift s: shifts) {
+            s.setLocked(lockHelper(s.getDate()));
+            applyRecurringRoles(s);
+        }
+        return shifts;
     }
 
     // IDK whether it's good that it is duplicated but just to be safe atm:
