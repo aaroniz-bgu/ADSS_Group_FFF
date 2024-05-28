@@ -3,11 +3,13 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.EmployeeRepository;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.domain.models.Role;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static bgu.adss.fff.dev.domain.models.Constants.*;
 import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
@@ -15,10 +17,13 @@ import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository repository;
+    private final RoleService roleService;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository repository) {
+    public EmployeeServiceImpl(EmployeeRepository repository,
+                               RoleService roleService) {
         this.repository = repository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -30,6 +35,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw EmployeeException.illegalField(employee.getId(),
                     "Employee", "Bad request, can be any of the following:");
         }
+        List<Role> roles = getRolesHelper(employee);
+        if (roles == null) {
+            throw EmployeeException.illegalField(employee.getId(), "Employee",
+                    "One or more of the given roles do not exist in the system.");
+        }
+        employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
         return repository.save(employee);
     }
@@ -76,12 +87,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee toUpdate = getEmployee(id);
         toUpdate.setName(employee.getName());
-        toUpdate.setRoles(employee.getRoles()); // FIXME, I'm dumb
+
+        List<Role> roles = getRolesHelper(employee);
+
+        if (roles == null) {
+            throw EmployeeException.illegalField(id, "Employee",
+                    "One or more of the given roles do not exist in the system.");
+        }
+
+        toUpdate.setRoles(roles);
 
         int[] bank = getBankDetailsHelper(employee.getBank());
         toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
 
         return repository.save(toUpdate);
+    }
+
+    /**
+     * A list of all the roles of the employee from the db if there is a matching role.
+     * @param employee The employee to get the roles from.
+     * @return List of roles if all exist, null otherwise.
+     */
+    private List<Role> getRolesHelper(Employee employee) {
+        List<String> roleNames = employee.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        return roleService.returnIfExists(roleNames);
     }
 
     @Override
