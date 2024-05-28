@@ -57,9 +57,33 @@ public class Shift {
         this.requiredRoles = new ArrayList<>();
     }
 
-    public EmbeddedShiftId getEmbeddedId() {
-        return id;
+    public void addOrRemoveAvailableEmployee(Employee emp) {
+        if(emp == null) {
+            throw new NullPointerException("Cannot update null employee availability.");
+        }
+
+        if(!availableEmployees.contains(emp)) {
+            availableEmployees.add(emp);
+        }
+        availableEmployees.remove(emp);
     }
+
+    public void addRequiredRole(Role role) {
+        if(role == null) {
+            throw new NullPointerException("Cannot add null role.");
+        }
+
+        if(!requiredRoles.contains(role)) {
+            requiredRoles.add(role);
+        }
+    }
+
+    public void removeRequiredRole(Role role) {
+        if(role == null) {
+            throw new NullPointerException("Cannot add null role.");
+        }
+        requiredRoles.remove(role);
+        }
 
     public LocalDate getDate() {
         return id.getDate();
@@ -75,6 +99,10 @@ public class Shift {
 
     public List<Employee> getAssignedEmployees() {
         return assignedEmployees;
+    }
+
+    public void setAssignedEmployees(List<Employee> availableEmployees) {
+        this.availableEmployees = availableEmployees;
     }
 
     public EmbeddedShiftId getId() {
