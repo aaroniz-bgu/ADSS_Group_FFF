@@ -107,8 +107,8 @@ public class Shift {
         return assignedEmployees;
     }
 
-    public void setAssignedEmployees(List<Employee> availableEmployees) {
-        this.availableEmployees = availableEmployees;
+    public void setAssignedEmployees(List<Employee> assignedEmployees) {
+        this.assignedEmployees = assignedEmployees;
     }
 
     public EmbeddedShiftId getId() {
