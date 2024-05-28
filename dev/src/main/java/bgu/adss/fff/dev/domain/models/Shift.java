@@ -1,8 +1,7 @@
 package bgu.adss.fff.dev.domain.models;
 
 import bgu.adss.fff.dev.data.HumanResourceConfig;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,26 +9,83 @@ import java.util.List;
 
 @Entity(name = "shifts")
 public class Shift {
-//    @EmbeddedId
+    @EmbeddedId
     private EmbeddedShiftId id;
-    private List<Employee> availableEmployees;
-    private List<Employee> assignedEmployees;
-    private List<Role> requiredRoles;
+    @Column
     private boolean isLocked;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "available_emps",
+            joinColumns = {
+                    @JoinColumn(name = "shift_date"),
+                    @JoinColumn(name = "day_part")
+            },
+            inverseJoinColumns = @JoinColumn(name = "emp_id")
+    )
+    private List<Employee> availableEmployees;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "assigned_emps",
+            joinColumns = {
+                    @JoinColumn(name = "shift_date"),
+                    @JoinColumn(name = "day_part")
+            },
+            inverseJoinColumns = @JoinColumn(name = "emp_id")
+    )
+    private List<Employee> assignedEmployees;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "req_roles",
+            joinColumns = {
+                    @JoinColumn(name = "shift_date"),
+                    @JoinColumn(name = "day_part")
+            },
+            inverseJoinColumns = @JoinColumn(name = "role")
+    )
+    private List<Role> requiredRoles;
+
+    // For JDA:
+    public Shift() { }
 
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked) {
         this.id = new EmbeddedShiftId(date, shift);
-        this.isLocked = LocalDate.now()
-                .isBefore(date.minus(HumanResourceConfig.barrierTime));
+//        this.isLocked = LocalDate.now() atm like this...
+//                .isBefore(date.minus(HumanResourceConfig.barrierTime));
+        this.isLocked = date.isBefore(LocalDate.now());
 
         this.availableEmployees = new ArrayList<>();
         this.assignedEmployees = new ArrayList<>();
         this.requiredRoles = new ArrayList<>();
     }
 
-    public EmbeddedShiftId getEmbeddedId() {
-        return id;
+    public void addOrRemoveAvailableEmployee(Employee emp) {
+        if(emp == null) {
+            throw new NullPointerException("Cannot update null employee availability.");
+        }
+
+        if(!availableEmployees.contains(emp)) {
+            availableEmployees.add(emp);
+        } else {
+            availableEmployees.remove(emp);
+        }
     }
+
+    public void addRequiredRole(Role role) {
+        if(role == null) {
+            throw new NullPointerException("Cannot add null role.");
+        }
+
+        if(!requiredRoles.contains(role)) {
+            requiredRoles.add(role);
+        }
+    }
+
+    public void removeRequiredRole(Role role) {
+        if(role == null) {
+            throw new NullPointerException("Cannot add null role.");
+        }
+        requiredRoles.remove(role);
+        }
 
     public LocalDate getDate() {
         return id.getDate();
@@ -45,6 +101,10 @@ public class Shift {
 
     public List<Employee> getAssignedEmployees() {
         return assignedEmployees;
+    }
+
+    public void setAssignedEmployees(List<Employee> availableEmployees) {
+        this.availableEmployees = availableEmployees;
     }
 
     public EmbeddedShiftId getId() {

@@ -49,4 +49,13 @@ public class Role implements Serializable {
     public void setShiftManager(boolean shiftManager) {
         isShiftManager = shiftManager;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Role) {
+            Role other = (Role) obj;
+            return this.name.equals(other.name) && this.isShiftManager == other.isShiftManager;
+        }
+        return false;
+    }
 }
