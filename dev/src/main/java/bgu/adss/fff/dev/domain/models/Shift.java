@@ -65,8 +65,9 @@ public class Shift {
 
         if(!availableEmployees.contains(emp)) {
             availableEmployees.add(emp);
+        } else {
+            availableEmployees.remove(emp);
         }
-        availableEmployees.remove(emp);
     }
 
     public void addRequiredRole(Role role) {
