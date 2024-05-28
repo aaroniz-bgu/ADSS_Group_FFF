@@ -67,14 +67,13 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public List<Role> returnIfExists(Collection<String> roles) {
-        List<Role> foundRoles = new ArrayList<>();
-        for (String roleName : roles) {
-            Optional<Role> role = repository.findById(roleName);
-            if (role.isEmpty()) {
-                return null;
-            }
-            foundRoles.add(role.get());
+        List<String> roleNames = new ArrayList<>(roles);
+        List<Role> foundRoles = repository.findByNameIn(roleNames);
+
+        if (foundRoles.size() != roleNames.size()) {
+            return null;
         }
+
         return foundRoles;
     }
 }
