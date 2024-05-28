@@ -146,6 +146,9 @@ public class ShiftServicesImpl implements ShiftService {
             emps.add(emp);
             hasShiftManger |= isShiftMangerHelper(emp);
         }
+        if(!hasShiftManger) {
+            // TODO Throw...
+        }
 
         // TODO Check if all roles are fulfilled...
 
