@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ShiftServicesImpl implements ShiftService {
+public class ShiftServiceImpl implements ShiftService {
     private final ShiftRepository repository;
     private final ShiftRoleRequirementRepository reqRoleRepository;
 
@@ -19,10 +19,10 @@ public class ShiftServicesImpl implements ShiftService {
     private final EmployeeService employeeService;
 
     @Autowired
-    public ShiftServicesImpl(ShiftRepository repository,
-                             ShiftRoleRequirementRepository reqRoleRepository,
-                             RoleService roleService,
-                             EmployeeService employeeService) {
+    public ShiftServiceImpl(ShiftRepository repository,
+                            ShiftRoleRequirementRepository reqRoleRepository,
+                            RoleService roleService,
+                            EmployeeService employeeService) {
         this.repository = repository;
         this.reqRoleRepository = reqRoleRepository;
         this.roleService = roleService;
