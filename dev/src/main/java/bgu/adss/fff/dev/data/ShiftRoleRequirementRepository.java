@@ -12,5 +12,6 @@ import java.util.List;
 public interface ShiftRoleRequirementRepository extends
         JpaRepository<ShiftRoleRequirement, ShiftRoleRequirement.ShiftRoleRequirementId> {
 
-    List<ShiftRoleRequirement> findByIdWeekDayAndIdPart(DayOfWeek weekDay, ShiftDayPart part);
+    //List<ShiftRoleRequirement> findByIdWeekDayAndIdPart(DayOfWeek weekDay, ShiftDayPart part);
+    List<ShiftRoleRequirement> findByIdWeekDayAndIdPartAndIdBranchName(DayOfWeek weekDay, ShiftDayPart part, String branchName);
 }
