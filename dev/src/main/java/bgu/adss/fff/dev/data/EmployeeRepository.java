@@ -11,7 +11,5 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-
-    @Query("select e from employee e where e.branch = :branch")
-    List<Employee> findEmployeesByBranch(@Param("branch") Branch branch);
+    List<Employee> findEmployeesByBranch(Branch branch);
 }
