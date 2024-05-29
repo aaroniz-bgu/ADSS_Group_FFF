@@ -47,5 +47,9 @@ public class RoleRepositoryTests {
 
         assertThat(foundRoles).hasSize(2);
         assertThat(foundRoles).extracting(Role::getName).containsOnly("Fixerupper", "Da big boss man");
+
+        foundRoles = roleRepository.findByNameIn(Arrays.asList("Da big boss"));
+
+        assertThat(foundRoles).isEmpty();
     }
 }
