@@ -44,7 +44,7 @@ public class EmbeddedShiftId implements Serializable {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof EmbeddedShiftId other) {
-            return date.equals(other.date) && (shift == other.shift) && branch.equals(other.branch);
+            return date.equals(other.date) && (shift == other.shift) && branchName.equals(other.branchName);
         }
         return false;
     }
