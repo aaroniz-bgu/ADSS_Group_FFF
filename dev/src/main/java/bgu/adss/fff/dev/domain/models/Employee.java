@@ -35,12 +35,15 @@ public class Employee implements Serializable {
      */
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
     private EmploymentTerms terms;
+    @ManyToOne
+    @JoinColumn(name = "branch_name")
+    private Branch branch;
 
     // For JPA:
     public Employee() { }
 
     public Employee(long id, String name, List<Role> roles, EmploymentTerms terms,
-                    int bankId, int bankBranch, int accountId) {
+                    int bankId, int bankBranch, int accountId, Branch branch) {
         this.id = id;
         this.name = name;
         this.roles = roles;
@@ -49,6 +52,8 @@ public class Employee implements Serializable {
         this.bankId = bankId;
         this.bankBranch = bankBranch;
         this.accountId = accountId;
+
+        this.branch = branch;
     }
 
     /**
@@ -134,5 +139,22 @@ public class Employee implements Serializable {
      */
     public void setTerms(EmploymentTerms terms) {
         this.terms = terms;
+    }
+
+    /**
+     * Gets the branch the employee works at.
+     *
+     * @return The branch the employee works at.
+     */
+    public Branch getBranch() {
+        return branch;
+    }
+
+    /**
+     * Sets the branch the employee works at.
+     * @param branch The new branch the employee works at.
+     */
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 }
