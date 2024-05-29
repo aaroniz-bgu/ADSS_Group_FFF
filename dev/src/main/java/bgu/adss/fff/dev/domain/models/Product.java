@@ -11,7 +11,7 @@ import java.util.Map;
 public class Product implements Serializable {
 
     @Id
-    private final long productID;
+    private long productID;
 
     @Column
     private String productName;
@@ -39,6 +39,10 @@ public class Product implements Serializable {
         this.shelves = shelves;
         this.storage = storage;
         this.minimalQuantity = minimalQuantity;
+    }
+
+    public Product() {
+
     }
 
     public long getProductID() {
@@ -91,5 +95,21 @@ public class Product implements Serializable {
 
     public void setMinimalQuantity(int minimalQuantity) {
         this.minimalQuantity = minimalQuantity;
+    }
+
+    public void addToStorage(Item item) {
+        storage.put(item.getItemID(), item);
+    }
+
+    public String toString() {
+        return "Product{" +
+                "productID=" + productID +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", discount=" + discount +
+                ", shelves=" + shelves +
+                ", storage=" + storage +
+                ", minimalQuantity=" + minimalQuantity +
+                '}';
     }
 }
