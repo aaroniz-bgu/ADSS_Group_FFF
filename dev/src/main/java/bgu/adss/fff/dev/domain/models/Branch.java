@@ -11,14 +11,25 @@ public class Branch {
     @Id
     private String name;
 
+    /**
+     * Creates a new branch with the given name.
+     * @param name The name of the branch.
+     */
     public Branch(String name) {
         this.name = name;
     }
 
+    /**
+     * For JDA
+     */
     public Branch() {
 
     }
 
+    /**
+     * Gets the name of the branch.
+     * @return The name of the branch.
+     */
     public String getName() {
         return name;
     }
