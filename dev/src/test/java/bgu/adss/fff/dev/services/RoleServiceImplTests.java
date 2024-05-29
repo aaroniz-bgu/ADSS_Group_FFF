@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -45,9 +46,19 @@ public class RoleServiceImplTests {
         assertThrows(RoleException.class, () -> roleService.getRole("NON-EXISTENT ROLE (Good PM)"));
     }
 
-    // TODO make tests for this.
-//    @Test
-//    void testRemoveRole() {
-//
-//    }
+    @Test
+    void testGetRoles() {
+        List<Role> roles = Arrays.asList(new Role("Test Role", false), new Role("Another Role", false));
+
+        when(roleRepository.findAll()).thenReturn(roles);
+
+        List<Role> returnedRoles = roleService.getRoles();
+
+        assertEquals(roles.size(), returnedRoles.size());
+        for (Role role : returnedRoles) {
+            assertTrue(roles.contains(role));
+        }
+    }
 }
+
+

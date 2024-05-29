@@ -3,11 +3,13 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.EmployeeRepository;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.domain.models.Role;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static bgu.adss.fff.dev.domain.models.Constants.*;
 import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
@@ -15,12 +17,21 @@ import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository repository;
+    private final RoleService roleService;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository repository) {
+    public EmployeeServiceImpl(EmployeeRepository repository,
+                               RoleService roleService) {
         this.repository = repository;
+        this.roleService = roleService;
     }
 
+    /**
+     * Creates a new employee in the system.
+     * @param employee The employee to create.
+     * @return The created employee.
+     * @throws EmployeeException if the employee already exists or the employee data is invalid.
+     */
     @Override
     public Employee createEmployee(Employee employee) {
         if(repository.existsById(employee.getId())) {
@@ -30,6 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw EmployeeException.illegalField(employee.getId(),
                     "Employee", "Bad request, can be any of the following:");
         }
+        List<Role> roles = getRolesHelper(employee);
+
+        employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
         return repository.save(employee);
     }
@@ -67,8 +81,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return repository.findById(id).orElseThrow(() -> EmployeeException.notFound(id));
     }
 
+    /**
+     * Updates the employee with the given id with the new employee data.
+     * @param id The id of the employee to update.
+     * @param employee The new employee data.
+     * @return The updated employee.
+     * @throws EmployeeException if the employee with the given id doesn't exist or the employee data is invalid.
+     */
     @Override
-    public Employee updateEmployee(long id, Employee employee) {
+    public Employee updateEmployee(long id, Employee employee) throws EmployeeException {
         if(!(checkEmployeeFields(employee) && employee.getId() == id) ) {
             throw EmployeeException.illegalField(id, "Employee",
                     "Either name/instance we're illegal or id mismatched");
@@ -76,12 +97,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee toUpdate = getEmployee(id);
         toUpdate.setName(employee.getName());
-        toUpdate.setRoles(employee.getRoles()); // FIXME, I'm dumb
+
+        List<Role> roles = getRolesHelper(employee);
+
+        toUpdate.setRoles(roles);
 
         int[] bank = getBankDetailsHelper(employee.getBank());
         toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
 
         return repository.save(toUpdate);
+    }
+
+    /**
+     * A list of all the roles of the employee from the db if there is a matching role.
+     * @param employee The employee to get the roles from.
+     * @return List of roles if all exist, null otherwise.
+     * @throws EmployeeException if one or more of the roles do not exist in the system.
+     */
+    private List<Role> getRolesHelper(Employee employee) throws EmployeeException {
+        List<String> roleNames = employee.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        List<Role> roles = roleService.returnIfExists(roleNames);
+        if (roles == null) {
+            throw EmployeeException.illegalField(employee.getId(), "Employee",
+                    "One or more of the given roles do not exist in the system.");
+        }
+        return roles;
     }
 
     @Override
