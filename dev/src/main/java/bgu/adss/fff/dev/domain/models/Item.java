@@ -1,12 +1,20 @@
 package bgu.adss.fff.dev.domain.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Item implements Serializable {
 
+    @Id
     private long itemID;
+
+    @Column
     private LocalDate expirationDate;
+
+    @Column
     private boolean isDefected;
 
     public Item(long itemID, LocalDate expirationDate, boolean isDefected) {
