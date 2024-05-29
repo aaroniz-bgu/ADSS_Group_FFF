@@ -26,6 +26,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.roleService = roleService;
     }
 
+    /**
+     * Creates a new employee in the system.
+     * @param employee The employee to create.
+     * @return The created employee.
+     * @throws EmployeeException if the employee already exists or the employee data is invalid.
+     */
     @Override
     public Employee createEmployee(Employee employee) {
         if(repository.existsById(employee.getId())) {
@@ -36,10 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     "Employee", "Bad request, can be any of the following:");
         }
         List<Role> roles = getRolesHelper(employee);
-        if (roles == null) {
-            throw EmployeeException.illegalField(employee.getId(), "Employee",
-                    "One or more of the given roles do not exist in the system.");
-        }
+
         employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
         return repository.save(employee);
@@ -78,8 +81,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         return repository.findById(id).orElseThrow(() -> EmployeeException.notFound(id));
     }
 
+    /**
+     * Updates the employee with the given id with the new employee data.
+     * @param id The id of the employee to update.
+     * @param employee The new employee data.
+     * @return The updated employee.
+     * @throws EmployeeException if the employee with the given id doesn't exist or the employee data is invalid.
+     */
     @Override
-    public Employee updateEmployee(long id, Employee employee) {
+    public Employee updateEmployee(long id, Employee employee) throws EmployeeException {
         if(!(checkEmployeeFields(employee) && employee.getId() == id) ) {
             throw EmployeeException.illegalField(id, "Employee",
                     "Either name/instance we're illegal or id mismatched");
@@ -89,11 +99,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         toUpdate.setName(employee.getName());
 
         List<Role> roles = getRolesHelper(employee);
-
-        if (roles == null) {
-            throw EmployeeException.illegalField(id, "Employee",
-                    "One or more of the given roles do not exist in the system.");
-        }
 
         toUpdate.setRoles(roles);
 
@@ -107,12 +112,18 @@ public class EmployeeServiceImpl implements EmployeeService {
      * A list of all the roles of the employee from the db if there is a matching role.
      * @param employee The employee to get the roles from.
      * @return List of roles if all exist, null otherwise.
+     * @throws EmployeeException if one or more of the roles do not exist in the system.
      */
-    private List<Role> getRolesHelper(Employee employee) {
+    private List<Role> getRolesHelper(Employee employee) throws EmployeeException {
         List<String> roleNames = employee.getRoles().stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
-        return roleService.returnIfExists(roleNames);
+        List<Role> roles = roleService.returnIfExists(roleNames);
+        if (roles == null) {
+            throw EmployeeException.illegalField(employee.getId(), "Employee",
+                    "One or more of the given roles do not exist in the system.");
+        }
+        return roles;
     }
 
     @Override
