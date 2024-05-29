@@ -43,8 +43,8 @@ public class ShiftServiceImpl implements ShiftService {
         // If the shift is already locked, then no need to change it.
         if(shift.isLocked()) return shift;
         // Retrieves all the role requirements by shift and day, then for each one of them it takes the role:
-        List<Role> roles = reqRoleRepository.findByIdWeekDayAndIdPart(
-                shift.getDate().getDayOfWeek(), shift.getShiftDayPart()).stream()
+        List<Role> roles = reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
+                shift.getDate().getDayOfWeek(), shift.getShiftDayPart(), shift.getBranchName()).stream()
                 .map(ShiftRoleRequirement::getRole)
                 .toList();
         // get the existing required roles:
@@ -190,7 +190,7 @@ public class ShiftServiceImpl implements ShiftService {
     public void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring, String branchName) {
         Role roleInstance = roleService.getRole(role);
         if(reoccurring) {
-            reqRoleRepository.save(new ShiftRoleRequirement(date.getDayOfWeek(), dayPart, roleInstance));
+            reqRoleRepository.save(new ShiftRoleRequirement(date.getDayOfWeek(), dayPart, roleInstance, branchName));
         } else {
             Shift shift = getShiftOrClean(date, dayPart, branchName);
             shift.addRequiredRole(roleInstance);
@@ -206,8 +206,8 @@ public class ShiftServiceImpl implements ShiftService {
             shift.removeRequiredRole(roleInstance);
             repository.save(shift);
         } else {
-            List<ShiftRoleRequirement> reqs = reqRoleRepository.findByIdWeekDayAndIdPart(
-                    date.getDayOfWeek(), dayPart);
+            List<ShiftRoleRequirement> reqs = reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
+                    date.getDayOfWeek(), dayPart, branchName);
             for(ShiftRoleRequirement req : reqs) {
                 if(req.getRole().getName().equals(role)) {
                     reqRoleRepository.delete(req);
