@@ -8,17 +8,18 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ShiftService {
-    Shift getShift(LocalDate date, ShiftDayPart dayPart);
+    Shift getShift(LocalDate date, ShiftDayPart dayPart, String branch);
     List<Shift> getShifts(LocalDate from, LocalDate to);
-    void lockShift(LocalDate date, ShiftDayPart dayPart);
-    void unlockShift(LocalDate date, ShiftDayPart dayPart);
+    List<Shift> getShiftsByBranch(LocalDate from, LocalDate to, String branch);
+    void lockShift(LocalDate date, ShiftDayPart dayPart, String branch);
+    void unlockShift(LocalDate date, ShiftDayPart dayPart, String branch);
 
     void reportAvailability(Long empId, LocalDate date, ShiftDayPart dayPart);
 
-    List<Employee> getAvailableEmployees(LocalDate date, ShiftDayPart dayPart);
-    List<Employee> getAssignedEmployees(LocalDate date, ShiftDayPart dayPart);
-    void assignEmployees(List<Employee> employees, LocalDate date, ShiftDayPart dayPart);
+    List<Employee> getAvailableEmployees(LocalDate date, ShiftDayPart dayPart, String branch);
+    List<Employee> getAssignedEmployees(LocalDate date, ShiftDayPart dayPart, String branch);
+    void assignEmployees(List<Employee> employees, LocalDate date, ShiftDayPart dayPart, String branch);
 
-    void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring);
-    void remRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean once);
+    void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring, String branch);
+    void remRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean once , String branch);
 }
