@@ -8,6 +8,7 @@ import java.util.List;
 public interface EmployeeService {
     Employee createEmployee(Employee employee);
     List<Employee> getEmployees();
+    List<Employee> getEmployeesByBranch(String branchName);
     Employee getEmployee(long id);
     Employee updateEmployee(long id, Employee employee);
     void removeEmployee(long id);

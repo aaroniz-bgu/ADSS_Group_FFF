@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.EmployeeRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
 import bgu.adss.fff.dev.domain.models.Role;
@@ -18,12 +19,15 @@ import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository repository;
     private final RoleService roleService;
+    private final BranchService branchService;
 
     @Autowired
     public EmployeeServiceImpl(EmployeeRepository repository,
-                               RoleService roleService) {
+                               RoleService roleService,
+                               BranchService branchService) {
         this.repository = repository;
         this.roleService = roleService;
+        this.branchService = branchService;
     }
 
     /**
@@ -74,6 +78,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<Employee> getEmployees() {
         return repository.findAll();
+    }
+
+    /**
+     * Gets all employees in the system that are assigned to the given branch.
+     * @param branchName
+     * @return A list of all employees in the system that are assigned to the given branch.
+     */
+    @Override
+    public List<Employee> getEmployeesByBranch(String branchName) {
+        Branch branch = branchService.getBranch(branchName);
+        return repository.findEmployeesByBranch(branch);
     }
 
     @Override
