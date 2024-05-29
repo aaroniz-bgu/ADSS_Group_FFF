@@ -47,11 +47,15 @@ public class Shift {
     // For JDA:
     public Shift() { }
 
+    public Shift(LocalDate date, ShiftDayPart shift) {
+        //        this.isLocked = LocalDate.now() atm like this...
+        //                .isBefore(date.minus(HumanResourceConfig.barrierTime));
+        this(date, shift, date.isBefore(LocalDate.now()));
+    }
+
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked) {
         this.id = new EmbeddedShiftId(date, shift);
-//        this.isLocked = LocalDate.now() atm like this...
-//                .isBefore(date.minus(HumanResourceConfig.barrierTime));
-        this.isLocked = date.isBefore(LocalDate.now());
+        this.isLocked = isLocked;
 
         this.availableEmployees = new ArrayList<>();
         this.assignedEmployees = new ArrayList<>();
@@ -103,8 +107,8 @@ public class Shift {
         return assignedEmployees;
     }
 
-    public void setAssignedEmployees(List<Employee> availableEmployees) {
-        this.availableEmployees = availableEmployees;
+    public void setAssignedEmployees(List<Employee> assignedEmployees) {
+        this.assignedEmployees = assignedEmployees;
     }
 
     public EmbeddedShiftId getId() {

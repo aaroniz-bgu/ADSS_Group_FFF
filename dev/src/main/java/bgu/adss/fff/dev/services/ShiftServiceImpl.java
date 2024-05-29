@@ -62,7 +62,7 @@ public class ShiftServiceImpl implements ShiftService {
      */
     private boolean lockHelper(LocalDate date) {
         // TODO IN THE FUTURE CHECK IF TIME PASSED...
-        return !(date.isBefore(LocalDate.now()) /* || ((allRolesAssigned(...)) && (barrierPassed()))*/);
+        return date.isBefore(LocalDate.now() /* || ((allRolesAssigned(...)) && (barrierPassed()))*/);
     }
 
     /**
