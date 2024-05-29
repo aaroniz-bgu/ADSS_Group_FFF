@@ -13,7 +13,14 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+/**
+ * Tests for the RoleRepository class.
+ * Can read more at https://www.baeldung.com/junit-datajpatest-repository
+ */
+@DataJpaTest(properties = {
+        "spring.datasource.url=jdbc:h2:mem:testdb",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
+})
 public class RoleRepositoryTests {
 
     @Autowired
