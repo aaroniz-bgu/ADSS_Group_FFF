@@ -22,7 +22,45 @@ public abstract class Report implements Serializable {
     @Column
     private String content;
 
-    public Report(){ }
+    public Report(){}
 
+    public Report(long reportId, LocalDateTime reportDate, String title, String content){
+        this.reportId = reportId;
+        this.reportDate = reportDate;
+        this.title = title;
+        this.content = content;
+    }
+
+    public long getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(long reportId) {
+        this.reportId = reportId;
+    }
+
+    public LocalDateTime getReportDate() {
+        return reportDate;
+    }
+
+    public void setReportDate(LocalDateTime reportDate) {
+        this.reportDate = reportDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
 }

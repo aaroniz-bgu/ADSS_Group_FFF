@@ -1,11 +1,13 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.util.Map;
 
+@Entity(name="Product")
 public class Product implements Serializable {
 
     @Id
