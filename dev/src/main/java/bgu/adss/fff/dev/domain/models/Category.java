@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -17,10 +18,10 @@ public class Category implements Serializable {
     @Column
     private String categoryName;
 
-    @Column
+    @ElementCollection
     private Map<String, Category> children;
 
-    @Column
+    @ElementCollection
     private Map<String, Product> products;
 
     public Category() {}

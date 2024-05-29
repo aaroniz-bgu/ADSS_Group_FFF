@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -22,10 +23,10 @@ public class Product implements Serializable {
     @Column
     private Discount discount;
 
-    @Column
+    @ElementCollection
     private Map<Long, Item> shelves;
 
-    @Column
+    @ElementCollection
     private Map<Long, Item> storage;
 
     @Column
