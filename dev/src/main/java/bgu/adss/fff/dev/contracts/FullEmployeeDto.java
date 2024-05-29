@@ -14,6 +14,7 @@ public record FullEmployeeDto(
         @JsonProperty("name") String name,
         @JsonProperty("roles") RoleDto[] roles,
         @JsonProperty("bankDetails") String bankDetails,
+        @JsonProperty("branch") String branchName,
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         @JsonProperty("startDate") LocalDate startDate,
         @JsonProperty("jobType") int jobType,
