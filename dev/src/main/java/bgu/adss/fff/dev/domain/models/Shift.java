@@ -43,9 +43,6 @@ public class Shift {
             inverseJoinColumns = @JoinColumn(name = "role")
     )
     private List<Role> requiredRoles;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "branch_name")
-    private Branch branch;
 
     // For JDA:
     public Shift() { }
@@ -57,13 +54,12 @@ public class Shift {
     }
 
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked, Branch branch) {
-        this.id = new EmbeddedShiftId(date, shift);
+        this.id = new EmbeddedShiftId(date, shift, branch.getName());
         this.isLocked = isLocked;
 
         this.availableEmployees = new ArrayList<>();
         this.assignedEmployees = new ArrayList<>();
         this.requiredRoles = new ArrayList<>();
-        this.branch = branch;
     }
 
     public void addOrRemoveAvailableEmployee(Employee emp) {
@@ -135,5 +131,5 @@ public class Shift {
         isLocked = locked;
     }
 
-    public Branch getBranch() { return branch; }
+    public String getBranchName() { return id.getBranch(); }
 }

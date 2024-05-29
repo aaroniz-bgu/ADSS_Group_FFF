@@ -9,10 +9,12 @@ import java.time.LocalDate;
 public class EmbeddedShiftId implements Serializable {
     private LocalDate date;
     private ShiftDayPart shift;
+    private String branchName;
 
-    public EmbeddedShiftId(LocalDate date, ShiftDayPart shift) {
+    public EmbeddedShiftId(LocalDate date, ShiftDayPart shift, String branch) {
         this.date = date;
         this.shift = shift;
+        this.branchName = branch;
     }
 
     public EmbeddedShiftId() {
@@ -35,10 +37,14 @@ public class EmbeddedShiftId implements Serializable {
         this.shift = shift;
     }
 
+    public String getBranch() { return branchName; }
+
+    public void setBranch(String branch) { this.branchName = branch; }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof EmbeddedShiftId other) {
-            return date.equals(other.date) && (shift == other.shift);
+            return date.equals(other.date) && (shift == other.shift) && branch.equals(other.branch);
         }
         return false;
     }
