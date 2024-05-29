@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class Discount implements Serializable {
 
     @Id
-    private final long id;
+    private final long discountID;
 
     @Column
     private LocalDate startDate;
@@ -23,16 +23,16 @@ public class Discount implements Serializable {
     @Column
     private boolean isValid;
 
-    public Discount(long id, LocalDate startDate, int numOfDays, float discountPercent) {
-        this.id = id;
+    public Discount(long discountID, LocalDate startDate, int numOfDays, float discountPercent) {
+        this.discountID = discountID;
         this.startDate = startDate;
         this.numOfDays = numOfDays;
         this.discountPercent = discountPercent;
         this.isValid = true;
     }
 
-    public long getId() {
-        return id;
+    public long getDiscountID() {
+        return discountID;
     }
 
     public LocalDate getStartDate() {
