@@ -57,7 +57,7 @@ public class ShiftServiceImplTests {
                     LocalDate.now().getDayOfWeek(), ShiftDayPart.MORNING))
                 .thenReturn(Arrays.asList(requirement)); // do not use List.of(T) since its unmodifiable.
         when(repository.findById(id)).thenReturn(Optional.empty());
-        when(repository.getRangeOfShifts(
+        when(repository.getRangeOfShiftsByBranch(
                     LocalDate.now().minusDays(1), LocalDate.now().plusDays(1)))
                 .thenReturn(Arrays.asList(
                         new Shift(LocalDate.now(), ShiftDayPart.MORNING, false)
@@ -140,7 +140,7 @@ public class ShiftServiceImplTests {
         doAnswer(invocationOnMock -> removed[0] = true).when(reqRoleRepository).delete(requirement);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
-        when(repository.getRangeOfShifts(
+        when(repository.getRangeOfShiftsByBranch(
                 LocalDate.now().minusDays(1), LocalDate.now().plusDays(1)))
                 .thenReturn(Arrays.asList(
                         new Shift(LocalDate.now(), ShiftDayPart.MORNING, false)
