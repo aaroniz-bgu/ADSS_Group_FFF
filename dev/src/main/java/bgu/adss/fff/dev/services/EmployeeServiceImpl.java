@@ -49,6 +49,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
+        // Set the branch of the employee to the branch instance from the db, since the branch name is the only
+        // thing that is supplied by the client.
+        employee.setBranch(branchService.getBranch(employee.getBranch().getName()));
         return repository.save(employee);
     }
 
@@ -119,6 +122,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         int[] bank = getBankDetailsHelper(employee.getBank());
         toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
+
+        toUpdate.setBranch(branchService.getBranch(employee.getBranch().getName()));
 
         return repository.save(toUpdate);
     }

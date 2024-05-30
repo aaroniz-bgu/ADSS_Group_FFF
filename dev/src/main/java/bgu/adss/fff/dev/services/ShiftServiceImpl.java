@@ -34,7 +34,7 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     /**
-     * Checks for any save d reoccurring role constraints for this day & day part and applies them to the shift
+     * Checks for any save d reoccurring role constraints for this day & day part & branch and applies them to the shift
      * if not present already.
      *
      * @param shift The shift.
@@ -75,10 +75,11 @@ public class ShiftServiceImpl implements ShiftService {
      *
      * @param date the date associated with the shift.
      * @param dayPart the day part of the shift.
+     * @param branchName the branch of the shift.
      * @return the requested shift.
      */
     private Shift getShiftOrClean(LocalDate date, ShiftDayPart dayPart, String branchName) {
-        return repository.findById(new EmbeddedShiftId(date, dayPart, branchName))
+        return repository.findById(new EmbeddedShiftId(date, dayPart, branchService.getBranch(branchName)))
                 .orElse(new Shift(date, dayPart, lockHelper(date), branchService.getBranch(branchName)));
     }
 
@@ -172,8 +173,8 @@ public class ShiftServiceImpl implements ShiftService {
         boolean hasShiftManger = false;
         for(Employee emp : employees) {
             emp = employeeService.getEmployee(emp.getId());
-            if (!emp.getBranch().getName().equals(branchName)) {
-                throw ShiftException.illegalAssignment(branchName, emp.getName());
+            if (!emp.getBranch().getName().equals(shift.getBranchName())) {
+                throw ShiftException.illegalAssignment(shift.getBranchName(), emp.getName());
             }
             emps.add(emp);
             hasShiftManger |= isShiftMangerHelper(emp);
@@ -203,7 +204,8 @@ public class ShiftServiceImpl implements ShiftService {
     public void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring, String branchName) {
         Role roleInstance = roleService.getRole(role);
         if(reoccurring) {
-            reqRoleRepository.save(new ShiftRoleRequirement(date.getDayOfWeek(), dayPart, roleInstance, branchName));
+            reqRoleRepository.save(new ShiftRoleRequirement(
+                    date.getDayOfWeek(), dayPart, roleInstance, branchService.getBranch(branchName)));
         } else {
             Shift shift = getShiftOrClean(date, dayPart, branchName);
             shift.addRequiredRole(roleInstance);

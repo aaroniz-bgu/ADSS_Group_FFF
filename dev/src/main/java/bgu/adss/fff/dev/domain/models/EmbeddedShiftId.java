@@ -1,6 +1,9 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -9,9 +12,11 @@ import java.time.LocalDate;
 public class EmbeddedShiftId implements Serializable {
     private LocalDate date;
     private ShiftDayPart shift;
-    private String branchName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch_name")
+    private Branch branchName;
 
-    public EmbeddedShiftId(LocalDate date, ShiftDayPart shift, String branch) {
+    public EmbeddedShiftId(LocalDate date, ShiftDayPart shift, Branch branch) {
         this.date = date;
         this.shift = shift;
         this.branchName = branch;
@@ -37,9 +42,9 @@ public class EmbeddedShiftId implements Serializable {
         this.shift = shift;
     }
 
-    public String getBranch() { return branchName; }
+    public Branch getBranch() { return branchName; }
 
-    public void setBranch(String branch) { this.branchName = branch; }
+    public void setBranch(Branch branch) { this.branchName = branch; }
 
     @Override
     public boolean equals(Object obj) {

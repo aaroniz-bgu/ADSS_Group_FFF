@@ -54,7 +54,7 @@ public class Shift {
     }
 
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked, Branch branch) {
-        this.id = new EmbeddedShiftId(date, shift, branch.getName());
+        this.id = new EmbeddedShiftId(date, shift, branch);
         this.isLocked = isLocked;
 
         this.availableEmployees = new ArrayList<>();
@@ -131,5 +131,5 @@ public class Shift {
         isLocked = locked;
     }
 
-    public String getBranchName() { return id.getBranch(); }
+    public String getBranchName() { return id.getBranch().getName(); }
 }

@@ -60,7 +60,8 @@ public class ShiftController {
      * Lock/ unlocks the shift to employee reports, so no more changes could be applied to them.
      *
      * @param lock a boolean determines whether this shift supposed to be locked or unlocked.
-     * @param request the request which contains the date and shift day part ordinal to identify the shift.
+     * @param request the request which contains the date,
+     *               shift day part ordinal to identifying the shift and the branch.
      * @return ok http response if everything goes to plan.
      */
     @PutMapping("/{lock}")

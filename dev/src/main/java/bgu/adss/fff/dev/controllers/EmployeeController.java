@@ -42,6 +42,7 @@ public class EmployeeController {
      *                - - Bank ID - The identifier of the bank facilitating the employee's account.<br>
      *                - - Bank Branch The 3-digit identifier of the bank branch facilitating the employee's account.<br>
      *                - - Account ID - The employee's bank account ID.<br>
+     *                - {@code String branchName}: The name of the branch the employee is assigned to.<br>
      *                - {@code LocalDateTime startDate}: The date when the employee started employment.<br>
      *                - {@code int jobType}: Type of job according to {@link bgu.adss.fff.dev.domain.models.JobType} enum ordinal.<br>
      *                - {@code float monthlySalary}: Monthly salary, or -1 if not paid monthly.<br>

@@ -35,7 +35,7 @@ public class Employee implements Serializable {
      */
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "employee")
     private EmploymentTerms terms;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_name")
     private Branch branch;
 
