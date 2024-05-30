@@ -92,7 +92,7 @@ public class ShiftController {
     /**
      * Retrieves the available employees which reported availability to the system for the specified shift.
      *
-     * @param request the shift dto object which contains the shift identifiers (date & day part ordinal).
+     * @param request the shift dto object which contains the shift identifiers (date, day part ordinal and branch).
      * @return An array of employee dtos which correspond to the available ones.
      */
     @GetMapping("/available")
@@ -107,7 +107,7 @@ public class ShiftController {
     /**
      * Retrieves the employees which were assigned to the specified shift.
      *
-     * @param request the shift dto object which contains the shift identifiers (day & day part ordinal).
+     * @param request the shift dto object which contains the shift identifiers (day, day part ordinal and branch).
      * @return An array of employee dtos which correspond to the ones which are assigned to work in it.
      */
     @GetMapping("/assigned")
