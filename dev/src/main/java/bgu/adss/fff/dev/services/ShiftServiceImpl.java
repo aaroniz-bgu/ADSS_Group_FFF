@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.data.ShiftRepository;
+import bgu.adss.fff.dev.exceptions.ShiftException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -149,6 +150,15 @@ public class ShiftServiceImpl implements ShiftService {
         return getShiftOrClean(date, dayPart, branchName).getAssignedEmployees();
     }
 
+    /**
+     * Assigns a list of employees to a specified shift, overwriting any previous assignment.
+     * @param employees The employees to assign.
+     * @param date The date of the shift.
+     * @param dayPart The day part of the shift.
+     * @param branchName The branch of the shift.
+     * @throws NullPointerException if the employees list is null.
+     * @throws ShiftException if at least one of the employees are not assigned to the specified branch.
+     */
     @Override
     public void assignEmployees(List<Employee> employees, LocalDate date, ShiftDayPart dayPart, String branchName) {
         if(employees == null) {
@@ -162,6 +172,9 @@ public class ShiftServiceImpl implements ShiftService {
         boolean hasShiftManger = false;
         for(Employee emp : employees) {
             emp = employeeService.getEmployee(emp.getId());
+            if (!emp.getBranch().getName().equals(branchName)) {
+                throw ShiftException.illegalAssignment(branchName, emp.getName());
+            }
             emps.add(emp);
             hasShiftManger |= isShiftMangerHelper(emp);
         }
