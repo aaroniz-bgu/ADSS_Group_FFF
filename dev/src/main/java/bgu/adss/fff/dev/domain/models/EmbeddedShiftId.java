@@ -14,12 +14,12 @@ public class EmbeddedShiftId implements Serializable {
     private ShiftDayPart shift;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_name")
-    private Branch branchName;
+    private Branch branch;
 
     public EmbeddedShiftId(LocalDate date, ShiftDayPart shift, Branch branch) {
         this.date = date;
         this.shift = shift;
-        this.branchName = branch;
+        this.branch = branch;
     }
 
     public EmbeddedShiftId() {
@@ -42,14 +42,14 @@ public class EmbeddedShiftId implements Serializable {
         this.shift = shift;
     }
 
-    public Branch getBranch() { return branchName; }
+    public Branch getBranch() { return branch; }
 
-    public void setBranch(Branch branch) { this.branchName = branch; }
+    public void setBranch(Branch branch) { this.branch = branch; }
 
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof EmbeddedShiftId other) {
-            return date.equals(other.date) && (shift == other.shift) && branchName.equals(other.branchName);
+            return date.equals(other.date) && (shift == other.shift) && branch.equals(other.branch);
         }
         return false;
     }
