@@ -12,12 +12,14 @@ import java.util.List;
 
 public interface ShiftRepository extends JpaRepository<Shift, EmbeddedShiftId> {
 
-    @Query("select s from shifts s where branch.name = :branchName and s.id.date between :fromDate and :toDate")
+    @Query("select s from shifts s where s.id.branch = :branch and s.id.date between :fromDate and :toDate")
     List<Shift> getRangeOfShiftsByBranch(
+            @Param("branch") Branch branchName,
             @Param("fromDate") LocalDate fromDate,
-            @Param("toDate") LocalDate toDate,
-            @Param("branchName") String branchName);
-    List<Shift> findShiftsByBranch(Branch branch);
+            @Param("toDate") LocalDate toDate
+            );
+    @Query("select s from shifts s where s.id.branch = :branchName")
+    List<Shift> findShiftsByBranch(@Param("branchName") Branch branch);
     // In case this is needed, might be redundant
     @Query("select s from shifts s where s.id.date between :fromDate and :toDate")
     List<Shift> getRangeOfShifts(
