@@ -4,6 +4,7 @@ import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.EmployeeTermsDto;
 import bgu.adss.fff.dev.contracts.FullEmployeeDto;
 import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,23 @@ public class EmployeeController {
         EmployeeDto[] objects = new EmployeeDto[0];
 
         return ResponseEntity.ok().body(service.getEmployees()
+                .stream()
+                .map(EmployeeMapper::map)
+                .toList()
+                .toArray(objects)
+        );
+    }
+
+    /**
+     * Fetches all employees in the system that are assigned to a specific branch.
+     * @param branchName The name of the branch to filter employees by.
+     * @return ResponseEntity containing an array of EmployeeDto or no content if none exist.
+     */
+    @GetMapping("/branch/{branchName}")
+    public ResponseEntity<EmployeeDto[]> getEmployeesByBranch(@PathVariable("branchName") String branchName) {
+        EmployeeDto[] objects = new EmployeeDto[0];
+
+        return ResponseEntity.ok().body(service.getEmployeesByBranch(new Branch(branchName))
                 .stream()
                 .map(EmployeeMapper::map)
                 .toList()
