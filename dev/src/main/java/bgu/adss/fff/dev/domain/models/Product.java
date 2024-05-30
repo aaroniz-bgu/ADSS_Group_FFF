@@ -1,11 +1,9 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 @Entity(name="Product")
@@ -23,16 +21,26 @@ public class Product implements Serializable {
     @Column
     private Discount discount;
 
-    @ElementCollection
-    private Map<Long, Item> shelves;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_item",
+            joinColumns = @JoinColumn(name = "productID"),
+            inverseJoinColumns = @JoinColumn(name = "itemID")
+    )
+    private List<Item> shelves;
 
-    @ElementCollection
-    private Map<Long, Item> storage;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_item",
+            joinColumns = @JoinColumn(name = "productID"),
+            inverseJoinColumns = @JoinColumn(name = "itemID")
+    )
+    private List<Item> storage;
 
     @Column
     private int minimalQuantity;
 
-    public Product(long productID, String productName, float price, Discount discount, Map<Long, Item> shelves, Map<Long, Item> storage, int minimalQuantity) {
+    public Product(long productID, String productName, float price, Discount discount, List<Item> shelves, List<Item> storage, int minimalQuantity) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
@@ -74,19 +82,19 @@ public class Product implements Serializable {
         this.discount = discount;
     }
 
-    public Map<Long, Item> getShelves() {
+    public List<Item> getShelves() {
         return shelves;
     }
 
-    public void setShelves(Map<Long, Item> shelves) {
+    public void setShelves(List<Item> shelves) {
         this.shelves = shelves;
     }
 
-    public Map<Long, Item> getStorage() {
+    public List<Item> getStorage() {
         return storage;
     }
 
-    public void setStorage(Map<Long, Item> storage) {
+    public void setStorage(List<Item> storage) {
         this.storage = storage;
     }
 
@@ -99,7 +107,7 @@ public class Product implements Serializable {
     }
 
     public void addToStorage(Item item) {
-        storage.put(item.getItemID(), item);
+        storage.add(item);
     }
 
     public String toString() {

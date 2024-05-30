@@ -1,11 +1,13 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@Entity(name="Item")
 public class Item implements Serializable {
 
     @Id
@@ -16,6 +18,9 @@ public class Item implements Serializable {
 
     @Column
     private boolean isDefected;
+
+    public Item() {
+    }
 
     public Item(long itemID, LocalDate expirationDate, boolean isDefected) {
         this.itemID = itemID;
