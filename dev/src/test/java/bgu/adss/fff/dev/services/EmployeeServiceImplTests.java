@@ -1,10 +1,8 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.data.BranchRepository;
 import bgu.adss.fff.dev.data.EmployeeRepository;
-import bgu.adss.fff.dev.domain.models.Employee;
-import bgu.adss.fff.dev.domain.models.EmploymentTerms;
-import bgu.adss.fff.dev.domain.models.JobType;
-import bgu.adss.fff.dev.domain.models.Role;
+import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,9 +27,13 @@ public class EmployeeServiceImplTests {
 
     private Employee yonatan;
     private Employee gal;
+    @MockBean
+    private BranchRepository branchRepository;
 
     @BeforeEach
     void before() {
+        Branch branch1 = new Branch("Middle Earth");
+        Branch branch2 = new Branch("Narnia");
         // Data source: https://www.youtube.com/watch?v=tot02ZOYUmc
         yonatan = new Employee(12345689L, "Yonatan Barak I",
                 new ArrayList<Role>(){{
@@ -40,7 +42,7 @@ public class EmployeeServiceImplTests {
                 }},
                 new EmploymentTerms(LocalDate.now(), JobType.CONTRACT, null,
                         80000, -1, 300),
-                10, 800, 100100);
+                10, 800, 100100, branch1);
         // Data source: https://eincyclopedia.org/wiki/%D7%92%D7%9C_%D7%92%D7%93%D7%95%D7%AA
         gal = new Employee(420420420L, "Gal G Gadot",
                 new ArrayList<Role>(){{
@@ -49,8 +51,10 @@ public class EmployeeServiceImplTests {
                 }},
                 new EmploymentTerms(LocalDate.now(), JobType.FULL_TIME, yonatan,
                         10000, -1, -1),
-                10, 420, 420420
+                10, 420, 420420, branch2
             );
+        when(branchRepository.findById(branch1.getName())).thenReturn(Optional.of(branch1));
+        when(branchRepository.findById(branch2.getName())).thenReturn(Optional.of(branch2));
     }
 
     @Test
