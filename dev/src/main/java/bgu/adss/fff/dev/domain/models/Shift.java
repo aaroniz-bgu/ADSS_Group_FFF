@@ -18,7 +18,8 @@ public class Shift {
             name = "available_emps",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "emp_id")
     )
@@ -28,7 +29,8 @@ public class Shift {
             name = "assigned_emps",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "emp_id")
     )
@@ -38,7 +40,8 @@ public class Shift {
             name = "req_roles",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "role")
     )
