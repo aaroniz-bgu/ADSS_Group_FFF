@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 /**
  * Represents a time period where shifts will be returned in addition to the branch name
- * TODO decide maybe if the branch name is empty, should we return all the shifts from all the branches?
+ * Branch is optional and if not provided, all branches will be considered
  */
 public record GetShiftsRequest(
         @JsonProperty("from") LocalDate from,
