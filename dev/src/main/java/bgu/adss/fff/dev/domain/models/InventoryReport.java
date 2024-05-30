@@ -1,8 +1,6 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -11,7 +9,12 @@ import java.util.List;
 @Entity(name="InventoryReport")
 public class InventoryReport extends Report {
 
-    @ElementCollection
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "inventoryReport_category",
+            joinColumns = @JoinColumn(name = "reportId"),
+            inverseJoinColumns = @JoinColumn(name = "categoryID")
+    )
     private List<Category> categories;
     public InventoryReport() {}
 

@@ -1,12 +1,10 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 @Entity(name="Category")
@@ -18,20 +16,29 @@ public class Category implements Serializable {
     @Column
     private String categoryName;
 
-    @ElementCollection
-    private Map<String, Category> children;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "category_hierarchy",
+            joinColumns = @JoinColumn(name = "categoryID"),
+            inverseJoinColumns = @JoinColumn(name = "categoryID")
+    )
+    private List<Category> children;
 
-    @ElementCollection
-    private Map<String, Product> products;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "category_products",
+            joinColumns = @JoinColumn(name = "categoryID"),
+            inverseJoinColumns = @JoinColumn(name = "productID")
+    )
+    private List<Product> products;
 
     public Category() {}
 
-    public Category(long categoryID, String categoryName, Map<String, Category> children, Map<String, Product> products) {
+    public Category(long categoryID, String categoryName, List<Category> children, List<Product> products) {
         this.categoryID = categoryID;
         this.categoryName = categoryName;
         this.children = children;
         this.products = products;
-
     }
 
     public long getCategoryID() {
@@ -50,32 +57,20 @@ public class Category implements Serializable {
         this.categoryName = categoryName;
     }
 
-    public Map<String, Category> getChildren() {
+    public List<Category> getChildren() {
         return children;
     }
 
-    public void setChildren(Map<String, Category> children) {
+    public void setChildren(List<Category> children) {
         this.children = children;
     }
 
-    public Map<String, Product> getProducts() {
+    public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Map<String, Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public void addProduct(Product product) {
-        products.put(product.getProductName(), product);
-    }
-
-    public void removeProduct(Product product) {
-        products.remove(product.getProductName());
-    }
-
-    public void addSubCategory(Category category) {
-        children.put(category.getCategoryName(), category);
     }
 
 }
