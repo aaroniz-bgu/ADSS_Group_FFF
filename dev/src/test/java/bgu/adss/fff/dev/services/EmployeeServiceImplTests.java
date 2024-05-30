@@ -34,11 +34,13 @@ public class EmployeeServiceImplTests {
     private BranchService branchService;
     @MockBean
     private RoleService roleService;
+    Branch branch1;
+    Branch branch2;
 
     @BeforeEach
     void before() {
-        Branch branch1 = new Branch("Middle Earth");
-        Branch branch2 = new Branch("Narnia");
+        branch1 = new Branch("Middle Earth");
+        branch2 = new Branch("Narnia");
         List<Role> allRoles1 = new ArrayList<>(){{{{
             add(new Role("Jewish Prince", false));
             add(new Role("Handsome Ashkenazi", true));
@@ -94,6 +96,8 @@ public class EmployeeServiceImplTests {
 
         assertEquals(yonatan, service.updateEmployee(yonatan.getId(), yonatan));
         assertEquals(gal, service.updateEmployee(gal.getId(), gal));
+        gal.setBranch(branch1);
+        assertEquals(yonatan.getBranch(), service.updateEmployee(gal.getId(),gal).getBranch());
     }
 
     @Test
