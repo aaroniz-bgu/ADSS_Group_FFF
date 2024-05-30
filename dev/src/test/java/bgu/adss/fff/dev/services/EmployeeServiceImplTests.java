@@ -33,7 +33,7 @@ public class EmployeeServiceImplTests {
     @MockBean
     private BranchService branchService;
     @MockBean
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     @BeforeEach
     void before() {
@@ -47,10 +47,10 @@ public class EmployeeServiceImplTests {
             add(new Role("Agent", false));
             add(new Role("Ballet Dancer", true));
         }}}};
-        when(roleRepository.findByNameIn(allRoles1.stream()
+        when(roleService.returnIfExists(allRoles1.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList()))).thenReturn(allRoles1);
-        when(roleRepository.findByNameIn(allRoles2.stream()
+        when(roleService.returnIfExists(allRoles2.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList()))).thenReturn(allRoles2);
         // Data source: https://www.youtube.com/watch?v=tot02ZOYUmc
