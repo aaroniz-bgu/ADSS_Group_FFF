@@ -31,7 +31,7 @@ public class EmployeeServiceImplTests {
     private Employee yonatan;
     private Employee gal;
     @MockBean
-    private BranchRepository branchRepository;
+    private BranchService branchService;
     @MockBean
     private RoleRepository roleRepository;
 
@@ -66,8 +66,8 @@ public class EmployeeServiceImplTests {
                         10000, -1, -1),
                 10, 420, 420420, branch2
             );
-        when(branchRepository.findById(branch1.getName())).thenReturn(Optional.of(branch1));
-        when(branchRepository.findById(branch2.getName())).thenReturn(Optional.of(branch2));
+        when(branchService.getBranch(branch1.getName())).thenReturn(branch1);
+        when(branchService.getBranch(branch2.getName())).thenReturn(branch2);
     }
 
     @Test
