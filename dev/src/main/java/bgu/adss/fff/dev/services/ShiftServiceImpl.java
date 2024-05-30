@@ -101,7 +101,7 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public List<Shift> getShiftsByBranch(LocalDate from, LocalDate to, Branch branch) {
-        List<Shift> shifts = repository.getRangeOfShiftsByBranch(from, to, branch.getName());
+        List<Shift> shifts = repository.getRangeOfShiftsByBranch(branch, from, to);
         for(Shift s: shifts) {
             s.setLocked(lockHelper(s.getDate()));
             applyRecurringRoles(s);
