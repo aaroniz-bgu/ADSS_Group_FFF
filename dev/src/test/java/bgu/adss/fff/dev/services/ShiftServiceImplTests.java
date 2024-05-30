@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.data.BranchRepository;
 import bgu.adss.fff.dev.data.ShiftRepository;
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
 import bgu.adss.fff.dev.domain.models.*;
@@ -29,6 +30,8 @@ public class ShiftServiceImplTests {
     private RoleService roleService;
     @MockBean
     private EmployeeService employeeService;
+    @MockBean
+    private BranchService branchService;
 
     @Autowired
     private ShiftService service;
@@ -47,6 +50,7 @@ public class ShiftServiceImplTests {
                         null, .0f, .0f, 1),
                 10, 100, 100100, branch
         );
+        when(branchService.getBranch(branch.getName())).thenReturn(branch);
     }
 
     @Test
