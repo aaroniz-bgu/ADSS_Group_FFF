@@ -85,13 +85,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Gets all employees in the system that are assigned to the given branch.
-     * @param branchName
+     * @param branch The branch to get the employees from.
      * @return A list of all employees in the system that are assigned to the given branch.
      */
     @Override
-    public List<Employee> getEmployeesByBranch(String branchName) {
-        Branch branch = branchService.getBranch(branchName);
-        return repository.findEmployeesByBranch(branch);
+    public List<Employee> getEmployeesByBranch(Branch branch) {
+        return repository.findEmployeesByBranch(branchService.getBranch(branch.getName()));
     }
 
     @Override

@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.controllers;
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
 import bgu.adss.fff.dev.controllers.mappers.ShiftMapper;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Shift;
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import bgu.adss.fff.dev.services.ShiftService;
@@ -32,7 +33,7 @@ public class ShiftController {
     @GetMapping("/single")
     public ResponseEntity<ShiftDto> getShift(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        return ResponseEntity.ok(map(service.getShift(request.date(), part, request.branch())));
+        return ResponseEntity.ok(map(service.getShift(request.date(), part, new Branch(request.branch()))));
     }
 
     /**
@@ -47,7 +48,7 @@ public class ShiftController {
     public ResponseEntity<ShiftDto[]> getShifts(@RequestBody GetShiftsRequest request) {
         List<Shift> shifts;
         if (request.branchName() != null && !request.branchName().isEmpty()) {
-            shifts = service.getShiftsByBranch(request.from(), request.to(), request.branchName());
+            shifts = service.getShiftsByBranch(request.from(), request.to(), new Branch(request.branchName()));
         } else {
             shifts = service.getShifts(request.from(), request.to());
         }
@@ -68,9 +69,9 @@ public class ShiftController {
     public ResponseEntity<?> lockShift(@PathVariable("lock") boolean lock, @RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         if (lock) {
-            service.lockShift(request.date(), part, request.branch());
+            service.lockShift(request.date(), part, new Branch(request.branch()));
         } else {
-            service.unlockShift(request.date(), part, request.branch());
+            service.unlockShift(request.date(), part, new Branch(request.branch()));
         }
         return ResponseEntity.ok().build();
     }
@@ -98,7 +99,7 @@ public class ShiftController {
     public ResponseEntity<EmployeeDto[]> getAvailable(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         return ResponseEntity.ok(service.getAvailableEmployees(
-                request.date(), part, request.branch()).stream()
+                request.date(), part, new Branch(request.branch())).stream()
                 .map(EmployeeMapper::map).toList()
                 .toArray(EmployeeDto[]::new));
     }
@@ -113,7 +114,7 @@ public class ShiftController {
     public ResponseEntity<EmployeeDto[]> getAssigned(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         return ResponseEntity.ok(service.getAssignedEmployees(
-                request.date(), part, request.branch()).stream()
+                request.date(), part, new Branch(request.branch())).stream()
                 .map(EmployeeMapper::map).toList()
                 .toArray(EmployeeDto[]::new));
     }
@@ -133,7 +134,7 @@ public class ShiftController {
                 shift.getAssignedEmployees(),
                 shift.getDate(),
                 shift.getShiftDayPart(),
-                shift.getBranchName());
+                new Branch(shift.getBranchName()));
         return ResponseEntity.ok().build();
     }
 
@@ -152,7 +153,7 @@ public class ShiftController {
                 request.date(),
                 part,
                 request.reoccurring(),
-                request.branch());
+                new Branch(request.branch()));
         return ResponseEntity.ok().build();
     }
 
@@ -171,7 +172,7 @@ public class ShiftController {
                 request.date(),
                 part,
                 request.reoccurring(),
-                request.branch());
+                new Branch(request.branch()));
         return ResponseEntity.ok().build();
     }
 
