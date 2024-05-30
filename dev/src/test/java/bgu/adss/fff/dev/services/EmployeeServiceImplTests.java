@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.BranchRepository;
 import bgu.adss.fff.dev.data.EmployeeRepository;
+import bgu.adss.fff.dev.data.RoleRepository;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -29,26 +32,36 @@ public class EmployeeServiceImplTests {
     private Employee gal;
     @MockBean
     private BranchRepository branchRepository;
+    @MockBean
+    private RoleRepository roleRepository;
 
     @BeforeEach
     void before() {
         Branch branch1 = new Branch("Middle Earth");
         Branch branch2 = new Branch("Narnia");
+        List<Role> allRoles1 = new ArrayList<>(){{{{
+            add(new Role("Jewish Prince", false));
+            add(new Role("Handsome Ashkenazi", true));
+        }}}};
+        List<Role> allRoles2 = new ArrayList<>(){{{{
+            add(new Role("Agent", false));
+            add(new Role("Ballet Dancer", true));
+        }}}};
+        when(roleRepository.findByNameIn(allRoles1.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList()))).thenReturn(allRoles1);
+        when(roleRepository.findByNameIn(allRoles2.stream()
+                .map(Role::getName)
+                .collect(Collectors.toList()))).thenReturn(allRoles2);
         // Data source: https://www.youtube.com/watch?v=tot02ZOYUmc
         yonatan = new Employee(12345689L, "Yonatan Barak I",
-                new ArrayList<Role>(){{
-                    add(new Role("Jewish Prince", false));
-                    add(new Role("Handsome Ashkenazi", true));
-                }},
+                allRoles1,
                 new EmploymentTerms(LocalDate.now(), JobType.CONTRACT, null,
                         80000, -1, 300),
                 10, 800, 100100, branch1);
         // Data source: https://eincyclopedia.org/wiki/%D7%92%D7%9C_%D7%92%D7%93%D7%95%D7%AA
         gal = new Employee(420420420L, "Gal G Gadot",
-                new ArrayList<Role>(){{
-                    add(new Role("Agent", true));
-                    add(new Role("Ballet Dancer", false));
-                }},
+                allRoles2,
                 new EmploymentTerms(LocalDate.now(), JobType.FULL_TIME, yonatan,
                         10000, -1, -1),
                 10, 420, 420420, branch2
