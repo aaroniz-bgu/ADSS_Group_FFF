@@ -11,16 +11,13 @@ import java.util.Map;
 public class Category implements Serializable {
 
     @Id
-    private long categoryID;
-
-    @Column
     private String categoryName;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "category_hierarchy",
-            joinColumns = @JoinColumn(name = "categoryID"),
-            inverseJoinColumns = @JoinColumn(name = "categoryID")
+            joinColumns = @JoinColumn(name = "parent"),
+            inverseJoinColumns = @JoinColumn(name = "child")
     )
     private List<Category> children;
 
@@ -34,19 +31,10 @@ public class Category implements Serializable {
 
     public Category() {}
 
-    public Category(long categoryID, String categoryName, List<Category> children, List<Product> products) {
-        this.categoryID = categoryID;
+    public Category(String categoryName, List<Category> children, List<Product> products) {
         this.categoryName = categoryName;
         this.children = children;
         this.products = products;
-    }
-
-    public long getCategoryID() {
-        return categoryID;
-    }
-
-    public void setCategoryID(long categoryID) {
-        this.categoryID = categoryID;
     }
 
     public String getCategoryName() {
