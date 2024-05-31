@@ -17,4 +17,9 @@ public class ShiftException extends RuntimeException {
     public static ShiftException illegalAssignment(String branchName, String employeeName) {
         return new ShiftException("Illegal assignment of employee: " + employeeName + " to branch: " + branchName);
     }
+
+    public static ShiftException locked(LocalDate date) {
+        return new ShiftException("Cannot update shift availability at " + date.toString()
+                + " since the report period is already over."/*, HttpStatus.LOCKED*/);
+    }
 }
