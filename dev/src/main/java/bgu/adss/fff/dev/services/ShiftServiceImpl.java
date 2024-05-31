@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
+import bgu.adss.fff.dev.data.SystemConfiguration;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.data.ShiftRepository;
 import bgu.adss.fff.dev.exceptions.ShiftException;
@@ -11,6 +12,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static bgu.adss.fff.dev.domain.models.Constants.DAY_HOURS;
+
 @Service
 public class ShiftServiceImpl implements ShiftService {
     private final ShiftRepository repository;
@@ -19,6 +22,11 @@ public class ShiftServiceImpl implements ShiftService {
     private final RoleService roleService;
     private final EmployeeService employeeService;
     private final BranchService branchService;
+
+    /**
+     * For optimization purposes.
+     */
+    private Integer cutoff;
 
     @Autowired
     public ShiftServiceImpl(ShiftRepository repository,
@@ -31,6 +39,8 @@ public class ShiftServiceImpl implements ShiftService {
         this.roleService = roleService;
         this.employeeService = employeeService;
         this.branchService = branchService;
+
+        this.cutoff = null;
     }
 
     /**
@@ -62,12 +72,14 @@ public class ShiftServiceImpl implements ShiftService {
      * Checks whether a shift with a given date should be already locked.
      *
      * @param date the date which the shift occur at.
-     * @return true if and only if the shift <b>can stay unlocked.</b>
+     * @param currentState if the current shift is already locked.
+     * @return true if and only if the shift <b>is locked.</b>
      */
-    private boolean lockHelper(LocalDate date) {
-        // TODO IN THE FUTURE CHECK IF TIME PASSED...
-        // Also check if maybe different branches have different rules...
-        return date.isBefore(LocalDate.now() /* || ((allRolesAssigned(...)) && (barrierPassed()))*/);
+    private boolean lockHelper(LocalDate date, boolean currentState) {
+        if(cutoff == null) {
+            cutoff = new SystemConfiguration().getCutoffTime();
+        }
+        return currentState || date.minusDays(cutoff / DAY_HOURS).isBefore(LocalDate.now());
     }
 
     /**
@@ -79,8 +91,10 @@ public class ShiftServiceImpl implements ShiftService {
      * @return the requested shift.
      */
     private Shift getShiftOrClean(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        return repository.findById(new EmbeddedShiftId(date, dayPart, branchService.getBranch(branch.getName())))
-                .orElse(new Shift(date, dayPart, lockHelper(date), branchService.getBranch(branch.getName())));
+        Shift out = repository.findById(new EmbeddedShiftId(date, dayPart, branchService.getBranch(branch.getName())))
+                .orElse(new Shift(date, dayPart, false, branchService.getBranch(branch.getName())));
+        out.setLocked(lockHelper(date, out.isLocked()));
+        return out;
     }
 
     @Override
@@ -93,7 +107,7 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShifts(LocalDate from, LocalDate to) {
         List<Shift> shifts = repository.getRangeOfShifts(from, to);
         for(Shift s: shifts) {
-            s.setLocked(lockHelper(s.getDate()));
+            s.setLocked(lockHelper(s.getDate(), s.isLocked()));
             applyRecurringRoles(s);
         }
         return shifts;
@@ -103,7 +117,7 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShiftsByBranch(LocalDate from, LocalDate to, Branch branch) {
         List<Shift> shifts = repository.getRangeOfShiftsByBranch(branch, from, to);
         for(Shift s: shifts) {
-            s.setLocked(lockHelper(s.getDate()));
+            s.setLocked(lockHelper(s.getDate(), s.isLocked()));
             applyRecurringRoles(s);
         }
         return shifts;
@@ -119,13 +133,16 @@ public class ShiftServiceImpl implements ShiftService {
             hasShiftManger |= isShiftMangerHelper(emp);
         }
         if(!hasShiftManger) {
-            // TODO Throw...
+            throw ShiftException.noShiftManger(date, dayPart);
         }
 
         shift.setLocked(true);
         repository.save(shift);
     }
 
+    // TODO this is currently is being overridden everytime the shift is loaded by lockHelper(...);
+    // Need to think about the ways to make it so when lockHelper is trying to lock client unlocked
+    // shift, it won't affect the shift's lock state.
     @Override
     public void unlockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
         Shift shift = getShiftOrClean(date, dayPart, branch);
@@ -137,6 +154,9 @@ public class ShiftServiceImpl implements ShiftService {
     public void reportAvailability(Long empId, LocalDate date, ShiftDayPart dayPart) {
         Employee emp = employeeService.getEmployee(empId);
         Shift shift = getShiftOrClean(date, dayPart, emp.getBranch());
+        if(shift.isLocked()) {
+            throw ShiftException.locked(date);
+        }
         shift.addOrRemoveAvailableEmployee(emp);
         repository.save(shift);
     }
@@ -180,7 +200,7 @@ public class ShiftServiceImpl implements ShiftService {
             hasShiftManger |= isShiftMangerHelper(emp);
         }
         if(!hasShiftManger) {
-            // TODO Throw...
+            throw ShiftException.noShiftManger(date, dayPart);
         }
 
         // TODO Check if all roles are fulfilled...
