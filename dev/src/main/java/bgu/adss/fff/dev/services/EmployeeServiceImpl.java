@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.EmployeeRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
 import bgu.adss.fff.dev.domain.models.Role;
@@ -18,12 +19,15 @@ import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository repository;
     private final RoleService roleService;
+    private final BranchService branchService;
 
     @Autowired
     public EmployeeServiceImpl(EmployeeRepository repository,
-                               RoleService roleService) {
+                               RoleService roleService,
+                               BranchService branchService) {
         this.repository = repository;
         this.roleService = roleService;
+        this.branchService = branchService;
     }
 
     /**
@@ -45,6 +49,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
+        // Set the branch of the employee to the branch instance from the db, since the branch name is the only
+        // thing that is supplied by the client.
+        employee.setBranch(branchService.getBranch(employee.getBranch().getName()));
         return repository.save(employee);
     }
 
@@ -76,6 +83,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         return repository.findAll();
     }
 
+    /**
+     * Gets all employees in the system that are assigned to the given branch.
+     * @param branch The branch to get the employees from.
+     * @return A list of all employees in the system that are assigned to the given branch.
+     */
+    @Override
+    public List<Employee> getEmployeesByBranch(Branch branch) {
+        return repository.findEmployeesByBranch(branchService.getBranch(branch.getName()));
+    }
+
     @Override
     public Employee getEmployee(long id) {
         return repository.findById(id).orElseThrow(() -> EmployeeException.notFound(id));
@@ -104,6 +121,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         int[] bank = getBankDetailsHelper(employee.getBank());
         toUpdate.setBank(bank[BANK_ID_IND], bank[BANK_BRANCH_IND], bank[ACCOUNT_ID_IND]);
+
+        toUpdate.setBranch(branchService.getBranch(employee.getBranch().getName()));
 
         return repository.save(toUpdate);
     }

@@ -3,12 +3,15 @@ package bgu.adss.fff.dev.controllers;
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
 import bgu.adss.fff.dev.controllers.mappers.ShiftMapper;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Shift;
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 import bgu.adss.fff.dev.services.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static bgu.adss.fff.dev.controllers.mappers.ShiftMapper.map;
 
@@ -22,26 +25,34 @@ public class ShiftController {
     public ShiftController(ShiftService service) { this.service = service; }
 
     /**
-     * Retrieves the shift that occurs/ occurred at the given date.
+     * Retrieves the shift that occurs/ occurred at the given date at the specified branch.
      *
-     * @param request ShiftDto object which must only contain the date & day-part enum ordinal.
-     * @return the shift details that occurs/ occurred at the given date.
+     * @param request ShiftDto object which must only contain the date, day-part enum ordinal and branch name.
+     * @return the shift details that occurs/ occurred at the given date at the specified branch.
      */
     @GetMapping("/single")
     public ResponseEntity<ShiftDto> getShift(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        return ResponseEntity.ok(map(service.getShift(request.date(), part)));
+        return ResponseEntity.ok(map(service.getShift(request.date(), part, new Branch(request.branch()))));
     }
 
     /**
-     * Gets the shift between the specified time period.
+     * Gets the shifts between the specified time period. Optionally if the branch name is provided,
+     * it will only return the shifts that occurred in that branch.
      *
-     * @param request GetShiftsRequest, 2 local dates from < to.
-     * @return the shifts detail between the specified dates.
+     * @param request GetShiftsRequest, 2 local dates from < to. Optionally a branch name.
+     * @return The shifts detail between the specified dates. If no branch name is provided,
+     * it will return all shifts. Otherwise, only the ones that occurred in that branch.
      */
     @GetMapping
     public ResponseEntity<ShiftDto[]> getShifts(@RequestBody GetShiftsRequest request) {
-        return ResponseEntity.ok(service.getShifts(request.from(), request.to()).stream()
+        List<Shift> shifts;
+        if (request.branchName() != null && !request.branchName().isEmpty()) {
+            shifts = service.getShiftsByBranch(request.from(), request.to(), new Branch(request.branchName()));
+        } else {
+            shifts = service.getShifts(request.from(), request.to());
+        }
+        return ResponseEntity.ok(shifts.stream()
                 .map(ShiftMapper::map)
                 .toList().toArray(ShiftDto[]::new));
     }
@@ -50,16 +61,17 @@ public class ShiftController {
      * Lock/ unlocks the shift to employee reports, so no more changes could be applied to them.
      *
      * @param lock a boolean determines whether this shift supposed to be locked or unlocked.
-     * @param request the request which contains the date and shift day part ordinal to identify the shift.
+     * @param request the request which contains the date,
+     *               shift day part ordinal to identifying the shift and the branch.
      * @return ok http response if everything goes to plan.
      */
     @PutMapping("/{lock}")
     public ResponseEntity<?> lockShift(@PathVariable("lock") boolean lock, @RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         if (lock) {
-            service.lockShift(request.date(), part);
+            service.lockShift(request.date(), part, new Branch(request.branch()));
         } else {
-            service.unlockShift(request.date(), part);
+            service.unlockShift(request.date(), part, new Branch(request.branch()));
         }
         return ResponseEntity.ok().build();
     }
@@ -80,13 +92,14 @@ public class ShiftController {
     /**
      * Retrieves the available employees which reported availability to the system for the specified shift.
      *
-     * @param request the shift dto object which contains the shift identifiers (date & day part ordinal).
+     * @param request the shift dto object which contains the shift identifiers (date, day part ordinal and branch).
      * @return An array of employee dtos which correspond to the available ones.
      */
     @GetMapping("/available")
     public ResponseEntity<EmployeeDto[]> getAvailable(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        return ResponseEntity.ok(service.getAvailableEmployees(request.date(), part).stream()
+        return ResponseEntity.ok(service.getAvailableEmployees(
+                request.date(), part, new Branch(request.branch())).stream()
                 .map(EmployeeMapper::map).toList()
                 .toArray(EmployeeDto[]::new));
     }
@@ -94,13 +107,14 @@ public class ShiftController {
     /**
      * Retrieves the employees which were assigned to the specified shift.
      *
-     * @param request the shift dto object which contains the shift identifiers (day & day part ordinal).
+     * @param request the shift dto object which contains the shift identifiers (day, day part ordinal and branch).
      * @return An array of employee dtos which correspond to the ones which are assigned to work in it.
      */
     @GetMapping("/assigned")
     public ResponseEntity<EmployeeDto[]> getAssigned(@RequestBody ShiftDto request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        return ResponseEntity.ok(service.getAssignedEmployees(request.date(), part).stream()
+        return ResponseEntity.ok(service.getAssignedEmployees(
+                request.date(), part, new Branch(request.branch())).stream()
                 .map(EmployeeMapper::map).toList()
                 .toArray(EmployeeDto[]::new));
     }
@@ -116,7 +130,11 @@ public class ShiftController {
     @PutMapping("/assign")
     public ResponseEntity<?> assignEmployees(@RequestBody ShiftDto request) {
         Shift shift = map(request);
-        service.assignEmployees(shift.getAssignedEmployees(), shift.getDate(), shift.getShiftDayPart());
+        service.assignEmployees(
+                shift.getAssignedEmployees(),
+                shift.getDate(),
+                shift.getShiftDayPart(),
+                new Branch(shift.getBranchName()));
         return ResponseEntity.ok().build();
     }
 
@@ -130,7 +148,12 @@ public class ShiftController {
     @PutMapping("/roles=true")
     public ResponseEntity<?> requireRole(@RequestBody RequireRoleRequest request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        service.addRequiredRole(request.role(), request.date(), part, request.reoccurring());
+        service.addRequiredRole(
+                request.role(),
+                request.date(),
+                part,
+                request.reoccurring(),
+                new Branch(request.branch()));
         return ResponseEntity.ok().build();
     }
 
@@ -144,7 +167,12 @@ public class ShiftController {
     @PutMapping("/roles=false")
     public ResponseEntity<?> removeRequiredRole(@RequestBody RequireRoleRequest request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
-        service.remRequiredRole(request.role(), request.date(), part, request.reoccurring());
+        service.remRequiredRole(
+                request.role(),
+                request.date(),
+                part,
+                request.reoccurring(),
+                new Branch(request.branch()));
         return ResponseEntity.ok().build();
     }
 

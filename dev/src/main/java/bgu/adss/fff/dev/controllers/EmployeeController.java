@@ -4,6 +4,7 @@ import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.EmployeeTermsDto;
 import bgu.adss.fff.dev.contracts.FullEmployeeDto;
 import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class EmployeeController {
      *                - - Bank ID - The identifier of the bank facilitating the employee's account.<br>
      *                - - Bank Branch The 3-digit identifier of the bank branch facilitating the employee's account.<br>
      *                - - Account ID - The employee's bank account ID.<br>
+     *                - {@code String branchName}: The name of the branch the employee is assigned to.<br>
      *                - {@code LocalDateTime startDate}: The date when the employee started employment.<br>
      *                - {@code int jobType}: Type of job according to {@link bgu.adss.fff.dev.domain.models.JobType} enum ordinal.<br>
      *                - {@code float monthlySalary}: Monthly salary, or -1 if not paid monthly.<br>
@@ -65,6 +67,23 @@ public class EmployeeController {
         EmployeeDto[] objects = new EmployeeDto[0];
 
         return ResponseEntity.ok().body(service.getEmployees()
+                .stream()
+                .map(EmployeeMapper::map)
+                .toList()
+                .toArray(objects)
+        );
+    }
+
+    /**
+     * Fetches all employees in the system that are assigned to a specific branch.
+     * @param branchName The name of the branch to filter employees by.
+     * @return ResponseEntity containing an array of EmployeeDto or no content if none exist.
+     */
+    @GetMapping("/branch/{branchName}")
+    public ResponseEntity<EmployeeDto[]> getEmployeesByBranch(@PathVariable("branchName") String branchName) {
+        EmployeeDto[] objects = new EmployeeDto[0];
+
+        return ResponseEntity.ok().body(service.getEmployeesByBranch(new Branch(branchName))
                 .stream()
                 .map(EmployeeMapper::map)
                 .toList()

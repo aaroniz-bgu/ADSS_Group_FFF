@@ -16,8 +16,8 @@ public class ShiftRoleRequirement {
 
     public ShiftRoleRequirement() { }
 
-    public ShiftRoleRequirement(DayOfWeek day, ShiftDayPart part, Role role) {
-        this.id = new ShiftRoleRequirementId(day, part, role);
+    public ShiftRoleRequirement(DayOfWeek day, ShiftDayPart part, Role role, Branch branch) {
+        this.id = new ShiftRoleRequirementId(day, part, role, branch);
     }
 
     public DayOfWeek getDay() {
@@ -44,19 +44,27 @@ public class ShiftRoleRequirement {
         this.id.role = role;
     }
 
+    public Branch getBranch() { return id.branch; }
+
+    public void setBranch(Branch branch) { this.id.branch = branch; }
+
     @Embeddable
     public static class ShiftRoleRequirementId implements Serializable {
         private DayOfWeek weekDay;
         private ShiftDayPart part;
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "branch_name")
+        private Branch branch;
         @ManyToOne
         private Role role;
 
         public ShiftRoleRequirementId() {
         }
 
-        public ShiftRoleRequirementId(DayOfWeek day, ShiftDayPart part, Role role) {
+        public ShiftRoleRequirementId(DayOfWeek day, ShiftDayPart part, Role role, Branch branch) {
             this.weekDay = day;
             this.part = part;
+            this.branch = branch;
             this.role = role;
         }
     }

@@ -13,5 +13,5 @@ import java.time.LocalDate;
 public record ReportShiftRequest(
         @JsonProperty("date") LocalDate date,
         @JsonProperty("shift") int shift,
-        @JsonProperty("enpId") long empId
+        @JsonProperty("empId") long empId
         ) { }

@@ -18,7 +18,8 @@ public class Shift {
             name = "available_emps",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "emp_id")
     )
@@ -28,7 +29,8 @@ public class Shift {
             name = "assigned_emps",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "emp_id")
     )
@@ -38,7 +40,8 @@ public class Shift {
             name = "req_roles",
             joinColumns = {
                     @JoinColumn(name = "shift_date"),
-                    @JoinColumn(name = "day_part")
+                    @JoinColumn(name = "day_part"),
+                    @JoinColumn(name = "branch_name")
             },
             inverseJoinColumns = @JoinColumn(name = "role")
     )
@@ -47,14 +50,14 @@ public class Shift {
     // For JDA:
     public Shift() { }
 
-    public Shift(LocalDate date, ShiftDayPart shift) {
+    public Shift(LocalDate date, ShiftDayPart shift, Branch branch) {
         //        this.isLocked = LocalDate.now() atm like this...
         //                .isBefore(date.minus(HumanResourceConfig.barrierTime));
-        this(date, shift, date.isBefore(LocalDate.now()));
+        this(date, shift, date.isBefore(LocalDate.now()), branch);
     }
 
-    public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked) {
-        this.id = new EmbeddedShiftId(date, shift);
+    public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked, Branch branch) {
+        this.id = new EmbeddedShiftId(date, shift, branch);
         this.isLocked = isLocked;
 
         this.availableEmployees = new ArrayList<>();
@@ -130,4 +133,6 @@ public class Shift {
     public void setLocked(boolean locked) {
         isLocked = locked;
     }
+
+    public String getBranchName() { return id.getBranch().getName(); }
 }

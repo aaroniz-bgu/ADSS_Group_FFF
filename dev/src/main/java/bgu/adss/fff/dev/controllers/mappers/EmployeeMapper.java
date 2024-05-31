@@ -4,6 +4,7 @@ import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.EmployeeTermsDto;
 import bgu.adss.fff.dev.contracts.FullEmployeeDto;
 import bgu.adss.fff.dev.contracts.RoleDto;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
 import bgu.adss.fff.dev.domain.models.JobType;
@@ -19,6 +20,8 @@ import static bgu.adss.fff.dev.domain.models.Constants.*;
 public class EmployeeMapper {
     /**
      * Converts an EmployeeDto object to an Employee entity.
+     * The branch name is used to create a new Branch entity,
+     * cannot assume that the branch already exists in the database.
      *
      * @param dto the EmployeeDto object to be converted
      * @return the converted Employee entity
@@ -34,7 +37,7 @@ public class EmployeeMapper {
                 Arrays.stream(dto.roles())
                         .map(RoleMapper::map).toList(),
                 null,
-                bankId, bankBranch, accountId
+                bankId, bankBranch, accountId, new Branch(dto.branchName())
         );
     }
 
@@ -52,7 +55,8 @@ public class EmployeeMapper {
                         .stream()
                         .map(RoleMapper::map)
                         .toArray(RoleDto[]::new),
-                employee.getBank()
+                employee.getBank(),
+                employee.getBranch().getName()
         );
     }
 
@@ -81,7 +85,7 @@ public class EmployeeMapper {
                 Arrays.stream(dto.roles())
                         .map(RoleMapper::map).toList(),
                 trm,
-                bankId, bankBranch, accountId
+                bankId, bankBranch, accountId, new Branch(dto.branchName())
         );
     }
 
@@ -101,6 +105,7 @@ public class EmployeeMapper {
                         .map(RoleMapper::map)
                         .toArray(RoleDto[]::new),
                 emp.getBank(),
+                emp.getBranch().getName(),
                 trm.getStartDate(),
                 trm.getJobType().ordinal(),
                 trm.getMonthlySalary(),

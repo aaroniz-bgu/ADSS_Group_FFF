@@ -14,4 +14,7 @@ public class ShiftException extends RuntimeException {
     public static ShiftException noShiftManger(LocalDate date, ShiftDayPart dayPart) {
         return new ShiftException("No shift manager was assigned in: " + date.toString() + "-:" + dayPart.ordinal());
     }
+    public static ShiftException illegalAssignment(String branchName, String employeeName) {
+        return new ShiftException("Illegal assignment of employee: " + employeeName + " to branch: " + branchName);
+    }
 }

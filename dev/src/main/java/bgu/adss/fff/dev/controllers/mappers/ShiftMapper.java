@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.controllers.mappers;
 
 import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ShiftDto;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Role;
 import bgu.adss.fff.dev.domain.models.Shift;
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
@@ -24,6 +25,7 @@ public class ShiftMapper {
         return new ShiftDto(
                 shift.getDate(),
                 shift.getShiftDayPart().ordinal(),
+                shift.getBranchName(),
                 shift.isLocked(),
                 shift.getAvailableEmployees().stream()
                         .map(EmployeeMapper::map)
@@ -47,7 +49,8 @@ public class ShiftMapper {
         Shift out = new Shift(
                 dto.date(),
                 ShiftDayPart.values()[dto.shift()],
-                dto.isLocked()
+                dto.isLocked(),
+                new Branch(dto.branch())
         );
         // Note that there might be duplicates between the two:
         out.getAvailableEmployees().addAll(Arrays.stream(dto.availableEmployees())
