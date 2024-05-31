@@ -1,6 +1,5 @@
 package bgu.adss.fff.dev.exceptions;
 
-import bgu.adss.fff.dev.domain.models.Shift;
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
 
 import java.time.LocalDate;
