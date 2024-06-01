@@ -21,7 +21,9 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Category createCategory(Category category) {
-        return null;
+        // TODO: Check if category already exists
+        // TODO: Any other business logic
+        return repository.save(category);
     }
 
     @Override

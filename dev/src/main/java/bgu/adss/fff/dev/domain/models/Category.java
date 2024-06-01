@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +32,10 @@ public class Category implements Serializable {
 
     public Category() {}
 
-    public Category(String categoryName, List<Category> children, List<Product> products) {
+    public Category(String categoryName) {
         this.categoryName = categoryName;
-        this.children = children;
-        this.products = products;
+        children = new LinkedList<>();
+        products = new LinkedList<>();
     }
 
     public String getCategoryName() {

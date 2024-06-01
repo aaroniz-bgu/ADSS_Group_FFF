@@ -11,4 +11,8 @@ public class CategoryMapper {
         return new CategoryDto(category.getCategoryName());
     }
 
+    public static Category map(CategoryDto dto){
+        return new Category(dto.categoryName());
+    }
+
 }
