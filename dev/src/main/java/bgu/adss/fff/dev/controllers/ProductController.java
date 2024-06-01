@@ -22,13 +22,29 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto request) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductDto request) {
         Product product = map(request);
-        return new ResponseEntity<>(map(service.createProduct(product)), HttpStatus.CREATED);
+        service.createProduct(product);
+        return new ResponseEntity<>(new Object(), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable("id") long id){
-        return ResponseEntity.ok(map(service.getProduct(id)));
+        Product product = service.getProduct(id);
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(@RequestBody ProductDto request) {
+        Product product = map(request);
+        service.updateProduct(product);
+        return new ResponseEntity<>(new Object(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") long id) {
+        service.deleteProduct(id);
+        return new ResponseEntity<>(new Object(), HttpStatus.OK);
     }
 }

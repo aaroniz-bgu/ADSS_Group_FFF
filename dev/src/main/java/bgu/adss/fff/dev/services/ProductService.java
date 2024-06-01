@@ -6,7 +6,7 @@ public interface ProductService {
 
     Product createProduct(Product product);
     Product getProduct(long id);
-    Product updateProduct(long id, Product product);
+    Product updateProduct(Product product);
     void deleteProduct(long id);
 
 }

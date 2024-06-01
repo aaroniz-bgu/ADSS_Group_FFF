@@ -18,23 +18,50 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        // TODO: Check if product already exists
+
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
+        }
+
+        if (repository.existsById(product.getProductID())) {
+            throw new ProductException("Product already exists");
+        }
+
         // TODO: Any other business logic
+
         return repository.save(product);
     }
 
     @Override
     public Product getProduct(long id) {
-        return repository.findById(id).orElseThrow(ProductException::new);
+        return repository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
     }
 
     @Override
-    public Product updateProduct(long id, Product product) {
-        return null;
+    public Product updateProduct(Product product) {
+
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
+        }
+
+        if (!repository.existsById(product.getProductID())) {
+            throw new ProductException("Product not found");
+        }
+
+        //TODO: Any other business logic
+
+        return repository.save(product);
     }
 
     @Override
     public void deleteProduct(long id) {
 
+        if (!repository.existsById(id)) {
+            throw new ProductException("Product not found");
+        }
+
+        //TODO: Any other business logic
+
+        repository.deleteById(id);
     }
 }
