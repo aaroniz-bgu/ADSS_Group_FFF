@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.contracts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Map;
 
 public record ProductDto(
@@ -9,7 +10,7 @@ public record ProductDto(
         @JsonProperty("productName") String productName,
         @JsonProperty("price") float price,
         @JsonProperty("discount") DiscountDto discount,
-        @JsonProperty("shelves") Map<Long, ItemDto> shelves,
-        @JsonProperty("storage") Map<Long, ItemDto> storage,
+        @JsonProperty("shelves") List<ItemDto> shelves,
+        @JsonProperty("storage") List<ItemDto> storage,
         @JsonProperty("minimalQuantity") int minimalQuantity
 ) { }
