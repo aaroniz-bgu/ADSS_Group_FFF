@@ -17,4 +17,16 @@ public class ProductMapper {
         );
     }
 
+    public static Product map(ProductDto productDto){
+        return new Product(
+                productDto.productID(),
+                productDto.productName(),
+                productDto.price(),
+                DiscountMapper.map(productDto.discount()),
+                ItemMapper.map(productDto.shelves(), 0),
+                ItemMapper.map(productDto.storage(), 0),
+                productDto.minimalQuantity()
+        );
+    }
+
 }

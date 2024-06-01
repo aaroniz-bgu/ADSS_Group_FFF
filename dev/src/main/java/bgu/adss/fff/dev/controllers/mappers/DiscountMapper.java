@@ -5,6 +5,7 @@ import bgu.adss.fff.dev.contracts.DiscountDto;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DiscountMapper {
@@ -18,6 +19,16 @@ public class DiscountMapper {
                 discount.getNumOfDays(),
                 discount.getDiscountPercent(),
                 discount.isValid()
+        );
+    }
+
+    public static Discount map(DiscountDto discountDto){
+        return new Discount(
+                discountDto.discountID(),
+                LocalDate.parse(discountDto.startDate(), formatter),
+                discountDto.numOfDays(),
+                discountDto.discountPercent(),
+                discountDto.isValid()
         );
     }
 

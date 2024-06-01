@@ -1,13 +1,12 @@
 package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
 
@@ -20,6 +19,12 @@ public class ProductController {
     @Autowired
     public ProductController(ProductService service) {
         this.service = service;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto request) {
+        Product product = map(request);
+        return new ResponseEntity<>(map(service.createProduct(product)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
