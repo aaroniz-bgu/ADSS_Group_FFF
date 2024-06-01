@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
