@@ -23,8 +23,8 @@ public class ProductMapper {
                 productDto.productName(),
                 productDto.price(),
                 DiscountMapper.map(productDto.discount()),
-                ItemMapper.map(productDto.shelves(), 0),
-                ItemMapper.map(productDto.storage(), 0),
+                ItemMapper.map(productDto.shelves()),
+                ItemMapper.map(productDto.storage()),
                 productDto.minimalQuantity()
         );
     }

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ItemMapper {
 
@@ -20,8 +21,8 @@ public class ItemMapper {
         );
     }
 
-    public static List<ItemDto> map(List<Item> items){
-        return items.stream().map(ItemMapper::map).collect(Collectors.toList());
+    public static ItemDto[] map(List<Item> items){
+        return items.stream().map(ItemMapper::map).toArray(ItemDto[]::new);
     }
 
     public static Item map(ItemDto itemDto){
@@ -32,8 +33,8 @@ public class ItemMapper {
         );
     }
 
-    public static List<Item> map(List<ItemDto> itemDtos, int nothing) {
-        return itemDtos.stream().map(ItemMapper::map).collect(Collectors.toList());
+    public static List<Item> map(ItemDto[] itemDtos) {
+        return Stream.of(itemDtos).map(ItemMapper::map).collect(Collectors.toList());
     }
 
 }

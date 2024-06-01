@@ -10,7 +10,7 @@ public record ProductDto(
         @JsonProperty("productName") String productName,
         @JsonProperty("price") float price,
         @JsonProperty("discount") DiscountDto discount,
-        @JsonProperty("shelves") List<ItemDto> shelves,
-        @JsonProperty("storage") List<ItemDto> storage,
+        @JsonProperty("shelves") ItemDto[] shelves,
+        @JsonProperty("storage") ItemDto[] storage,
         @JsonProperty("minimalQuantity") int minimalQuantity
 ) { }

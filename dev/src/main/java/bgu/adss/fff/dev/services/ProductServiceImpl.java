@@ -18,8 +18,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
-        repository.save(product);
-        return product;
+        // TODO: Check if product already exists
+        // TODO: Any other business logic
+        return repository.save(product);
     }
 
     @Override
