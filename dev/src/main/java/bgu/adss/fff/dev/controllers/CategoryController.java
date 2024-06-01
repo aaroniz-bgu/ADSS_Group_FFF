@@ -23,7 +23,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto, @PathVariable){
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
         Category category = CategoryMapper.map(categoryDto);
         return new ResponseEntity<>(map(service.createCategory(category)), HttpStatus.CREATED);
     }
