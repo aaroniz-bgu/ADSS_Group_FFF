@@ -53,6 +53,10 @@ public class Item implements Serializable {
         this.itemID = itemID;
     }
 
+    public boolean isOutOfStock() {
+        return isDefected || expirationDate.isBefore(LocalDate.now());
+    }
+
     @Override
     public String toString() {
         return "Item{" +

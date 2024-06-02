@@ -24,7 +24,7 @@ public class Product implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_item",
+            name = "shelves_items",
             joinColumns = @JoinColumn(name = "productID"),
             inverseJoinColumns = @JoinColumn(name = "itemID")
     )
@@ -32,7 +32,7 @@ public class Product implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_item",
+            name = "storage_items",
             joinColumns = @JoinColumn(name = "productID"),
             inverseJoinColumns = @JoinColumn(name = "itemID")
     )
@@ -109,6 +109,10 @@ public class Product implements Serializable {
 
     public void addToStorage(Item item) {
         storage.add(item);
+    }
+
+    public void addToShelves(Item item) {
+        shelves.add(item);
     }
 
     public String toString() {

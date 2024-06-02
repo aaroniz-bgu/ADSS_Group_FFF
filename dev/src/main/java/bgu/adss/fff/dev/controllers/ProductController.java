@@ -26,8 +26,9 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createProduct(@RequestBody RequestProductDto request) {
-        Product product = map(request);
-        return new ResponseEntity<>(service.createProduct(product), HttpStatus.CREATED);
+        Product product = service.createProduct(map(request));
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/get/{id}")
@@ -39,8 +40,9 @@ public class ProductController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductDto request) {
-        Product product = map(request);
-        return new ResponseEntity<>(service.updateProduct(product), HttpStatus.OK);
+        Product product = service.updateProduct(map(request));
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -55,6 +57,23 @@ public class ProductController {
     public ResponseEntity<?> addStock(@PathVariable("id") long id,
                                       @RequestParam("quantity") int quantity,
                                       @RequestParam("expirationDate") String expirationDate) {
-        return new ResponseEntity<>(service.addStock(id, quantity, expirationDate), HttpStatus.OK);
+        Product product = service.addStock(id, quantity, expirationDate);
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/moveToShelves/{id}")
+    public ResponseEntity<?> moveToShelves(@PathVariable("id") long id,
+                                           @RequestParam("quantity") int quantity) {
+        Product product = service.moveToShelves(id, quantity);
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/removeExpiredStock/{id}")
+    public ResponseEntity<?> removeExpiredStock(@PathVariable("id") long id) {
+        Product product = service.removeOutOfStock(id);
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 }

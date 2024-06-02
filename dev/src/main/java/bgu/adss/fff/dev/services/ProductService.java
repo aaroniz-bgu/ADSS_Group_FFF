@@ -8,6 +8,9 @@ public interface ProductService {
     Product getProduct(long id);
     Product updateProduct(Product product);
     void deleteProduct(long id);
+
     Product addStock(long id, int quantity, String expirationDate);
+    Product moveToShelves(long id, int quantity);
+    Product removeOutOfStock(long id);
 
 }

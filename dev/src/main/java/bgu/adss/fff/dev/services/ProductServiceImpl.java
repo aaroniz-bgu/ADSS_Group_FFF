@@ -23,6 +23,24 @@ public class ProductServiceImpl implements ProductService {
         this.itemRepository = itemRepository;
     }
 
+    // Helper methods
+
+    private Product save(Product product) {
+        return productRepository.save(product);
+    }
+
+    private Item save(Item item) {
+        return itemRepository.save(item);
+    }
+
+    private void deleteProductByID(long id) {
+        productRepository.deleteById(id);
+    }
+
+    private void deleteItemByID(long id) {
+        itemRepository.deleteById(id);
+    }
+
     private Product getProductByID(long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
     }
@@ -41,6 +59,8 @@ public class ProductServiceImpl implements ProductService {
         return id;
     }
 
+    // Basic CRUD operations
+
     @Override
     public Product createProduct(Product product) {
 
@@ -56,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
 
         // TODO: Any other business logic
 
-        return productRepository.save(product);
+        return save(product);
     }
 
     @Override
@@ -78,7 +98,7 @@ public class ProductServiceImpl implements ProductService {
 
         //TODO: Any other business logic
 
-        return productRepository.save(product);
+        return save(product);
     }
 
     @Override
@@ -90,7 +110,7 @@ public class ProductServiceImpl implements ProductService {
 
         //TODO: Any other business logic
 
-        productRepository.deleteById(id);
+        deleteProductByID(id);
     }
 
     @Override
@@ -113,10 +133,53 @@ public class ProductServiceImpl implements ProductService {
         }
 
         for (int i = 0; i < quantity; i++) {
-            Item item = new Item(generateRandomItemID(), date, false);
-            product.addToStorage(itemRepository.save(item));
+            Item item = save(new Item(generateRandomItemID(), date, false));
+            product.addToStorage(item);
         }
 
-        return productRepository.save(product);
+        return save(product);
+    }
+
+    @Override
+    public Product moveToShelves(long id, int quantity) {
+
+        Product product = getProductByID(id);
+
+        if (quantity <= 0) {
+            throw new ProductException("Quantity must be greater than 0");
+        }
+
+        if (product.getStorage().size() < quantity) {
+            throw new ProductException("Not enough items in storage");
+        }
+
+        for (int i = 0; i < quantity; i++) {
+            Item item = product.getStorage().remove(0);
+            product.addToShelves(item);
+        }
+
+        return save(product);
+    }
+
+    @Override
+    public Product removeOutOfStock(long id) {
+
+        Product product = getProductByID(id);
+
+        for (Item item : product.getStorage()) {
+            if (item.isOutOfStock()) {
+                product.getStorage().remove(item);
+                deleteItemByID(item.getItemID());
+            }
+        }
+
+        for (Item item : product.getShelves()) {
+            if (item.isOutOfStock()) {
+                product.getShelves().remove(item);
+                deleteItemByID(item.getItemID());
+            }
+        }
+
+        return save(product);
     }
 }
