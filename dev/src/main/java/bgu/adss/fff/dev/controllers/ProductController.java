@@ -1,7 +1,9 @@
 package bgu.adss.fff.dev.controllers;
 
+import bgu.adss.fff.dev.contracts.ItemDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.contracts.RequestProductDto;
+import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
+import static bgu.adss.fff.dev.controllers.mappers.ItemMapper.map;
 
 @RestController
 @RequestMapping("/product")
@@ -24,28 +29,28 @@ public class ProductController {
 
     // Basic CRUD operations
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody RequestProductDto request) {
         Product product = service.createProduct(map(request));
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable("id") long id){
         Product product = service.getProduct(id);
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ResponseEntity<?> updateProduct(@RequestBody ProductDto request) {
         Product product = service.updateProduct(map(request));
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") long id) {
         service.deleteProduct(id);
         return new ResponseEntity<>(null, HttpStatus.OK);
@@ -53,26 +58,20 @@ public class ProductController {
 
     // Additional operations
 
-    @PutMapping("/addStock/{id}")
-    public ResponseEntity<?> addStock(@PathVariable("id") long id,
-                                      @RequestParam("quantity") int quantity,
-                                      @RequestParam("expirationDate") String expirationDate) {
-        Product product = service.addStock(id, quantity, expirationDate);
+    @PutMapping("/storage/{id}")
+    public ResponseEntity<?> updateStorage(@PathVariable("id") long id,
+                                           @RequestBody ItemDto[] items) {
+        List<Item> storage = map(items);
+        Product product = service.updateStorage(id, storage);
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @PutMapping("/moveToShelves/{id}")
-    public ResponseEntity<?> moveToShelves(@PathVariable("id") long id,
-                                           @RequestParam("quantity") int quantity) {
-        Product product = service.moveToShelves(id, quantity);
-        ProductDto productDto = map(product);
-        return new ResponseEntity<>(productDto, HttpStatus.OK);
-    }
-
-    @PutMapping("/removeExpiredStock/{id}")
-    public ResponseEntity<?> removeExpiredStock(@PathVariable("id") long id) {
-        Product product = service.removeOutOfStock(id);
+    @PutMapping("/shelves/{id}")
+    public ResponseEntity<?> updateShelves(@PathVariable("id") long id,
+                                           @RequestBody ItemDto[] items) {
+        List<Item> shelves = map(items);
+        Product product = service.updateShelves(id, shelves);
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }

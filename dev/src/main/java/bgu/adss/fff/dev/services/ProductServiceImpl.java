@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -113,71 +115,47 @@ public class ProductServiceImpl implements ProductService {
         deleteProductByID(id);
     }
 
+    // Additional operations
+
     @Override
-    public Product addStock(long id, int quantity, String expirationDate) {
+    public Product updateStorage(long id, List<Item> storage) {
+
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found");
+        }
 
         Product product = getProductByID(id);
 
-        if (expirationDate == null) {
-            throw new ProductException("Expiration date cannot be null");
-        }
+        // Delete all items from storage
+        itemRepository.deleteAll(product.getStorage());
+        product.setStorage(new LinkedList<>());
 
-        LocalDate date = LocalDate.parse(expirationDate);
-
-        if (date.isBefore(LocalDate.now())) {
-            throw new ProductException("Expiration date must be in the future");
-        }
-
-        if (quantity <= 0) {
-            throw new ProductException("Quantity must be greater than 0");
-        }
-
-        for (int i = 0; i < quantity; i++) {
-            Item item = save(new Item(generateRandomItemID(), date, false));
+        // Fill with new items
+        for (Item item : storage) {
             product.addToStorage(item);
+            save(item);
         }
 
         return save(product);
     }
 
     @Override
-    public Product moveToShelves(long id, int quantity) {
+    public Product updateShelves(long id, List<Item> shelves) {
+
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found");
+        }
 
         Product product = getProductByID(id);
 
-        if (quantity <= 0) {
-            throw new ProductException("Quantity must be greater than 0");
-        }
+        // Delete all items from storage
+        itemRepository.deleteAll(product.getShelves());
+        product.setShelves(new LinkedList<>());
 
-        if (product.getStorage().size() < quantity) {
-            throw new ProductException("Not enough items in storage");
-        }
-
-        for (int i = 0; i < quantity; i++) {
-            Item item = product.getStorage().remove(0);
+        // Fill with new items
+        for (Item item : shelves) {
             product.addToShelves(item);
-        }
-
-        return save(product);
-    }
-
-    @Override
-    public Product removeOutOfStock(long id) {
-
-        Product product = getProductByID(id);
-
-        for (Item item : product.getStorage()) {
-            if (item.isOutOfStock()) {
-                product.getStorage().remove(item);
-                deleteItemByID(item.getItemID());
-            }
-        }
-
-        for (Item item : product.getShelves()) {
-            if (item.isOutOfStock()) {
-                product.getShelves().remove(item);
-                deleteItemByID(item.getItemID());
-            }
+            save(item);
         }
 
         return save(product);
