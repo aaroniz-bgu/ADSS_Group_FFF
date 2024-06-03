@@ -15,11 +15,7 @@ import java.util.Map;
 /**
  * Contract for Report details
  * @param categoryName
- * @param children
- * @param products
  */
-public record CategoryDto(
-        @JsonProperty("categoryName") String categoryName,
-        @JsonProperty("children") CategoryDto[] children,
-        @JsonProperty("products") ProductDto[] products
+public record RequestCategoryDto(
+        @JsonProperty("categoryName") String categoryName
 ) { }

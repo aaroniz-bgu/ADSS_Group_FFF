@@ -31,8 +31,6 @@ public class CategoryServiceImpl implements CategoryService{
             throw new CategoryException("Category already exists");
         }
 
-        // TODO: Any other business logic
-
         return repository.save(category);
     }
 
@@ -47,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List<Category> getCategory() {
+    public List<Category> getCategories() {
 
         return repository.findAll();
 
@@ -63,8 +61,6 @@ public class CategoryServiceImpl implements CategoryService{
         if (!repository.existsById(category.getCategoryName())) {
             throw new CategoryException("Product not found");
         }
-
-        //TODO: Any other business logic
 
         return repository.save(category);
 

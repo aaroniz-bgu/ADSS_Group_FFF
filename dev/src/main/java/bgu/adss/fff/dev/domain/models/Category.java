@@ -32,10 +32,10 @@ public class Category implements Serializable {
 
     public Category() {}
 
-    public Category(String categoryName) {
+    public Category(String categoryName, List<Category> children, List<Product> products) {
         this.categoryName = categoryName;
-        children = new LinkedList<>();
-        products = new LinkedList<>();
+        this.children = children;
+        this.products = products;
     }
 
     public String getCategoryName() {
