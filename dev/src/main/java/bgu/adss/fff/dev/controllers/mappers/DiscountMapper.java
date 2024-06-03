@@ -1,8 +1,7 @@
 package bgu.adss.fff.dev.controllers.mappers;
 
-import bgu.adss.fff.dev.contracts.CategoryDto;
 import bgu.adss.fff.dev.contracts.DiscountDto;
-import bgu.adss.fff.dev.domain.models.Category;
+import bgu.adss.fff.dev.contracts.RequestDiscountDto;
 import bgu.adss.fff.dev.domain.models.Discount;
 
 import java.time.LocalDate;
@@ -16,9 +15,8 @@ public class DiscountMapper {
         return new DiscountDto(
                 discount.getDiscountID(),
                 discount.getStartDate().format(formatter),
-                discount.getNumOfDays(),
-                discount.getDiscountPercent(),
-                discount.isValid()
+                discount.getEndDate().format(formatter),
+                discount.getDiscountPercent()
         );
     }
 
@@ -26,9 +24,17 @@ public class DiscountMapper {
         return new Discount(
                 discountDto.discountID(),
                 LocalDate.parse(discountDto.startDate(), formatter),
-                discountDto.numOfDays(),
-                discountDto.discountPercent(),
-                discountDto.isValid()
+                LocalDate.parse(discountDto.endDate(), formatter),
+                discountDto.discountPercent()
+        );
+    }
+
+    public static Discount map(RequestDiscountDto requestDiscountDto){
+        return new Discount(
+                0,
+                LocalDate.parse(requestDiscountDto.startDate(), formatter),
+                LocalDate.parse(requestDiscountDto.endDate(), formatter),
+                requestDiscountDto.discountPercent()
         );
     }
 

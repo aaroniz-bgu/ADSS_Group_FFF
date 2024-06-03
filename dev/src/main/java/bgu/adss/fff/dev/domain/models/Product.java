@@ -3,9 +3,7 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Entity(name="Product")
 public class Product implements Serializable {
@@ -19,7 +17,12 @@ public class Product implements Serializable {
     @Column
     private float price;
 
-    @Column
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_discount",
+            joinColumns = @JoinColumn(name = "productID"),
+            inverseJoinColumns = @JoinColumn(name = "discountID")
+    )
     private Discount discount;
 
     @OneToMany(fetch = FetchType.EAGER)
