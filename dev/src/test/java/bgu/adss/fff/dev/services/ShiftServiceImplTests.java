@@ -1,6 +1,5 @@
 package bgu.adss.fff.dev.services;
 
-import bgu.adss.fff.dev.data.BranchRepository;
 import bgu.adss.fff.dev.data.ShiftRepository;
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
 import bgu.adss.fff.dev.domain.models.*;
@@ -45,7 +44,7 @@ public class ShiftServiceImplTests {
         sheldon = new Employee(
                 0L,
                 "Sheldon Copper",
-                List.of(new Role("Certified Bazzinga", false)),
+                List.of(new Role("Certified Bazzinga", true)),
                 new EmploymentTerms(LocalDate.now(), JobType.FULL_TIME,
                         null, .0f, .0f, 1),
                 10, 100, 100100, branch
@@ -55,10 +54,10 @@ public class ShiftServiceImplTests {
 
     @Test
     void testGetShift() {
-        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now().plusDays(2), ShiftDayPart.MORNING, branch);
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        Shift response = service.getShift(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        Shift response = service.getShift(LocalDate.now().plusDays(2), ShiftDayPart.MORNING, branch);
         assertEquals(id, response.getId());
         assertFalse(response.isLocked());
         assertEquals(branch.getName(), response.getBranchName());
@@ -69,28 +68,29 @@ public class ShiftServiceImplTests {
 
     @Test
     void testReoccurringRoles() {
-        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        LocalDate date = LocalDate.now().plusDays(2);
+        EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
         ShiftRoleRequirement requirement = new ShiftRoleRequirement(
-                LocalDate.now().getDayOfWeek(), ShiftDayPart.MORNING, new Role(
+                date.getDayOfWeek(), ShiftDayPart.MORNING, new Role(
                         "Crabby Patty Critique", false), branch);
 
         when(reqRoleRepository.save(requirement)).thenReturn(requirement);
         when(reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
-                    LocalDate.now().getDayOfWeek(), ShiftDayPart.MORNING, branch.getName()))
+                date.getDayOfWeek(), ShiftDayPart.MORNING, branch.getName()))
                 .thenReturn(Arrays.asList(requirement)); // do not use List.of(T) since its unmodifiable.
         when(repository.findById(id)).thenReturn(Optional.empty());
         when(repository.getRangeOfShiftsByBranch(
-                 branch, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1)))
+                 branch, date.minusDays(1), date.plusDays(1)))
                 .thenReturn(Arrays.asList(
-                        new Shift(LocalDate.now(), ShiftDayPart.MORNING, false, branch
+                        new Shift(date, ShiftDayPart.MORNING, false, branch
                 )));
 
 
-        Shift response = service.getShift(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        Shift response = service.getShift(date, ShiftDayPart.MORNING, branch);
         assertTrue(response.getRequiredRoles().contains(requirement.getRole()));
 
         assertTrue(service.getShifts(
-                    LocalDate.now().minusDays(1), LocalDate.now().plusDays(1))
+                        date.minusDays(1), date.plusDays(1))
                 .stream()
                 .allMatch(
                         (s) -> s.getRequiredRoles().contains(requirement.getRole())
@@ -100,65 +100,69 @@ public class ShiftServiceImplTests {
 
     @Test
     void testReportingAvailability() {
-        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now(), ShiftDayPart.MORNING, branch);
-        Shift shift = new Shift(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        LocalDate date = LocalDate.now().plusDays(2);
+        EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
+        Shift shift = new Shift(date, ShiftDayPart.MORNING, branch);
 
         when(employeeService.getEmployee(0L)).thenReturn(sheldon);
         when(repository.findById(id)).thenReturn(Optional.of(shift));
         when(repository.save(shift)).thenReturn(shift);
 
-        service.reportAvailability(0L, LocalDate.now(), ShiftDayPart.MORNING);
+        service.reportAvailability(0L, date, ShiftDayPart.MORNING);
         assertTrue(shift.getAvailableEmployees().contains(sheldon));
-        assertTrue(service.getAvailableEmployees(LocalDate.now(), ShiftDayPart.MORNING, branch).contains(sheldon));
-        service.reportAvailability(0L, LocalDate.now(), ShiftDayPart.MORNING);
+        assertTrue(service.getAvailableEmployees(date, ShiftDayPart.MORNING, branch).contains(sheldon));
+        service.reportAvailability(0L, date, ShiftDayPart.MORNING);
         assertFalse(shift.getAvailableEmployees().contains(sheldon));
-        assertFalse(service.getAvailableEmployees(LocalDate.now(), ShiftDayPart.MORNING, branch).contains(sheldon));
+        assertFalse(service.getAvailableEmployees(date, ShiftDayPart.MORNING, branch).contains(sheldon));
     }
 
     @Test
     void testAssignEmployees() {
-        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now(), ShiftDayPart.MORNING, branch);
-        Shift shift = new Shift(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        LocalDate date = LocalDate.now().plusDays(2);
+        EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
+        Shift shift = new Shift(date, ShiftDayPart.MORNING, branch);
 
         when(employeeService.getEmployee(0L)).thenReturn(sheldon);
         when(repository.findById(id)).thenReturn(Optional.of(shift));
         when(repository.save(shift)).thenReturn(shift);
 
-        service.assignEmployees(List.of(sheldon), LocalDate.now(), ShiftDayPart.MORNING, branch);
+        service.assignEmployees(List.of(sheldon), date, ShiftDayPart.MORNING, branch);
         assertTrue(shift.getAssignedEmployees().contains(sheldon));
-        assertTrue(service.getAssignedEmployees(LocalDate.now(), ShiftDayPart.MORNING, branch).contains(sheldon));
+        assertTrue(service.getAssignedEmployees(date, ShiftDayPart.MORNING, branch).contains(sheldon));
     }
 
     @Test
     void testRequiredRolesReoccurringAndNon() {
-        EmbeddedShiftId id = new EmbeddedShiftId(LocalDate.now(), ShiftDayPart.MORNING, branch);
+        LocalDate date = LocalDate.now().plusDays(2);
+
+        EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
 
         ShiftRoleRequirement requirement = new ShiftRoleRequirement(
-                LocalDate.now().getDayOfWeek(), ShiftDayPart.MORNING, new Role(
+                date.getDayOfWeek(), ShiftDayPart.MORNING, new Role(
                 "Certified Procrastinator", false), branch);
 
         when(reqRoleRepository.save(requirement)).thenReturn(requirement);
 
         boolean[] removed = {false};
         when(reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
-                LocalDate.now().getDayOfWeek(), ShiftDayPart.MORNING, branch.getName()))
+                date.getDayOfWeek(), ShiftDayPart.MORNING, branch.getName()))
                 .thenAnswer(invocationOnMock -> removed[0] ? new ArrayList<>() : Arrays.asList(requirement));
         doAnswer(invocationOnMock -> removed[0] = true).when(reqRoleRepository).delete(requirement);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
         when(repository.getRangeOfShiftsByBranch(
-                branch, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1)))
+                branch, date.minusDays(1), date.plusDays(1)))
                 .thenReturn(Arrays.asList(
-                        new Shift(LocalDate.now(), ShiftDayPart.MORNING, false, branch)
+                        new Shift(date, ShiftDayPart.MORNING, false, branch)
                 ));
         when(roleService.getRole("Certified Procrastinator")).thenReturn(requirement.getRole());
 
-        service.addRequiredRole("Certified Procrastinator", LocalDate.now(), ShiftDayPart.MORNING, true, branch);
-        assertTrue(service.getShift(LocalDate.now(), ShiftDayPart.MORNING, branch)
+        service.addRequiredRole("Certified Procrastinator", date, ShiftDayPart.MORNING, true, branch);
+        assertTrue(service.getShift(date, ShiftDayPart.MORNING, branch)
                 .getRequiredRoles().contains(requirement.getRole()));
 
-        service.remRequiredRole("Certified Procrastinator", LocalDate.now(), ShiftDayPart.MORNING, false, branch);
-        assertFalse(service.getShift(LocalDate.now(), ShiftDayPart.MORNING, branch)
+        service.remRequiredRole("Certified Procrastinator", date, ShiftDayPart.MORNING, false, branch);
+        assertFalse(service.getShift(date, ShiftDayPart.MORNING, branch)
                 .getRequiredRoles().contains(requirement.getRole()));
     }
 }

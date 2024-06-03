@@ -15,4 +15,9 @@ public class Constants {
     public static final int BANK_ID_IND = 0;
     public static final int BANK_BRANCH_IND = 1;
     public static final int ACCOUNT_ID_IND = 2;
+
+    /**
+     * Hours per day.
+     */
+    public static final int DAY_HOURS = 24;
 }
