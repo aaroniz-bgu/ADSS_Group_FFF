@@ -49,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employee.setRoles(roles);
         employee.getTerms().setManager(getManager(employee));
+        employee.getTerms().setEmployee(employee);
         // Set the branch of the employee to the branch instance from the db, since the branch name is the only
         // thing that is supplied by the client.
         employee.setBranch(branchService.getBranch(employee.getBranch().getName()));
