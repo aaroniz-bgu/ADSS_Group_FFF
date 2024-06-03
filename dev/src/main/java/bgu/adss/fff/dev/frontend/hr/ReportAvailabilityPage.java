@@ -25,13 +25,13 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
 
 
     private static final String ROUTE = URI_PATH +  "/shift";
-    private static final String ASS_ROUTE = ROUTE + "/available";
+    private static final String ASS_ROUTE = ROUTE + "/available/";
 
     InputComponent dateInput;
     InputComponent shiftInput;
 
     private EmployeeDto employee;
-    private LocalDate date;
+    private String date;
     private int shift;
 
     protected ReportAvailabilityPage(PrintStream out, EmployeeDto employee) {
@@ -52,14 +52,13 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
 
     private void onDateInserted(StateEvent event) {
         // Check that the date is in form of `dd-MM-yyyy`:
-        String input = event.getData();
+        date = event.getData();
         String regex = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";
-        if(!input.matches(regex)) {
+        if(!date.matches(regex)) {
             out.println("Please make sure your date is formatted properly [dd-MM-yyyy]");
             dateInput.render(out);
             return;
         }
-        date = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
     }
 
     private void onShiftInserted(StateEvent event) {
@@ -81,17 +80,16 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
     }
 
     private void result() {
-        ReportShiftRequest request = new ReportShiftRequest(date, shift, employee.id());
+        ReportShiftRequest request = new ReportShiftRequest(
+                LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy")), shift, employee.id());
 
         RestTemplate template = new RestTemplate();
         try {
             template.postForLocation(ROUTE, request);
 
             // Retrieve available emps:
-            ShiftDto shId = new ShiftDto(
-                    date, shift, employee.branchName(), false, null, null , null);
-            EmployeeDto[] response = template.exchange(ASS_ROUTE, HttpMethod.GET,
-                    new HttpEntity<>(shId), EmployeeDto[].class).getBody();
+            String route = ASS_ROUTE + date + "&" + shift + "&" + employee.branchName();
+            EmployeeDto[] response = template.getForEntity(route, EmployeeDto[].class).getBody();
 
             boolean isIn = false;
             for(EmployeeDto emp : response) {
