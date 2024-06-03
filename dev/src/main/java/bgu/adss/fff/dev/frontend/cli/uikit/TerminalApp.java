@@ -1,3 +1,8 @@
+/**
+ * This class is owned by Aaron Iziyaev (aaroniz-bgu on GitHub).
+ * It was created by @author Aaron Iziyaev.
+ */
+
 package bgu.adss.fff.dev.frontend.cli.uikit;
 
 import java.io.Closeable;
