@@ -22,11 +22,13 @@ public class InputComponent extends AbstractTerminalComponent {
 
     @Override
     public void render(PrintStream out) {
+        String input;
         try (Scanner scn = new Scanner(System.in)) {
             out.print(label + NEWLINE + "> ");
-            String input = scn.next();
-            notifyListeners(new StateEvent(input));
+            input = scn.next();
+            scn.nextLine();
         }
+        if(input != null) notifyListeners(new StateEvent(input));
     }
 
     public void setLabel(String label) {
