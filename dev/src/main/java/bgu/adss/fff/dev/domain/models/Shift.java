@@ -1,7 +1,12 @@
 package bgu.adss.fff.dev.domain.models;
 
-import bgu.adss.fff.dev.data.HumanResourceConfig;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
