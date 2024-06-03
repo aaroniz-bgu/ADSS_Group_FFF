@@ -36,9 +36,10 @@ public class LoginPage extends AbstractUserComponent {
         String uri =  URI_PATH + ROUTE + "/" + ans;
         try {
             EmployeeDto response = restTemplate.getForEntity(uri, EmployeeDto.class).getBody();
-            AbstractUserComponent nextPage = isHr(response) ? null : new EmployeeMenuPage(out, response);
+            AbstractUserComponent nextPage = isHr(response) ?
+                    new HrManagerMenuPage(out, response) :
+                    new EmployeeMenuPage(out, response);
             nextPage.render();
-            out.print("Horray! "+response.name());
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
             out.println(err.message());
