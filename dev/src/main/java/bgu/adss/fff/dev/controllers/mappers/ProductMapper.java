@@ -5,6 +5,9 @@ import bgu.adss.fff.dev.contracts.RequestProductDto;
 import bgu.adss.fff.dev.domain.models.Product;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProductMapper {
 
@@ -44,6 +47,14 @@ public class ProductMapper {
                 new LinkedList<>(),
                 requestProductDto.minimalQuantity()
         );
+    }
+
+    public static ProductDto[] map(List<Product> products) {
+        return products.stream().map(ProductMapper::map).toArray(ProductDto[]::new);
+    }
+
+    public static List<Product> map(ProductDto[] productDtos) {
+        return Stream.of(productDtos).map(ProductMapper::map).collect(Collectors.toList());
     }
 
 }
