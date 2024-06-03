@@ -22,6 +22,6 @@ public class ShiftException extends AppException {
 
     public static ShiftException locked(LocalDate date) {
         return new ShiftException("Cannot update shift availability at " + date.toString()
-                + " since the report period is already over."/*, HttpStatus.LOCKED*/);
+                + " since the report period is already over.", HttpStatus.LOCKED);
     }
 }
