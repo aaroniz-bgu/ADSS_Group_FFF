@@ -11,7 +11,8 @@ import java.util.List;
 
 public class EmployeeMenuPage extends AbstractUserComponent {
 
-    EmployeeDto employee;
+    private final EmployeeDto employee;
+
     protected EmployeeMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
 
