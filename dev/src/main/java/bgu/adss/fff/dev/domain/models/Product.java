@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class Product implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_item",
+            name = "shelves_items",
             joinColumns = @JoinColumn(name = "productID"),
             inverseJoinColumns = @JoinColumn(name = "itemID")
     )
@@ -31,7 +32,7 @@ public class Product implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_item",
+            name = "storage_items",
             joinColumns = @JoinColumn(name = "productID"),
             inverseJoinColumns = @JoinColumn(name = "itemID")
     )
@@ -108,6 +109,10 @@ public class Product implements Serializable {
 
     public void addToStorage(Item item) {
         storage.add(item);
+    }
+
+    public void addToShelves(Item item) {
+        shelves.add(item);
     }
 
     public String toString() {

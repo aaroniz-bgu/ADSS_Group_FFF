@@ -23,12 +23,12 @@ public class Discount implements Serializable {
     @Column
     private boolean isValid;
 
-    public Discount(long discountID, LocalDate startDate, int numOfDays, float discountPercent) {
+    public Discount(long discountID, LocalDate startDate, int numOfDays, float discountPercent, boolean isValid) {
         this.discountID = discountID;
         this.startDate = startDate;
         this.numOfDays = numOfDays;
         this.discountPercent = discountPercent;
-        this.isValid = true;
+        this.isValid = isValid;
     }
 
     public long getDiscountID() {
