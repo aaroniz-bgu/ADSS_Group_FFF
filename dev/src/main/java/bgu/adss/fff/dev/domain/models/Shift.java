@@ -1,7 +1,12 @@
 package bgu.adss.fff.dev.domain.models;
 
-import bgu.adss.fff.dev.data.HumanResourceConfig;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,7 +17,7 @@ public class Shift {
     @EmbeddedId
     private EmbeddedShiftId id;
     @Column
-    private boolean isLocked;
+    private ShiftState isLocked;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "available_emps",
@@ -58,7 +63,7 @@ public class Shift {
 
     public Shift(LocalDate date, ShiftDayPart shift, boolean isLocked, Branch branch) {
         this.id = new EmbeddedShiftId(date, shift, branch);
-        this.isLocked = isLocked;
+        this.isLocked = isLocked ? ShiftState.LOCK : ShiftState.UNLOCK;
 
         this.availableEmployees = new ArrayList<>();
         this.assignedEmployees = new ArrayList<>();
@@ -126,12 +131,20 @@ public class Shift {
         this.requiredRoles = requiredRoles;
     }
 
-    public boolean isLocked() {
+    public ShiftState getLockState() {
         return isLocked;
     }
 
-    public void setLocked(boolean locked) {
+    public boolean isLocked() {
+        return isLocked == ShiftState.LOCK || isLocked == ShiftState.FORCE_LOCK;
+    }
+
+    public void setLocked(ShiftState locked) {
         isLocked = locked;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked ? ShiftState.LOCK : ShiftState.UNLOCK;
     }
 
     public String getBranchName() { return id.getBranch().getName(); }
