@@ -1,6 +1,10 @@
 package bgu.adss.fff.dev.controllers;
 
-import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.contracts.EmployeeDto;
+import bgu.adss.fff.dev.contracts.GetShiftsRequest;
+import bgu.adss.fff.dev.contracts.ReportShiftRequest;
+import bgu.adss.fff.dev.contracts.RequireRoleRequest;
+import bgu.adss.fff.dev.contracts.ShiftDto;
 import bgu.adss.fff.dev.controllers.mappers.EmployeeMapper;
 import bgu.adss.fff.dev.controllers.mappers.ShiftMapper;
 import bgu.adss.fff.dev.domain.models.Branch;
