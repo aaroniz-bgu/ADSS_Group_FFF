@@ -1,20 +1,23 @@
 package bgu.adss.fff.dev.exceptions;
 
 import bgu.adss.fff.dev.domain.models.ShiftDayPart;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 
-public class ShiftException extends RuntimeException {
+public class ShiftException extends AppException {
 
-    private ShiftException(String msg) {
-        super(msg);
+    private ShiftException(String msg, HttpStatus status) {
+        super(msg, status);
     }
 
     public static ShiftException noShiftManger(LocalDate date, ShiftDayPart dayPart) {
-        return new ShiftException("No shift manager was assigned in: " + date.toString() + "-:" + dayPart.ordinal());
+        return new ShiftException("No shift manager was assigned in: " + date.toString() + "-:" + dayPart.ordinal(),
+                HttpStatus.BAD_REQUEST);
     }
     public static ShiftException illegalAssignment(String branchName, String employeeName) {
-        return new ShiftException("Illegal assignment of employee: " + employeeName + " to branch: " + branchName);
+        return new ShiftException("Illegal assignment of employee: " + employeeName + " to branch: " + branchName,
+                HttpStatus.BAD_REQUEST);
     }
 
     public static ShiftException locked(LocalDate date) {

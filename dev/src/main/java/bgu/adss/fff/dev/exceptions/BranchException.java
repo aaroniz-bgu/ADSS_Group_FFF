@@ -1,14 +1,16 @@
 package bgu.adss.fff.dev.exceptions;
 
-public class BranchException extends RuntimeException{
-    private BranchException(String msg) { super(msg); }
+import org.springframework.http.HttpStatus;
+
+public class BranchException extends AppException {
+    private BranchException(String msg, HttpStatus status) { super(msg, status); }
 
     public static BranchException alreadyExists(String name) {
-        return new BranchException("Branch with name " + name + " already exists.");
+        return new BranchException("Branch with name " + name + " already exists.", HttpStatus.CONFLICT);
     }
 
     public static BranchException notFound(String name) {
-        return new BranchException("Branch with name " + name + " was not found.");
+        return new BranchException("Branch with name " + name + " was not found.", HttpStatus.NOT_FOUND);
     }
 
     public static BranchException illegalField(String name, String resource, String details) {
@@ -17,6 +19,6 @@ public class BranchException extends RuntimeException{
                 Resource: %s
                 Details:
                 %s
-                """, name, resource, details));
+                """, name, resource, details), HttpStatus.BAD_REQUEST);
     }
 }
