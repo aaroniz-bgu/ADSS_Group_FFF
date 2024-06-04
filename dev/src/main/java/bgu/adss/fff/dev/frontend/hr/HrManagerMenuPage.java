@@ -40,7 +40,8 @@ public class HrManagerMenuPage extends AbstractUserComponent {
         try {
             int choice = Integer.parseInt(event.getData());
             switch (choice) {
-                case 1: //TODO
+                case 1:
+                    new RegisterEmployeePage(out).render();
                     break;
                 case 2:
                     break;
@@ -53,9 +54,9 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 case 6:
                     break;
                 case 7:
+                    rerender = false;
                     break;
                 default:
-                    rerender = false;
                     break;
             }
             if(rerender) this.render();
