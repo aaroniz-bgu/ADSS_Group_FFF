@@ -57,7 +57,6 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
         if(!date.matches(regex)) {
             out.println("Please make sure your date is formatted properly [dd-MM-yyyy]");
             dateInput.render(out);
-            return;
         }
     }
 
@@ -106,7 +105,6 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
             out.println(err.message());
-            this.render();
         } catch (Exception e) {
             out.println("an unexpected error occurred please try again later.");
         }
