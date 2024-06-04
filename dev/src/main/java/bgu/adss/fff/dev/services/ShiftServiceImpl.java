@@ -134,15 +134,24 @@ public class ShiftServiceImpl implements ShiftService {
             applyRecurringRoles(s);
         }
 
-        shifts = fillHolesHelper(shifts, from, to, branch);
-        shifts.sort(this::shiftDateTimeComparator);
+        fillHolesHelper(shifts, from, to, branch);
+        shifts.sort(this::shiftDatePartComparator);
 
         return shifts;
     }
 
-    private List<Shift> fillHolesHelper(List<Shift> shifts, LocalDate from, LocalDate to, Branch branch) {
+    /**
+     * Fills the time frame with shifts if they weren't persisted yet.
+     * Alters the given list (changes take in place).
+     *
+     * @param shifts the list of shift to change.
+     * @param from   the date from which to start scanning.
+     * @param to     the date to which we want to "fill holes" to (included).
+     * @param branch the branch which those shifts belong to.
+     */
+    private void fillHolesHelper(List<Shift> shifts, LocalDate from, LocalDate to, Branch branch) {
         // Sorting before iterating over the shift response:
-        shifts.sort(this::shiftDateTimeComparator);
+        shifts.sort(this::shiftDatePartComparator);
 
         // Adding "holes" which we're not present in the current shift, tried to keep it linear therefore, ugly code.
         LocalDate curr = from;
@@ -150,9 +159,9 @@ public class ShiftServiceImpl implements ShiftService {
 
         for(Shift shift : shifts) {
             Shift add;
-            while(shiftDateTimeComparator((add = new Shift(curr, part, branch)), shift) <= 0) {
+            while(shiftDatePartComparator((add = new Shift(curr, part, branch)), shift) <= 0) {
                 // Since we always flip, we need this to be like this:
-                if(shiftDateTimeComparator(add, shift) != 0) shifts.add(add);
+                if(shiftDatePartComparator(add, shift) != 0) shifts.add(add);
                 // Flip:
                 if(part == ShiftDayPart.MORNING) {
                     part = ShiftDayPart.EVENING;
@@ -173,14 +182,23 @@ public class ShiftServiceImpl implements ShiftService {
                 curr = curr.plusDays(1);
             }
         }
-        return shifts;
     }
 
-    private int shiftDateTimeComparator(Shift a, Shift b) {
+    /**
+     * Returns a negative integer if `a` is before `b`,
+     * 0 if they occur in the same time, and positive integer if `a` is later than `b`.
+     * <br> firstly, compares dates, if dates are equal then comparing {@link ShiftDayPart} where MORNING < EVENING.
+     *
+     * @param a first shift.
+     * @param b second shift.
+     * @return a negative integer if `a` is before `b`,
+     * 0 if they occur in the same time, and positive integer if `a` is later than `b`.
+     */
+    private int shiftDatePartComparator(Shift a, Shift b) {
         if(a.getDate().isBefore(b.getDate())) {
             return -1;
-        } else if (a.getDate().isEqual(b.getDate()) && a.getShiftDayPart() == b.getShiftDayPart()) {
-            return 0;
+        } else if (a.getDate().isEqual(b.getDate())) {
+            return Integer.compare(a.getShiftDayPart().ordinal(), b.getShiftDayPart().ordinal());
         }
         return 1;
     }
