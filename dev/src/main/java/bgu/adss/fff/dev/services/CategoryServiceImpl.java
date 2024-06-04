@@ -139,6 +139,7 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepository.save(category);
     }
 
+    @Override
     public void addCategoryDiscount(String name, Discount discount) {
         Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
         for(Product product : category.getProducts()){
@@ -146,6 +147,29 @@ public class CategoryServiceImpl implements CategoryService{
             productRepository.save(product);
         }
         categoryRepository.save(category);
+    }
+
+    @Override
+    public void addProduct(Product product, String[] categories) {
+        if(categories == null || categories.length != 3){
+            throw new ProductException("Product must belong to 3 levels of categories");
+        }
+
+        Category superCategory = categoryRepository.findById("Super").orElseThrow(() -> new CategoryException("Super category not found"));
+        for(String categoryName : categories){
+            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found"));
+            if(!superCategory.getChildren().contains(category)){
+                throw new ProductException("This category does not belong to the super category's children");
+            }
+            superCategory = category;
+        }
+
+        categoryRepository.findById("Super").ifPresent(category -> category.getProducts().add(product));
+        for(String categoryName : categories){
+            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found"));
+            category.getProducts().add(product);
+            categoryRepository.save(category);
+        }
     }
 
 }

@@ -88,5 +88,11 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/product/{categories}")
+    public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto, @PathVariable("categories") String[] categories) {
+        Product product = ProductMapper.map(productDto);
+        categoryService.addProduct(product, categories);
+        return ResponseEntity.noContent().build();
+    }
 
 }
