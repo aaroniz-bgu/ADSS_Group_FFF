@@ -133,7 +133,56 @@ public class ShiftServiceImpl implements ShiftService {
             s.setLocked(lockHelper(s.getDate(), s.getLockState()));
             applyRecurringRoles(s);
         }
+
+        shifts = fillHolesHelper(shifts, from, to, branch);
+        shifts.sort(this::shiftDateTimeComparator);
+
         return shifts;
+    }
+
+    private List<Shift> fillHolesHelper(List<Shift> shifts, LocalDate from, LocalDate to, Branch branch) {
+        // Sorting before iterating over the shift response:
+        shifts.sort(this::shiftDateTimeComparator);
+
+        // Adding "holes" which we're not present in the current shift, tried to keep it linear therefore, ugly code.
+        LocalDate curr = from;
+        ShiftDayPart part = ShiftDayPart.MORNING;
+
+        for(Shift shift : shifts) {
+            Shift add;
+            while(shiftDateTimeComparator((add = new Shift(curr, part, branch)), shift) <= 0) {
+                // Since we always flip, we need this to be like this:
+                if(shiftDateTimeComparator(add, shift) != 0) shifts.add(add);
+                // Flip:
+                if(part == ShiftDayPart.MORNING) {
+                    part = ShiftDayPart.EVENING;
+                } else {
+                    part = ShiftDayPart.MORNING;
+                    curr = curr.plusDays(1);
+                }
+            }
+        }
+        // if `to` wasn't reached:
+        while(!curr.isAfter(to)) {
+            Shift add = new Shift(curr, part, branch);
+            shifts.add(add);
+            if(part == ShiftDayPart.MORNING) {
+                part = ShiftDayPart.EVENING;
+            } else {
+                part = ShiftDayPart.MORNING;
+                curr = curr.plusDays(1);
+            }
+        }
+        return shifts;
+    }
+
+    private int shiftDateTimeComparator(Shift a, Shift b) {
+        if(a.getDate().isBefore(b.getDate())) {
+            return -1;
+        } else if (a.getDate().isEqual(b.getDate()) && a.getShiftDayPart() == b.getShiftDayPart()) {
+            return 0;
+        }
+        return 1;
     }
 
     @Override
