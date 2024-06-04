@@ -1,8 +1,11 @@
 package bgu.adss.fff.dev.frontend.hr;
 
+import bgu.adss.fff.dev.contracts.ErrorDetails;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 
 import java.io.PrintStream;
 
@@ -37,13 +40,18 @@ public class EditEmployeeDetailsPage extends AbstractUserComponent {
 
     private void onTermsOrEmployeeInput(StateEvent event) {
         String choice = event.getData().toLowerCase();
-        if(choice.equals("t")) {
-            new EditEmployeeTermsPage(out, id).render();
-        } else if (choice.equals("e")) {
-            new EditEmployeeDetailsOnlyPage(out, id).render();
-        } else {
-            out.println("Please insert only values that you were instructed to!");
-            termsOrEmployeeInput.render(out);
+        try {
+            if (choice.equals("t")) {
+                new EditEmployeeTermsPage(out, id).render();
+            } else if (choice.equals("e")) {
+                new EditEmployeeDetailsOnlyPage(out, id).render();
+            } else {
+                out.println("Please insert only values that you were instructed to!");
+                termsOrEmployeeInput.render(out);
+            }
+        } catch (RestClientResponseException e) {
+            ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
+            out.println(err.message());
         }
     }
 }

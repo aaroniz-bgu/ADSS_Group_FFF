@@ -35,24 +35,21 @@ public class EditEmployeeDetailsOnlyPage extends AbstractUserComponent {
     private RoleDto[] roles;
     private String bankDetails;
     private String branch;
-    public EditEmployeeDetailsOnlyPage(PrintStream out, long id) {
+    public EditEmployeeDetailsOnlyPage(PrintStream out, long id) throws RestClientResponseException {
         super(out);
 
         this.template = new RestTemplate();
-        try {
-            RoleDto[] roles = template.getForEntity(ROLES_ROUTE, RoleDto[].class).getBody();
-            rolesList = Arrays.toString(roles);
-            String[] branches = template.getForEntity(BRANCH_ROUTE, String[].class).getBody();
-            branchList = Arrays.toString(branches);
 
-            EmployeeDto emp = template.getForEntity(EMPLOYEE_ROUTE+id, EmployeeDto.class).getBody();
-            name = emp.name();
-            this.roles = emp.roles();
-            bankDetails = emp.bankDetails();
-            branch = emp.branchName();
-        } catch (Exception e) {
-            //log?
-        }
+        RoleDto[] roles = template.getForEntity(ROLES_ROUTE, RoleDto[].class).getBody();
+        rolesList = Arrays.toString(roles);
+        String[] branches = template.getForEntity(BRANCH_ROUTE, String[].class).getBody();
+        branchList = Arrays.toString(branches);
+
+        EmployeeDto emp = template.getForEntity(EMPLOYEE_ROUTE+id, EmployeeDto.class).getBody();
+        name = emp.name();
+        this.roles = emp.roles();
+        bankDetails = emp.bankDetails();
+        branch = emp.branchName();
 
         this.id = id;
 

@@ -39,22 +39,18 @@ public class EditEmployeeTermsPage extends AbstractUserComponent {
     private EmployeeDto directManager;
     private LocalDate endDate;
 
-    public EditEmployeeTermsPage(PrintStream out, long id) {
+    public EditEmployeeTermsPage(PrintStream out, long id) throws RestClientResponseException {
         super(out);
 
         this.template = new RestTemplate();
-        try {
-            EmployeeTermsDto terms = template.getForEntity(TERMS_ROUTE+id, EmployeeTermsDto.class).getBody();
-            this.startDate = terms.startDate();
-            this.jobType = terms.jobType();
-            this.monthlySalary = terms.monthlySalary();
-            this.hourlyRate = terms.hourlyRate();
-            this.daysOff = terms.daysOff();
-            this.directManager = terms.directManager();
-            this.endDate = terms.endDate();
-        } catch (Exception e) {
-            //log?
-        }
+        EmployeeTermsDto terms = template.getForEntity(TERMS_ROUTE+id, EmployeeTermsDto.class).getBody();
+        this.startDate = terms.startDate();
+        this.jobType = terms.jobType();
+        this.monthlySalary = terms.monthlySalary();
+        this.hourlyRate = terms.hourlyRate();
+        this.daysOff = terms.daysOff();
+        this.directManager = terms.directManager();
+        this.endDate = terms.endDate();
 
         this.id = id;
 
