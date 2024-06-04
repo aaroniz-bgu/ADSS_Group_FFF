@@ -25,11 +25,13 @@ public class HrManagerMenuPage extends AbstractUserComponent {
         page.add(new LogoComponent("Welcome " + employee.name() + " : HUMAN RESOURCES DEPARTMENT"));
         page.add(new ListComponent<String>(List.of(
                 "Register new employee",
-                "Soon: Edit existing employee details",
+                "Edit existing employee details",
                 "[#] Shift Assignment Interface", // Choose week->show shifts table??
                 "Un/lock shifts to reports",
                 "View shift history",
                 "Require roles",
+                "Add new roles - still unavailable",
+                "Add new branch - still unavailable",
                 "Exit"
         )));
         choiceInput.subscribe(this::onChoice);
@@ -63,7 +65,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 case 6:
                     new RequireRolesPage(out).render();
                     break;
-                case 7:
+                case 9:
                     rerender = false;
                     break;
                 default:
