@@ -41,7 +41,7 @@ public class ShiftRoleRequirementRepositoryTests {
         Branch branch2 = new Branch("Branch2");
         entityManager.persist(branch2);
 
-        Role role = new Role("Role1", false);
+        Role role = new Role("Role1", false, false);
         entityManager.persist(role);
 
         ShiftRoleRequirement shiftRoleRequirement = new ShiftRoleRequirement(DayOfWeek.MONDAY, ShiftDayPart.MORNING, role, branch);

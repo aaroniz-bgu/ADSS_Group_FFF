@@ -62,7 +62,7 @@ public class ShiftMapper {
         );
         // Should be replaced with instances from the repository:
         out.setRequiredRoles(Arrays.stream(dto.requiredRoles())
-                .map((s) -> new Role(s, false))
+                .map((s) -> new Role(s, false, false))
                 .toList());
         return out;
     }

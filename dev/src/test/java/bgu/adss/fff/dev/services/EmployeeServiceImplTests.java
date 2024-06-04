@@ -42,12 +42,12 @@ public class EmployeeServiceImplTests {
         branch1 = new Branch("Middle Earth");
         branch2 = new Branch("Narnia");
         List<Role> allRoles1 = new ArrayList<>(){{{{
-            add(new Role("Jewish Prince", false));
-            add(new Role("Handsome Ashkenazi", true));
+            add(new Role("Jewish Prince", false, false));
+            add(new Role("Handsome Ashkenazi", true, false));
         }}}};
         List<Role> allRoles2 = new ArrayList<>(){{{{
-            add(new Role("Agent", false));
-            add(new Role("Ballet Dancer", true));
+            add(new Role("Agent", false, false));
+            add(new Role("Ballet Dancer", true, false));
         }}}};
         when(roleService.returnIfExists(allRoles1.stream()
                 .map(Role::getName)
