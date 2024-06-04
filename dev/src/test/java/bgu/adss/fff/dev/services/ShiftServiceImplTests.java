@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.ShiftRepository;
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
 import bgu.adss.fff.dev.domain.models.*;
+import bgu.adss.fff.dev.exceptions.ShiftException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,7 @@ public class ShiftServiceImplTests {
         when(employeeService.getEmployee(0L)).thenReturn(sheldon);
         when(repository.findById(id)).thenReturn(Optional.of(shift));
         when(repository.save(shift)).thenReturn(shift);
+        service.reportAvailability(0L, date, ShiftDayPart.MORNING);
 
         service.assignEmployees(List.of(sheldon), date, ShiftDayPart.MORNING, branch);
         assertTrue(shift.getAssignedEmployees().contains(sheldon));
@@ -164,5 +166,17 @@ public class ShiftServiceImplTests {
         service.remRequiredRole("Certified Procrastinator", date, ShiftDayPart.MORNING, false, branch);
         assertFalse(service.getShift(date, ShiftDayPart.MORNING, branch)
                 .getRequiredRoles().contains(requirement.getRole()));
+    }
+
+    @Test
+    void testNotAvailableEmployees() {
+        LocalDate date = LocalDate.now().plusDays(2);
+        EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
+        Shift shift = new Shift(date, ShiftDayPart.MORNING, branch);
+
+        when(employeeService.getEmployee(0L)).thenReturn(sheldon);
+        when(repository.findById(id)).thenReturn(Optional.of(shift));
+        when(repository.save(shift)).thenReturn(shift);
+        assertThrows(ShiftException.class, () -> service.assignEmployees(List.of(sheldon), date, ShiftDayPart.MORNING, branch));
     }
 }
