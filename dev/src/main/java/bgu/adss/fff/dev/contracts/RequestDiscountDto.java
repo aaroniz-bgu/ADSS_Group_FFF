@@ -3,9 +3,7 @@ package bgu.adss.fff.dev.contracts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record DiscountDto(
-        @JsonProperty("discountID") long discountID,
-
+public record RequestDiscountDto(
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         @JsonProperty("startDate") String startDate,
 

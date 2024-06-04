@@ -1,38 +1,42 @@
 package bgu.adss.fff.dev.domain.models;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
+@Entity(name="Discount")
 public class Discount implements Serializable {
 
     @Id
-    private final long discountID;
+    private long discountID;
 
     @Column
     private LocalDate startDate;
 
     @Column
-    private int numOfDays;
+    private LocalDate endDate;
 
     @Column
     private float discountPercent;
 
-    @Column
-    private boolean isValid;
-
-    public Discount(long discountID, LocalDate startDate, int numOfDays, float discountPercent, boolean isValid) {
+    public Discount(long discountID, LocalDate startDate, LocalDate endDate, float discountPercent) {
         this.discountID = discountID;
         this.startDate = startDate;
-        this.numOfDays = numOfDays;
+        this.endDate = endDate;
         this.discountPercent = discountPercent;
-        this.isValid = isValid;
     }
+
+    public Discount() { }
 
     public long getDiscountID() {
         return discountID;
+    }
+
+    public void setDiscountID(long discountID) {
+        this.discountID = discountID;
     }
 
     public LocalDate getStartDate() {
@@ -43,12 +47,12 @@ public class Discount implements Serializable {
         this.startDate = startDate;
     }
 
-    public int getNumOfDays() {
-        return numOfDays;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setNumOfDays(int numOfDays) {
-        this.numOfDays = numOfDays;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public float getDiscountPercent() {
@@ -59,21 +63,12 @@ public class Discount implements Serializable {
         this.discountPercent = discountPercent;
     }
 
-    public boolean isValid() {
-        return isValid;
-    }
-
-    public void setValid(boolean valid) {
-        isValid = valid;
-    }
-
     @Override
     public String toString() {
         return "Discount{" +
                 "startDate=" + startDate +
-                ", numOfDays=" + numOfDays +
+                ", endDate=" + endDate +
                 ", discountPercent=" + discountPercent +
-                ", isValid=" + isValid +
                 '}';
     }
 }
