@@ -51,7 +51,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                     new ShiftAssignmentPage(out).render();
                     break;
                 case 4:
-                    new LockShiftPage(out);
+                    new LockShiftPage(out).render();
                     break;
                 case 5:
                     try {
