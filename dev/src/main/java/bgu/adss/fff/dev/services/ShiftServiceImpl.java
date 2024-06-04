@@ -208,13 +208,13 @@ public class ShiftServiceImpl implements ShiftService {
     public void lockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
         Shift shift = getShiftOrClean(date, dayPart, branch);
 
-        boolean hasShiftManger = false;
-        for(Employee emp : shift.getAssignedEmployees()) {
-            hasShiftManger |= isShiftMangerHelper(emp);
-        }
-        if(!hasShiftManger) {
-            throw ShiftException.noShiftManger(date, dayPart);
-        }
+//        boolean hasShiftManger = false;
+//        for(Employee emp : shift.getAssignedEmployees()) {
+//            hasShiftManger |= isShiftMangerHelper(emp);
+//        }
+//        if(!hasShiftManger) {
+//            throw ShiftException.noShiftManger(date, dayPart);
+//        }
 
         shift.setLocked(ShiftState.FORCE_LOCK);
         repository.save(shift);
