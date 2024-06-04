@@ -158,7 +158,8 @@ public class ShiftServiceImpl implements ShiftService {
         LocalDate curr = from;
         ShiftDayPart part = ShiftDayPart.MORNING;
 
-        for(Shift shift : shifts) {
+        List<Shift> iterate = List.copyOf(shifts);
+        for(Shift shift : iterate) {
             Shift add;
             while(shiftDatePartComparator((add = new Shift(curr, part, branch)), shift) <= 0) {
                 // Since we always flip, we need this to be like this:
