@@ -58,7 +58,7 @@ public class LoginPage extends AbstractUserComponent {
 
     private boolean isHr(EmployeeDto emp) {
         for(RoleDto r : emp.roles()) {
-            if(r.isShiftManager()) return true;
+            if(r.isHrManager()) return true;
         }
         return false;
     }

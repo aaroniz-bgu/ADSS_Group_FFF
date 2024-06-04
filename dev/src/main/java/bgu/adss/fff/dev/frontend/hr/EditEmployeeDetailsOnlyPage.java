@@ -90,7 +90,7 @@ public class EditEmployeeDetailsOnlyPage extends AbstractUserComponent {
             String[] roleTitles = event.getData().replace(" ","").split(",");
             roles = new RoleDto[roleTitles.length];
             for(int i = 0 ; i< roles.length; i++) {
-                roles[i] = new RoleDto(roleTitles[i], false);
+                roles[i] = new RoleDto(roleTitles[i], false, false);
             }
         } // else we're not updating the roles.
     }

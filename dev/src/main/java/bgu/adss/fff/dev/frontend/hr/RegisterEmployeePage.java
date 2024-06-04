@@ -126,7 +126,7 @@ public class RegisterEmployeePage extends AbstractUserComponent {
             String[] roleTitles = event.getData().replace(" ","").split(",");
             roles = new RoleDto[roleTitles.length];
             for(int i = 0 ; i< roles.length; i++) {
-                roles[i] = new RoleDto(roleTitles[i], false);
+                roles[i] = new RoleDto(roleTitles[i], false, false);
             }
         } else this.roles = new RoleDto[0];
     }
