@@ -19,6 +19,10 @@ public class ShiftException extends AppException {
         return new ShiftException("Illegal assignment of employee: " + employeeName + " to branch: " + branchName,
                 HttpStatus.BAD_REQUEST);
     }
+    public static ShiftException employeeNotAvailable(String employeeName, LocalDate date, ShiftDayPart dayPart) {
+        return new ShiftException("Employee: " + employeeName + " is not available on: " + date.toString() + "-:" + dayPart.ordinal(),
+                HttpStatus.BAD_REQUEST);
+    }
 
     public static ShiftException locked(LocalDate date) {
         return new ShiftException("Cannot update shift availability at " + date.toString()
