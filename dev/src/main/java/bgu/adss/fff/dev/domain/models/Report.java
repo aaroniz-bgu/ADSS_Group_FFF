@@ -31,6 +31,8 @@ public abstract class Report implements Serializable {
         this.content = content;
     }
 
+    public abstract void writeReport();
+
     public long getReportId() {
         return reportId;
     }

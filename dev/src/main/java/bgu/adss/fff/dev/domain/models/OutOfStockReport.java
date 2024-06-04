@@ -14,4 +14,9 @@ public class OutOfStockReport extends Report {
         super(reportId, reportDate, title, content);
     }
 
+    @Override
+    public void writeReport() {
+
+    }
+
 }
