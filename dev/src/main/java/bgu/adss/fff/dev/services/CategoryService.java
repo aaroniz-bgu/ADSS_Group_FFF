@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.domain.models.Category;
+import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 
@@ -15,5 +16,6 @@ public interface CategoryService {
     void deleteCategory(String name);
     Category updateChildren(String name, List<Category> children);
     Category updateProducts(String name, List<Product> products);
+    void addCategoryDiscount(String name, Discount discount);
 
 }

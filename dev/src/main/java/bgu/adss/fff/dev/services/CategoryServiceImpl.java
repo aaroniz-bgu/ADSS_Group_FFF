@@ -1,7 +1,9 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.CategoryRepository;
+import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Category;
+import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.CategoryException;
@@ -15,11 +17,13 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository repository) {
-        this.repository = repository;
+    public CategoryServiceImpl(CategoryRepository repository, ProductRepository productRepository) {
+        this.categoryRepository = repository;
+        this.productRepository = productRepository;
         Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
         repository.save(superCategory);
     }
@@ -36,18 +40,18 @@ public class CategoryServiceImpl implements CategoryService{
             throw new CategoryException("Category cannot be null");
         }
 
-        if (repository.existsById(category.getCategoryName())) {
+        if (categoryRepository.existsById(category.getCategoryName())) {
             throw new CategoryException("Category already exists");
         }
 
-        Category parentCategory = repository.findById(parent).orElseThrow(() -> new CategoryException("Parent not found"));
+        Category parentCategory = categoryRepository.findById(parent).orElseThrow(() -> new CategoryException("Parent not found"));
         if(parentCategory.getLevel() == 3){
             throw new CategoryException("Cannot add category to a category with level 3");
         }
         category.setLevel(parentCategory.getLevel() + 1);
         parentCategory.getChildren().add(category);
-        repository.save(parentCategory);
-        return repository.save(category);
+        categoryRepository.save(parentCategory);
+        return categoryRepository.save(category);
     }
 
     @Override
@@ -57,13 +61,13 @@ public class CategoryServiceImpl implements CategoryService{
             throw new CategoryException("Category name cannot be null");
         }
 
-        return repository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        return categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
     }
 
     @Override
     public List<Category> getCategories() {
 
-        return repository.findAll();
+        return categoryRepository.findAll();
 
     }
 
@@ -74,55 +78,55 @@ public class CategoryServiceImpl implements CategoryService{
             throw new CategoryException("Product cannot be null");
         }
 
-        if (!repository.existsById(category.getCategoryName())) {
+        if (!categoryRepository.existsById(category.getCategoryName())) {
             throw new CategoryException("Product not found");
         }
 
-        return repository.save(category);
+        return categoryRepository.save(category);
 
     }
 
     @Override
     public void deleteCategory(String name) {
 
-        if(!repository.existsById(name)){
+        if(!categoryRepository.existsById(name)){
             throw new CategoryException("Category not found");
         }
 
-        repository.deleteById(name);
+        categoryRepository.deleteById(name);
 
     }
 
     @Override
     public Category updateChildren(String name, List<Category> children) {
 
-        if (!repository.existsById(name)) {
+        if (!categoryRepository.existsById(name)) {
             throw new ProductException("Category not found");
         }
 
-        Category category = repository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
 
         // Delete current children of category
-        repository.deleteAll(category.getChildren());
+        categoryRepository.deleteAll(category.getChildren());
         category.setChildren(new LinkedList<>());
 
         // Fill with new sub categories
         for (Category subCategory : children) {
             category.getChildren().add(subCategory);
-            repository.save(subCategory);
+            categoryRepository.save(subCategory);
         }
 
-        return repository.save(category);
+        return categoryRepository.save(category);
     }
 
     @Override
     public Category updateProducts(String name, List<Product> products) {
 
-        if (!repository.existsById(name)) {
+        if (!categoryRepository.existsById(name)) {
             throw new ProductException("Category not found");
         }
 
-        Category category = repository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
 
         // Delete all products from category
         category.setProducts(new LinkedList<>());
@@ -132,7 +136,16 @@ public class CategoryServiceImpl implements CategoryService{
             category.getProducts().add(product);
         }
 
-        return repository.save(category);
+        return categoryRepository.save(category);
+    }
+
+    public void addCategoryDiscount(String name, Discount discount) {
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        for(Product product : category.getProducts()){
+            product.setDiscount(discount);
+            productRepository.save(product);
+        }
+        categoryRepository.save(category);
     }
 
 }
