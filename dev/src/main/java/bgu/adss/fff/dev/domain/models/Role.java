@@ -15,10 +15,12 @@ public class Role implements Serializable {
     @Id
     private String name;
     private boolean isShiftManager;
+    private boolean isHrManager;
 
-    public Role(String name, boolean isShiftManger) {
+    public Role(String name, boolean isShiftManger, boolean isHrManager) {
         this.name = name;
         this.isShiftManager = isShiftManger;
+        this.isHrManager = isHrManager;
     }
 
     public Role() { }
@@ -42,6 +44,15 @@ public class Role implements Serializable {
     }
 
     /**
+     * Checks if the role is for an HR manager.
+     *
+     * @return True if the role is for an HR manager, false otherwise.
+     */
+    public boolean isHrManager() {
+        return isHrManager;
+    }
+
+    /**
      * Sets whether the role is for a shift manager.
      *
      * @param shiftManager True if the role is for a shift manager, false otherwise.
@@ -50,11 +61,20 @@ public class Role implements Serializable {
         isShiftManager = shiftManager;
     }
 
+    /**
+     * Sets whether the role is for an HR manager.
+     *
+     * @param hrManager True if the role is for an HR manager, false otherwise.
+     */
+    public void setHrManager(boolean hrManager) {
+        isHrManager = hrManager;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Role) {
             Role other = (Role) obj;
-            return this.name.equals(other.name) && this.isShiftManager == other.isShiftManager;
+            return this.name.equals(other.name) && this.isShiftManager == other.isShiftManager && this.isHrManager == other.isHrManager;
         }
         return false;
     }

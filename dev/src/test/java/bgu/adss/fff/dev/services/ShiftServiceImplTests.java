@@ -44,7 +44,7 @@ public class ShiftServiceImplTests {
         sheldon = new Employee(
                 0L,
                 "Sheldon Copper",
-                List.of(new Role("Certified Bazzinga", true)),
+                List.of(new Role("Certified Bazzinga", true, true)),
                 new EmploymentTerms(LocalDate.now(), JobType.FULL_TIME,
                         null, .0f, .0f, 1),
                 10, 100, 100100, branch
@@ -72,7 +72,7 @@ public class ShiftServiceImplTests {
         EmbeddedShiftId id = new EmbeddedShiftId(date, ShiftDayPart.MORNING, branch);
         ShiftRoleRequirement requirement = new ShiftRoleRequirement(
                 date.getDayOfWeek(), ShiftDayPart.MORNING, new Role(
-                        "Crabby Patty Critique", false), branch);
+                        "Crabby Patty Critique", false, false), branch);
 
         when(reqRoleRepository.save(requirement)).thenReturn(requirement);
         when(reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
@@ -139,7 +139,7 @@ public class ShiftServiceImplTests {
 
         ShiftRoleRequirement requirement = new ShiftRoleRequirement(
                 date.getDayOfWeek(), ShiftDayPart.MORNING, new Role(
-                "Certified Procrastinator", false), branch);
+                "Certified Procrastinator", false, false), branch);
 
         when(reqRoleRepository.save(requirement)).thenReturn(requirement);
 

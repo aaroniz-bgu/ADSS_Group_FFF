@@ -14,7 +14,7 @@ public class RoleMapper {
      * @return the converted Role entity
      */
     public static Role map(RoleDto dto) {
-        return new Role(dto.name(), dto.isShiftManager());
+        return new Role(dto.name(), dto.isShiftManager(), dto.isHrManager());
     }
 
     /**
@@ -24,6 +24,6 @@ public class RoleMapper {
      * @return the converted RoleDto object
      */
     public static RoleDto map(Role role) {
-        return new RoleDto(role.getName(), role.isShiftManager());
+        return new RoleDto(role.getName(), role.isShiftManager(), role.isHrManager());
     }
 }
