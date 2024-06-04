@@ -54,8 +54,8 @@ public class RequireRolesPage extends AbstractUserComponent {
             //log?
         }
 
-        this.requireRemoveInput = new InputComponent("You're requiring a role or removing a requirement?: [Y/N]");
-        this.reoccurringInput = new InputComponent("Is this a reoccurring constraint? or specific to this shift only? [Y/N]?");
+        this.requireRemoveInput = new InputComponent("You're requiring[Y] a role or removing[N] a requirement?: [Y/N]");
+        this.reoccurringInput = new InputComponent("Is this a reoccurring constraint[Y]? or specific to this shift only[N]? [Y/N]?");
         InputComponent branchInput = new InputComponent("Which branch this requirement is needed for?\n"
                 + branchList);
         this.dateInput = new InputComponent("Please insert the date of the requested shift (or just a date of the day if it's an reoccurring role requirement).");
@@ -129,7 +129,7 @@ public class RequireRolesPage extends AbstractUserComponent {
 
     private void sendRequest() {
         try {
-            template.put(SHIFT_ROUTE + require,
+            template.put(SHIFT_ROUTE + "role=" + require,
                     new RequireRoleRequest(date, part, branch, role, reoccuring));
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
