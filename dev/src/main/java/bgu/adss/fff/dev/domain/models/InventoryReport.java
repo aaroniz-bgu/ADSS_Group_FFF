@@ -23,8 +23,23 @@ public class InventoryReport extends Report {
     public void writeReport(ProductRepository repository) {
         if (repository == null)
             throw new NullPointerException("Product repository is null");
+        if (categories == null)
+            throw new NullPointerException("Categories list is null");
+        if (categories.isEmpty())
+            throw new IllegalArgumentException("Categories list is empty");
 
         // write report
+        StringBuilder content = new StringBuilder();
+
+        for (Category category : categories) {
+            content.append("\n").append(category.getCategoryName()).append("\n");
+            for (Product product : category.getProducts()) {
+                String productRow = "\t" + product.getProductName() + " - " + product.getQuantity() + " items\n";
+                content.append(productRow);
+            }
+        }
+
+        setContent(content.toString());
     }
 
     public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content, List<Category> categories) {
