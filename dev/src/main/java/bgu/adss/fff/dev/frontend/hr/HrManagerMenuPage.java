@@ -61,6 +61,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                     }
                     break;
                 case 6:
+                    new RequireRolesPage(out).render();
                     break;
                 case 7:
                     rerender = false;
