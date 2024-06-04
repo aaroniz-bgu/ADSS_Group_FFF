@@ -5,6 +5,7 @@ import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.ListComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
+import org.springframework.web.client.RestClientException;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -52,6 +53,11 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 case 4:
                     break;
                 case 5:
+                    try {
+                        new ViewShiftHistoryPromptPage(out).render();
+                    } catch (RestClientException e) {
+                        out.println("There was an error communicating with the server please try again later.");
+                    }
                     break;
                 case 6:
                     break;
