@@ -3,16 +3,14 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.domain.models.DefectiveItemsReport;
 import bgu.adss.fff.dev.domain.models.InventoryReport;
 import bgu.adss.fff.dev.domain.models.OutOfStockReport;
+import bgu.adss.fff.dev.domain.models.Report;
 
 public interface ReportService {
 
-    InventoryReport createInventoryReport(InventoryReport inventoryReport);
+    Report createReport(Report report);
+
     InventoryReport getInventoryReport(long id);
-
-    OutOfStockReport createOutOfStockReport(OutOfStockReport outOfStockReport);
     OutOfStockReport getOutOfStockReport(long id);
-
-    DefectiveItemsReport createDefectiveItemsReport(DefectiveItemsReport defectiveItemsReport);
     DefectiveItemsReport getDefectiveItemsReport(long id);
 
 }

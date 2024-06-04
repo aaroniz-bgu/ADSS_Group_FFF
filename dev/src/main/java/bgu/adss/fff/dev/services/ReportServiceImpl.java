@@ -3,12 +3,13 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.DefectiveItemsReportRepository;
 import bgu.adss.fff.dev.data.InventoryReportRepository;
 import bgu.adss.fff.dev.data.OutOfStockReportRepository;
-import bgu.adss.fff.dev.domain.models.DefectiveItemsReport;
-import bgu.adss.fff.dev.domain.models.InventoryReport;
-import bgu.adss.fff.dev.domain.models.OutOfStockReport;
+import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.ReportException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -24,14 +25,45 @@ public class ReportServiceImpl implements ReportService {
         this.defectiveItemsReportRepository = defectiveItemsReportRepository;
     }
 
+    private long generateRandomItemID(JpaRepository<? extends Report, Long> repository) {
+        long id =  new Random().nextLong();
+
+        while (repository.existsById(id)) {
+            id = new Random().nextLong();
+        }
+
+        return id;
+    }
+
     @Override
-    public InventoryReport createInventoryReport(InventoryReport inventoryReport) {
+    public Report createReport(Report report) {
+        if (report == null)
+            throw new ReportException("Report is null");
+
+        if (report.getReportType() == null)
+            throw new ReportException("Report type is null");
+
+        if (report.getReportType() == ReportType.INVENTORY) {
+            return createInventoryReport((InventoryReport) report);
+        } else if (report.getReportType() == ReportType.OUT_OF_STOCK) {
+            return createOutOfStockReport((OutOfStockReport) report);
+        } else if (report.getReportType() == ReportType.DEFECTIVE_ITEMS) {
+            return createDefectiveItemsReport((DefectiveItemsReport) report);
+        } else {
+            throw new ReportException("Invalid report type");
+        }
+    }
+
+    private InventoryReport createInventoryReport(InventoryReport inventoryReport) {
 
         if (inventoryReport == null)
             throw new ReportException("Inventory report is null");
 
         if (inventoryReportRepository.existsById(inventoryReport.getReportId()))
             throw new ReportException("Inventory report already exists");
+
+        long id = generateRandomItemID(inventoryReportRepository);
+        inventoryReport.setReportId(id);
 
         inventoryReport.writeReport();
         return inventoryReportRepository.save(inventoryReport);
@@ -42,14 +74,16 @@ public class ReportServiceImpl implements ReportService {
         return inventoryReportRepository.findById(id).orElseThrow(() -> new ReportException("Inventory report not found"));
     }
 
-    @Override
-    public OutOfStockReport createOutOfStockReport(OutOfStockReport outOfStockReport) {
+    private OutOfStockReport createOutOfStockReport(OutOfStockReport outOfStockReport) {
 
         if (outOfStockReport == null)
             throw new ReportException("Out of stock report is null");
 
         if (outOfStockReportRepository.existsById(outOfStockReport.getReportId()))
             throw new ReportException("Out of stock report already exists");
+
+        long id = generateRandomItemID(outOfStockReportRepository);
+        outOfStockReport.setReportId(id);
 
         outOfStockReport.writeReport();
         return outOfStockReportRepository.save(outOfStockReport);
@@ -60,14 +94,16 @@ public class ReportServiceImpl implements ReportService {
         return outOfStockReportRepository.findById(id).orElseThrow(() -> new ReportException("Out of stock report not found"));
     }
 
-    @Override
-    public DefectiveItemsReport createDefectiveItemsReport(DefectiveItemsReport defectiveItemsReport) {
+    private DefectiveItemsReport createDefectiveItemsReport(DefectiveItemsReport defectiveItemsReport) {
 
         if (defectiveItemsReport == null)
             throw new ReportException("Defective items report is null");
 
         if (defectiveItemsReportRepository.existsById(defectiveItemsReport.getReportId()))
             throw new ReportException("Defective items report already exists");
+
+        long id = generateRandomItemID(defectiveItemsReportRepository);
+        defectiveItemsReport.setReportId(id);
 
         defectiveItemsReport.writeReport();
         return defectiveItemsReportRepository.save(defectiveItemsReport);

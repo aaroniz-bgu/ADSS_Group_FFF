@@ -22,13 +22,17 @@ public abstract class Report implements Serializable {
     @Column
     private String content;
 
+    @Column
+    private ReportType reportType;
+
     public Report(){}
 
-    public Report(long reportId, LocalDateTime reportDate, String title, String content){
+    public Report(long reportId, LocalDateTime reportDate, String title, String content, ReportType reportType) {
         this.reportId = reportId;
         this.reportDate = reportDate;
         this.title = title;
         this.content = content;
+        this.reportType = reportType;
     }
 
     public abstract void writeReport();
@@ -63,6 +67,14 @@ public abstract class Report implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public ReportType getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(ReportType reportType) {
+        this.reportType = reportType;
     }
 
 }
