@@ -273,7 +273,7 @@ public class ShiftServiceImpl implements ShiftService {
             if (!emp.getBranch().getName().equals(shift.getBranchName())) {
                 throw ShiftException.illegalAssignment(shift.getBranchName(), emp.getName());
             }
-            if (shift.getAvailableEmployees().contains(emp)) {
+            if (!shift.getAvailableEmployees().contains(emp)) {
                 throw ShiftException.employeeNotAvailable(emp.getName(), date, dayPart);
             }
             emps.add(emp);
