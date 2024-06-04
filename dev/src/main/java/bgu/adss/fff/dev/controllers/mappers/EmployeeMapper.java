@@ -148,7 +148,7 @@ public class EmployeeMapper {
                 trm.getMonthlySalary(),
                 trm.getHourlyRate(),
                 trm.getDaysOff(),
-                map(trm.getManager()),
+                trm.getManager() != null ? map(trm.getManager()) : null,
                 trm.getEndDate()
         );
     }
