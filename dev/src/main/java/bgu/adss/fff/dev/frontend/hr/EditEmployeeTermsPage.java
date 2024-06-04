@@ -148,17 +148,18 @@ public class EditEmployeeTermsPage extends AbstractUserComponent {
 
     private void onEndDateInput(StateEvent event) {
         try {
-            if(!event.getData().isBlank()) return;
-            String input = event.getData();
-            if(input.equals("0")) {
-                endDate = null;
-            } else {
-                String regex = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";
-                if (!input.matches(regex)) {
-                    out.println("Please make sure your date is formatted properly [dd-MM-yyyy]");
-                    startInput.render(out);
+            if(!event.getData().isBlank()) {
+                String input = event.getData();
+                if (input.equals("0")) {
+                    endDate = null; //fixme
                 } else {
-                    endDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    String regex = "^(3[01]|[12][0-9]|0[1-9])-(1[0-2]|0[1-9])-[0-9]{4}$";
+                    if (!input.matches(regex)) {
+                        out.println("Please make sure your date is formatted properly [dd-MM-yyyy]");
+                        startInput.render(out);
+                    } else {
+                        endDate = LocalDate.parse(input, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                    }
                 }
             }
             sendRequest();
