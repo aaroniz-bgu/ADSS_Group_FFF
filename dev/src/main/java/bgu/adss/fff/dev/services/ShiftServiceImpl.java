@@ -112,7 +112,6 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public Shift getShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         Shift shift = getShiftOrClean(date, dayPart, branch);
         return applyRecurringRoles(shift);
     }
@@ -207,7 +206,6 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public void lockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         Shift shift = getShiftOrClean(date, dayPart, branch);
 
         boolean hasShiftManger = false;
@@ -224,7 +222,6 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public void unlockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         Shift shift = getShiftOrClean(date, dayPart, branch);
         shift.setLocked(ShiftState.FORCE_UNLOCK);
         repository.save(shift);
@@ -243,13 +240,11 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public List<Employee> getAvailableEmployees(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         return getShiftOrClean(date, dayPart, branch).getAvailableEmployees();
     }
 
     @Override
     public List<Employee> getAssignedEmployees(LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         return getShiftOrClean(date, dayPart, branch).getAssignedEmployees();
     }
 
@@ -264,7 +259,6 @@ public class ShiftServiceImpl implements ShiftService {
      */
     @Override
     public void assignEmployees(List<Employee> employees, LocalDate date, ShiftDayPart dayPart, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         if(employees == null) {
             throw new NullPointerException("Cannot assign null.");
         }
@@ -305,7 +299,6 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         Role roleInstance = roleService.getRole(role);
         if(reoccurring) {
             reqRoleRepository.save(new ShiftRoleRequirement(
@@ -319,7 +312,6 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public void remRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean once, Branch branch) {
-        branch = branchService.getBranch(branch.getName());
         Role roleInstance = roleService.getRole(role);
         if(once) {
             Shift shift = getShiftOrClean(date, dayPart, branch);
