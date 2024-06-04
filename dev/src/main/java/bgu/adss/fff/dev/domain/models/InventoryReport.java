@@ -1,9 +1,9 @@
 package bgu.adss.fff.dev.domain.models;
 
+import bgu.adss.fff.dev.data.ProductRepository;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity(name="InventoryReport")
@@ -16,11 +16,15 @@ public class InventoryReport extends Report {
             inverseJoinColumns = @JoinColumn(name = "categoryID")
     )
     private List<Category> categories;
-    public InventoryReport() {}
+
+    public InventoryReport() { }
 
     @Override
-    public void writeReport() {
+    public void writeReport(ProductRepository repository) {
+        if (repository == null)
+            throw new NullPointerException("Product repository is null");
 
+        // write report
     }
 
     public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content, List<Category> categories) {

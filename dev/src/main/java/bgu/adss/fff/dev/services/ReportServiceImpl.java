@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.data.DefectiveItemsReportRepository;
 import bgu.adss.fff.dev.data.InventoryReportRepository;
 import bgu.adss.fff.dev.data.OutOfStockReportRepository;
+import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.ReportException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,18 @@ public class ReportServiceImpl implements ReportService {
     private final OutOfStockReportRepository outOfStockReportRepository;
     private final DefectiveItemsReportRepository defectiveItemsReportRepository;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public ReportServiceImpl(InventoryReportRepository inventoryReportRepository, OutOfStockReportRepository outOfStockReportRepository, DefectiveItemsReportRepository defectiveItemsReportRepository) {
+    public ReportServiceImpl(
+            InventoryReportRepository inventoryReportRepository,
+            OutOfStockReportRepository outOfStockReportRepository,
+            DefectiveItemsReportRepository defectiveItemsReportRepository,
+            ProductRepository productRepository) {
         this.inventoryReportRepository = inventoryReportRepository;
         this.outOfStockReportRepository = outOfStockReportRepository;
         this.defectiveItemsReportRepository = defectiveItemsReportRepository;
+        this.productRepository = productRepository;
     }
 
     private long generateRandomItemID(JpaRepository<? extends Report, Long> repository) {
@@ -65,7 +73,7 @@ public class ReportServiceImpl implements ReportService {
         long id = generateRandomItemID(inventoryReportRepository);
         inventoryReport.setReportId(id);
 
-        inventoryReport.writeReport();
+        inventoryReport.writeReport(productRepository);
         return inventoryReportRepository.save(inventoryReport);
     }
 
@@ -85,7 +93,8 @@ public class ReportServiceImpl implements ReportService {
         long id = generateRandomItemID(outOfStockReportRepository);
         outOfStockReport.setReportId(id);
 
-        outOfStockReport.writeReport();
+        outOfStockReport.writeReport(productRepository);
+
         return outOfStockReportRepository.save(outOfStockReport);
     }
 
@@ -105,7 +114,7 @@ public class ReportServiceImpl implements ReportService {
         long id = generateRandomItemID(defectiveItemsReportRepository);
         defectiveItemsReport.setReportId(id);
 
-        defectiveItemsReport.writeReport();
+        defectiveItemsReport.writeReport(productRepository);
         return defectiveItemsReportRepository.save(defectiveItemsReport);
     }
 
