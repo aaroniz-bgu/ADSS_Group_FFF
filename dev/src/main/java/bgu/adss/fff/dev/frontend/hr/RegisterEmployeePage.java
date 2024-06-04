@@ -89,7 +89,7 @@ public class RegisterEmployeePage extends AbstractUserComponent {
         daysOffInput.subscribe(this::onDaysOffInput);
         managerInput.subscribe(this::onMangerInput);
 
-        page.add(new LogoComponent("REGISTER NEW EMPLOYEE"));
+        page.add(new LogoComponent("Register New Employee"));
         page.add(idInput);
         page.add(nameInput);
         page.add(rolesInput);
