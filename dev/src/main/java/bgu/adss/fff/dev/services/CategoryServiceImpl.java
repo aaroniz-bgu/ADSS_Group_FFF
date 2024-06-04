@@ -20,11 +20,17 @@ public class CategoryServiceImpl implements CategoryService{
     @Autowired
     public CategoryServiceImpl(CategoryRepository repository) {
         this.repository = repository;
+        Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
+        repository.save(superCategory);
     }
 
 
     @Override
-    public Category createCategory(Category category) {
+    public Category createCategory(Category category, String parent) {
+
+        if(parent == null){
+            throw new CategoryException("Parent cannot be null");
+        }
 
         if(category == null){
             throw new CategoryException("Category cannot be null");
@@ -34,6 +40,13 @@ public class CategoryServiceImpl implements CategoryService{
             throw new CategoryException("Category already exists");
         }
 
+        Category parentCategory = repository.findById(parent).orElseThrow(() -> new CategoryException("Parent not found"));
+        if(parentCategory.getLevel() == 3){
+            throw new CategoryException("Cannot add category to a category with level 3");
+        }
+        category.setLevel(parentCategory.getLevel() + 1);
+        parentCategory.getChildren().add(category);
+        repository.save(parentCategory);
         return repository.save(category);
     }
 

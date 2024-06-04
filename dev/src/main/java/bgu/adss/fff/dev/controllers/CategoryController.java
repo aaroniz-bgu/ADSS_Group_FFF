@@ -31,10 +31,10 @@ public class CategoryController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody RequestCategoryDto categoryDto){
+    @PostMapping("/{parent}")
+    public ResponseEntity<CategoryDto> createCategory(@RequestBody RequestCategoryDto categoryDto, @PathVariable("parent") String parent){
         Category category = CategoryMapper.map(categoryDto);
-        return new ResponseEntity<>(map(service.createCategory(category)), HttpStatus.CREATED);
+        return new ResponseEntity<>(map(service.createCategory(category, parent)), HttpStatus.CREATED);
     }
 
     @GetMapping("/{name}")

@@ -19,16 +19,17 @@ public class CategoryMapper {
     public static CategoryDto map(Category category){
         CategoryDto[] children = CategoryMapper.map(category.getChildren());
         ProductDto[] products = ProductMapper.map(category.getProducts());
-        return new CategoryDto(category.getCategoryName(), children, products);
+        return new CategoryDto(category.getCategoryName(), category.getLevel(), children, products);
     }
 
     public static Category map(RequestCategoryDto dto){
-        return new Category(dto.categoryName(), new LinkedList<>(), new LinkedList<>());
+        return new Category(dto.categoryName(), 0, new LinkedList<>(), new LinkedList<>());
     }
 
     public static Category map(CategoryDto categoryDto){
         return new Category(
                 categoryDto.categoryName(),
+                categoryDto.level(),
                 CategoryMapper.map(categoryDto.children()),
                 ProductMapper.map(categoryDto.products())
         );

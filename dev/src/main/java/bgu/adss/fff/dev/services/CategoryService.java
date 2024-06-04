@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Category createCategory(Category category);
+    Category createCategory(Category category, String parent);
     Category getCategory(String name);
     List<Category> getCategories();
     Category updateCategory(String name, Category category);

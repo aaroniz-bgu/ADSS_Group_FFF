@@ -14,6 +14,9 @@ public class Category implements Serializable {
     @Id
     private String categoryName;
 
+    @Column
+    private int level;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "category_hierarchy",
@@ -32,8 +35,9 @@ public class Category implements Serializable {
 
     public Category() {}
 
-    public Category(String categoryName, List<Category> children, List<Product> products) {
+    public Category(String categoryName, int level, List<Category> children, List<Product> products) {
         this.categoryName = categoryName;
+        this.level = level;
         this.children = children;
         this.products = products;
     }
@@ -44,6 +48,14 @@ public class Category implements Serializable {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     public List<Category> getChildren() {
