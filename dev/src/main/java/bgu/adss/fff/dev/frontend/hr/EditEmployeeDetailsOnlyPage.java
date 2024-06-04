@@ -96,7 +96,7 @@ public class EditEmployeeDetailsOnlyPage extends AbstractUserComponent {
     }
 
     private void onBankInput(StateEvent event) {
-        if(!event.getData().isBlank()) return; //no need to worry...
+        if(event.getData().isBlank()) return; //no need to worry...
 
         char[] input = event.getData().toCharArray();
         int count = 0;
@@ -121,6 +121,8 @@ public class EditEmployeeDetailsOnlyPage extends AbstractUserComponent {
             template.put(EMPLOYEE_ROUTE + id, new EmployeeDto(
                     id, name, roles, bankDetails, branch
             ));
+            EmployeeDto emp = template.getForEntity(EMPLOYEE_ROUTE+id, EmployeeDto.class).getBody();
+            out.println("Updated: "+emp.name()+" : "+emp.id()+" successfully!");
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
             out.println(err.message());
