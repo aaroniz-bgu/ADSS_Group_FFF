@@ -29,7 +29,7 @@ public class RoleServiceImplTests {
 
     @BeforeEach
     void setup() {
-        testRole = new Role("Test Role", false);
+        testRole = new Role("Test Role", false, false);
     }
 
     @Test
@@ -48,7 +48,8 @@ public class RoleServiceImplTests {
 
     @Test
     void testGetRoles() {
-        List<Role> roles = Arrays.asList(new Role("Test Role", false), new Role("Another Role", false));
+        List<Role> roles = Arrays.asList(new Role("Test Role", false, false),
+                new Role("Another Role", false, false));
 
         when(roleRepository.findAll()).thenReturn(roles);
 

@@ -31,9 +31,9 @@ public class RoleRepositoryTests {
 
     @BeforeEach
     void setup() {
-        Role role1 = new Role("Fixerupper", false);
-        Role role2 = new Role("Da big boss man", true);
-        Role role3 = new Role("Something or another", false);
+        Role role1 = new Role("Fixerupper", false, false);
+        Role role2 = new Role("Da big boss man", true, true);
+        Role role3 = new Role("Something or another", false, false);
 
         entityManager.persist(role1);
         entityManager.persist(role2);
