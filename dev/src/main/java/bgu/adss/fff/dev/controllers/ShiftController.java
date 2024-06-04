@@ -36,7 +36,7 @@ public class ShiftController {
      * @param branchName the branch name associated with this shift.
      * @return the shift details that occurs/ occurred at the given date at the specified branch.
      */
-    @GetMapping("/{date}&{shift}&{branch}")
+    @GetMapping("/at={date}&part={shift}&{branch}")
     public ResponseEntity<ShiftDto> getShift(
             @PathVariable("date") LocalDate date,
             @PathVariable("shift") int shift,
@@ -57,7 +57,7 @@ public class ShiftController {
      * @return The shifts detail between the specified dates. If no branch name is provided,
      * it will return all shifts. Otherwise, only the ones that occurred in that branch.
      */
-    @GetMapping("{from}&{to}&{branch}")
+    @GetMapping("/from={from}&to={to}&{branch}")
     public ResponseEntity<ShiftDto[]> getShifts(
             @PathVariable("from") LocalDate from,
             @PathVariable("to") LocalDate to,
