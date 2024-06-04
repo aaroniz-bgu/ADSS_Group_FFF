@@ -257,6 +257,7 @@ public class ShiftServiceImpl implements ShiftService {
      * @param branch The branch of the shift.
      * @throws NullPointerException if the employees list is null.
      * @throws ShiftException if at least one of the employees are not assigned to the specified branch.
+     * @throws ShiftException if at least one of the employees is not available for the specified shift.
      */
     @Override
     public void assignEmployees(List<Employee> employees, LocalDate date, ShiftDayPart dayPart, Branch branch) {
@@ -273,6 +274,9 @@ public class ShiftServiceImpl implements ShiftService {
             emp = employeeService.getEmployee(emp.getId());
             if (!emp.getBranch().getName().equals(shift.getBranchName())) {
                 throw ShiftException.illegalAssignment(shift.getBranchName(), emp.getName());
+            }
+            if (!shift.getAvailableEmployees().contains(emp)) {
+                throw ShiftException.employeeNotAvailable(emp.getName(), date, dayPart);
             }
             emps.add(emp);
             hasShiftManger |= isShiftMangerHelper(emp);
