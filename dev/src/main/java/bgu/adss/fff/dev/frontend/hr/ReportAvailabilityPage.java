@@ -27,7 +27,7 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
     private String date;
     private int shift;
 
-    protected ReportAvailabilityPage(PrintStream out, EmployeeDto employee) {
+    public ReportAvailabilityPage(PrintStream out, EmployeeDto employee) {
         super(out);
 
         dateInput = new InputComponent("Insert the date of shift [dd-MM-yyyy] without the brackets:");

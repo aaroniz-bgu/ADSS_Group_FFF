@@ -53,7 +53,7 @@ public class RegisterEmployeePage extends AbstractUserComponent {
     private int daysOff;
     private EmployeeDto directManager;
 
-    protected RegisterEmployeePage(PrintStream out) {
+    public RegisterEmployeePage(PrintStream out) {
         super(out);
 
         this.template = new RestTemplate();

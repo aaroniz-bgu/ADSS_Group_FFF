@@ -13,7 +13,7 @@ public class EmployeeMenuPage extends AbstractUserComponent {
 
     private final EmployeeDto employee;
 
-    protected EmployeeMenuPage(PrintStream out, EmployeeDto employee) {
+    public EmployeeMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
 
         this.employee = employee;

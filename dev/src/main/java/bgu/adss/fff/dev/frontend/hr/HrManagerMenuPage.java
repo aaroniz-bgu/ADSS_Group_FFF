@@ -14,7 +14,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
     private final EmployeeDto employee;
     private final InputComponent choiceInput;
 
-    protected HrManagerMenuPage(PrintStream out, EmployeeDto employee) {
+    public HrManagerMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
 
         this.employee = employee;
@@ -24,7 +24,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
         page.add(new LogoComponent("Welcome " + employee.name() + " : HUMAN RESOURCES DEPARTMENT"));
         page.add(new ListComponent<String>(List.of(
                 "Register new employee",
-                "Edit existing employee details",
+                "Soon: Edit existing employee details",
                 "[#] Shift Assignment Interface", // Choose week->show shifts table??
                 "Un/lock shifts to reports",
                 "View shift history",
@@ -44,8 +44,10 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                     new RegisterEmployeePage(out).render();
                     break;
                 case 2:
+                    new EditEmployeeDetailsPage(out).render();
                     break;
                 case 3:
+                    new ShiftAssignmentPage(out).render();
                     break;
                 case 4:
                     break;
