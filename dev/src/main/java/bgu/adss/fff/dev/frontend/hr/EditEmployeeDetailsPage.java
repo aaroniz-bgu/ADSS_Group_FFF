@@ -38,7 +38,7 @@ public class EditEmployeeDetailsPage extends AbstractUserComponent {
     private void onTermsOrEmployeeInput(StateEvent event) {
         String choice = event.getData().toLowerCase();
         if(choice.equals("t")) {
-
+            new EditEmployeeTermsPage(out, id).render();
         } else if (choice.equals("e")) {
             new EditEmployeeDetailsOnlyPage(out, id).render();
         } else {
