@@ -18,15 +18,11 @@ public class DiscountServiceImpl implements DiscountService {
         this.discountRepository = discountRepository;
     }
 
-    private Discount save(Discount discount) {
-        return discountRepository.save(discount);
-    }
-
     private boolean doesDiscountExist(long id) {
         return discountRepository.existsById(id);
     }
 
-    public long generateRandomDiscountID() {
+    private long generateRandomDiscountID() {
         long id =  new Random().nextLong();
 
         while (id == 0 || doesDiscountExist(id)) {
@@ -45,21 +41,39 @@ public class DiscountServiceImpl implements DiscountService {
 
         discount.setDiscountID(generateRandomDiscountID());
 
-        return save(discount);
+        if (doesDiscountExist(discount.getDiscountID())) {
+            throw new DiscountException("Discount already exists");
+        }
+
+        return discountRepository.save(discount);
     }
 
     @Override
     public Discount getDiscount(long id) {
-        return null;
+        return discountRepository.findById(id).orElseThrow(() -> new DiscountException("Discount not found"));
     }
 
     @Override
     public Discount updateDiscount(Discount discount) {
-        return null;
+
+        if (discount == null) {
+            throw new DiscountException("Discount cannot be null");
+        }
+
+        if (!doesDiscountExist(discount.getDiscountID())) {
+            throw new DiscountException("Discount not found");
+        }
+
+        return discountRepository.save(discount);
     }
 
     @Override
     public void deleteDiscount(long id) {
 
+        if (!doesDiscountExist(id)) {
+            throw new DiscountException("Discount not found");
+        }
+
+        discountRepository.deleteById(id);
     }
 }
