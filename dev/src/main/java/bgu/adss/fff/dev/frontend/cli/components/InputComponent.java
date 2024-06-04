@@ -24,7 +24,7 @@ public class InputComponent extends AbstractTerminalComponent {
     @Override
     public void render(PrintStream out) {
         out.print(label + NEWLINE + "> ");
-        String input = SCANNER.next();
+        String input = SCANNER.nextLine();
         notifyListeners(new StateEvent(input));
     }
 
