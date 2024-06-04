@@ -164,6 +164,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         Employee mgr = getManager(emp);
+        terms.setEmployee(emp);
         terms.setManager(mgr);
         emp.setTerms(terms);
         repository.save(emp);
