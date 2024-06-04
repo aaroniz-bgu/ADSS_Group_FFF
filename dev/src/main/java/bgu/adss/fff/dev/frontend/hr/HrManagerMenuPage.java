@@ -12,8 +12,7 @@ import java.util.List;
 public class HrManagerMenuPage extends AbstractUserComponent {
 
     private final EmployeeDto employee;
-
-    private InputComponent choiceInput;
+    private final InputComponent choiceInput;
 
     protected HrManagerMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
@@ -27,6 +26,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 "Register new employee",
                 "Edit existing employee details",
                 "[#] Shift Assignment Interface", // Choose week->show shifts table??
+                "Un/lock shifts to reports",
                 "View shift history",
                 "Require roles",
                 "Exit"
@@ -51,6 +51,8 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 case 5:
                     break;
                 case 6:
+                    break;
+                case 7:
                     break;
                 default:
                     rerender = false;
