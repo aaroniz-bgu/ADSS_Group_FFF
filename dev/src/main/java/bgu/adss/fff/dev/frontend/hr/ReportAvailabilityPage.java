@@ -3,26 +3,19 @@ package bgu.adss.fff.dev.frontend.hr;
 import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ErrorDetails;
 import bgu.adss.fff.dev.contracts.ReportShiftRequest;
-import bgu.adss.fff.dev.contracts.ShiftDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.DateFormatter;
 import java.io.PrintStream;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
 public class ReportAvailabilityPage extends AbstractUserComponent {
-
 
     private static final String ROUTE = URI_PATH +  "/shift";
     private static final String ASS_ROUTE = ROUTE + "/available/";
@@ -30,7 +23,7 @@ public class ReportAvailabilityPage extends AbstractUserComponent {
     InputComponent dateInput;
     InputComponent shiftInput;
 
-    private EmployeeDto employee;
+    private final EmployeeDto employee;
     private String date;
     private int shift;
 
