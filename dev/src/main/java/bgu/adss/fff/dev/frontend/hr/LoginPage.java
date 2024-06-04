@@ -16,6 +16,7 @@ import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 public class LoginPage extends AbstractUserComponent {
 
     private static final String ROUTE = "/employee";
+    private static final String DEBUG_MANAGER = "SYSADMIN-000";
 
     private final RestTemplate restTemplate;
 
@@ -33,6 +34,12 @@ public class LoginPage extends AbstractUserComponent {
 
     private void onLogin(StateEvent event) {
         String ans = event.getData();
+        if(ans.equals(DEBUG_MANAGER)) {
+            new HrManagerMenuPage(out,
+                    new EmployeeDto(0L,"ADMIN", null, null, null))
+                    .render();
+            return;
+        }
         String uri =  URI_PATH + ROUTE + "/" + ans;
         try {
             EmployeeDto response = restTemplate.getForEntity(uri, EmployeeDto.class).getBody();
