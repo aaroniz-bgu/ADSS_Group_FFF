@@ -43,6 +43,10 @@ public class ViewShiftHistoryPromptPage extends AbstractUserComponent {
         this.toInput = new InputComponent(
                 "Insert the latest date you'd like to see using the following pattern [dd-MM-yyyy]");
 
+        branchInput.subscribe(this::onBranch);
+        fromInput.subscribe(this::onFrom);
+        toInput.subscribe(this::onTo);
+
         page.add(new LogoComponent("Shift History"));
         page.add(new ListComponent<>(Arrays.asList(branches)));
         page.add(branchInput);
@@ -66,6 +70,7 @@ public class ViewShiftHistoryPromptPage extends AbstractUserComponent {
     private void onTo(StateEvent event) {
         if(checkDateFormat(event.getData())) {
             to = event.getData();
+            sendRequest();
         } else {
             out.println("Please use the format given!");
             toInput.render(out);
