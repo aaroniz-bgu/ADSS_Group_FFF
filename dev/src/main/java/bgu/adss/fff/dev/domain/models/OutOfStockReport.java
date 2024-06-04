@@ -11,7 +11,12 @@ public class OutOfStockReport extends Report {
     public OutOfStockReport() {}
 
     public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content){
-        super(reportId, reportDate, title, content);
+        super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK);
+    }
+
+    @Override
+    public void writeReport() {
+
     }
 
 }

@@ -10,7 +10,12 @@ public class DefectiveItemsReport extends Report{
     public DefectiveItemsReport() {}
 
     public DefectiveItemsReport(long reportId, LocalDateTime reportDate, String title, String content){
-        super(reportId, reportDate, title, content);
+        super(reportId, reportDate, title, content, ReportType.DEFECTIVE_ITEMS);
+    }
+
+    @Override
+    public void writeReport() {
+
     }
 
 }

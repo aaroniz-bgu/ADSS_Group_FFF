@@ -1,5 +1,7 @@
 package bgu.adss.fff.dev.contracts;
 
+import bgu.adss.fff.dev.domain.models.ReportType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -13,7 +15,11 @@ import java.time.LocalDateTime;
  */
 public record ReportDto(
         @JsonProperty("reportId") long reportId,
-        @JsonProperty("reportDate") LocalDateTime reportDate,
+
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        @JsonProperty("reportDate") String reportDate,
+
         @JsonProperty("title") String title,
-        @JsonProperty("content") String content
+        @JsonProperty("content") String content,
+        @JsonProperty("reportType")ReportType reportType
 ) { }
