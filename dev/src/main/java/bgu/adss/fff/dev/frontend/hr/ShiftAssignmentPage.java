@@ -36,7 +36,7 @@ public class ShiftAssignmentPage extends AbstractUserComponent {
 
     private void onBranchPicked(StateEvent event) {
         try {
-            new ShiftAssignmentBranchPage(out, event.getData());
+            new ShiftAssignmentBranchPage(out, event.getData()).render();
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
             out.println(err.message());
