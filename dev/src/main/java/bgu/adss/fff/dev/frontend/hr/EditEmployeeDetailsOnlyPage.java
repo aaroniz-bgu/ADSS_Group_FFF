@@ -41,7 +41,7 @@ public class EditEmployeeDetailsOnlyPage extends AbstractUserComponent {
         this.template = new RestTemplate();
 
         RoleDto[] roles = template.getForEntity(ROLES_ROUTE, RoleDto[].class).getBody();
-        rolesList = Arrays.toString(roles);
+        rolesList = Arrays.toString(Arrays.stream(roles).map((r) -> r.name()).toArray());
         String[] branches = template.getForEntity(BRANCH_ROUTE, String[].class).getBody();
         branchList = Arrays.toString(branches);
 
