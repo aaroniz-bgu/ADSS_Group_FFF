@@ -26,12 +26,10 @@ import static bgu.adss.fff.dev.controllers.mappers.CategoryMapper.map;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final ProductService productService;
 
     @Autowired
     public CategoryController(CategoryService categoryService, ProductService productService) {
         this.categoryService = categoryService;
-        this.productService = productService;
     }
 
     @PostMapping("/{parent}")
