@@ -4,14 +4,12 @@ import bgu.adss.fff.dev.data.CategoryRepository;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
-import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.CategoryException;
 import bgu.adss.fff.dev.exceptions.ProductException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 

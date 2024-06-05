@@ -39,10 +39,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    private void deleteItemByID(long id) {
-        itemRepository.deleteById(id);
-    }
-
     private Product getProductByID(long id) {
         return productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
     }
@@ -76,8 +72,6 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductException("Product already exists");
         }
 
-        // TODO: Any other business logic
-
         return save(product);
     }
 
@@ -98,8 +92,6 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductException("Product not found");
         }
 
-        //TODO: Any other business logic
-
         return save(product);
     }
 
@@ -109,8 +101,6 @@ public class ProductServiceImpl implements ProductService {
         if (!doesProductExist(id)) {
             throw new ProductException("Product not found");
         }
-
-        //TODO: Any other business logic
 
         deleteProductByID(id);
     }
