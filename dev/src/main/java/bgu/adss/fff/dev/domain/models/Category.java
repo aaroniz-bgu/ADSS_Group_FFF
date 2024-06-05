@@ -25,7 +25,7 @@ public class Category implements Serializable {
     )
     private List<Category> children;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "category_products",
             joinColumns = @JoinColumn(name = "categoryID"),

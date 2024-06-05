@@ -4,6 +4,7 @@ import bgu.adss.fff.dev.data.ProductRepository;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity(name="InventoryReport")
@@ -47,8 +48,17 @@ public class InventoryReport extends Report {
         this.categories = categories;
     }
 
+    public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content) {
+        super(reportId, reportDate, title, content, ReportType.INVENTORY);
+        this.categories = new LinkedList<>();
+    }
+
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 
 }

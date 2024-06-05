@@ -11,6 +11,7 @@ import bgu.adss.fff.dev.exceptions.ProductException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -153,7 +154,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void addProduct(Product product, String[] categories) {
+    public void addProduct(long id, String[] categories) {
         if(categories == null || categories.length != 3){
             throw new ProductException("Product must belong to 3 levels of categories");
         }
@@ -167,12 +168,20 @@ public class CategoryServiceImpl implements CategoryService{
             superCategory = category;
         }
 
-        categoryRepository.findById("Super").ifPresent(category -> category.getProducts().add(product));
-        for(String categoryName : categories){
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
+
+        // Reverse the array to add the product to the most specific category first
+        String[] reversedCategories = new String[3];
+        for(int i = 0; i < 3; i++){
+            reversedCategories[i] = categories[3 - i - 1];
+        }
+
+        for(String categoryName : reversedCategories){
             Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found"));
             category.getProducts().add(product);
             categoryRepository.save(category);
         }
+        categoryRepository.findById("Super").ifPresent(category -> { category.getProducts().add(product); categoryRepository.save(category);});
     }
 
 }

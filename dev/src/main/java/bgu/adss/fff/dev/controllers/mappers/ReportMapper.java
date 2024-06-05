@@ -70,15 +70,14 @@ public class ReportMapper {
         );
     }
 
-    public static Report map(RequestResponseDto requestResponseDto){
-        if (requestResponseDto.reportType() == ReportType.INVENTORY) {
-            List<Category> categories = Arrays.stream(requestResponseDto.categories()).map(CategoryMapper::map).toList();
-            return new InventoryReport(0, LocalDateTime.now(), "Inventory Report", null, categories);
+    public static Report map(RequestReportDto requestReportDto){
+        if (requestReportDto.reportType() == ReportType.INVENTORY) {
+            return new InventoryReport(0, LocalDateTime.now(), "Inventory Report", null);
         }
-        if (requestResponseDto.reportType() == ReportType.OUT_OF_STOCK) {
+        if (requestReportDto.reportType() == ReportType.OUT_OF_STOCK) {
             return new OutOfStockReport(0, LocalDateTime.now(), "Out of Stock Report", null);
         }
-        if (requestResponseDto.reportType() == ReportType.DEFECTIVE_ITEMS) {
+        if (requestReportDto.reportType() == ReportType.DEFECTIVE_ITEMS) {
             return new DefectiveItemsReport(0, LocalDateTime.now(), "Defective Items Report", null);
         }
 

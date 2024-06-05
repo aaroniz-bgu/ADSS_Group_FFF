@@ -12,8 +12,6 @@ import java.util.stream.Stream;
 public class ProductMapper {
 
     public static ProductDto map(Product product){
-        System.out.println(product.getShelves());
-        System.out.println(product.getStorage());
         return new ProductDto(
                 product.getProductID(),
                 product.getProductName(),

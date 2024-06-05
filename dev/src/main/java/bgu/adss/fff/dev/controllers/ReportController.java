@@ -5,6 +5,7 @@ import bgu.adss.fff.dev.domain.models.DefectiveItemsReport;
 import bgu.adss.fff.dev.domain.models.InventoryReport;
 import bgu.adss.fff.dev.domain.models.OutOfStockReport;
 import bgu.adss.fff.dev.domain.models.Report;
+import bgu.adss.fff.dev.services.CategoryService;
 import bgu.adss.fff.dev.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class ReportController {
     // Basic CRUD operations
 
     @PostMapping
-    public ResponseEntity<ReportDto> createReport(@RequestBody RequestResponseDto request) {
-        Report report = service.createReport(map(request));
+    public ResponseEntity<ReportDto> createReport(@RequestBody RequestReportDto request) {
+        Report report = service.createReport(map(request), request.categories());
         ReportDto reportDto = map(report);
         return new ResponseEntity<>(reportDto, HttpStatus.CREATED);
     }

@@ -1,15 +1,14 @@
 package bgu.adss.fff.dev.services;
 
-import bgu.adss.fff.dev.data.DefectiveItemsReportRepository;
-import bgu.adss.fff.dev.data.InventoryReportRepository;
-import bgu.adss.fff.dev.data.OutOfStockReportRepository;
-import bgu.adss.fff.dev.data.ProductRepository;
+import bgu.adss.fff.dev.data.*;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.ReportException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -20,17 +19,20 @@ public class ReportServiceImpl implements ReportService {
     private final DefectiveItemsReportRepository defectiveItemsReportRepository;
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
     public ReportServiceImpl(
             InventoryReportRepository inventoryReportRepository,
             OutOfStockReportRepository outOfStockReportRepository,
             DefectiveItemsReportRepository defectiveItemsReportRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository,
+            CategoryRepository categoryRepository) {
         this.inventoryReportRepository = inventoryReportRepository;
         this.outOfStockReportRepository = outOfStockReportRepository;
         this.defectiveItemsReportRepository = defectiveItemsReportRepository;
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     private long generateRandomItemID(JpaRepository<? extends Report, Long> repository) {
@@ -44,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Report createReport(Report report) {
+    public Report createReport(Report report, String[] categories) {
         if (report == null)
             throw new ReportException("Report is null");
 
@@ -52,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
             throw new ReportException("Report type is null");
 
         if (report.getReportType() == ReportType.INVENTORY) {
-            return createInventoryReport((InventoryReport) report);
+            return createInventoryReport((InventoryReport) report, categories);
         } else if (report.getReportType() == ReportType.OUT_OF_STOCK) {
             return createOutOfStockReport((OutOfStockReport) report);
         } else if (report.getReportType() == ReportType.DEFECTIVE_ITEMS) {
@@ -62,7 +64,7 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
-    private InventoryReport createInventoryReport(InventoryReport inventoryReport) {
+    private InventoryReport createInventoryReport(InventoryReport inventoryReport, String[] categories) {
 
         if (inventoryReport == null)
             throw new ReportException("Inventory report is null");
@@ -72,6 +74,13 @@ public class ReportServiceImpl implements ReportService {
 
         long id = generateRandomItemID(inventoryReportRepository);
         inventoryReport.setReportId(id);
+
+        List<Category> categoryList = new LinkedList<>();
+        for (String categoryName : categories) {
+            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new ReportException("Category not found"));
+            categoryList.add(category);
+        }
+        inventoryReport.setCategories(categoryList);
 
         inventoryReport.writeReport(productRepository);
         return inventoryReportRepository.save(inventoryReport);

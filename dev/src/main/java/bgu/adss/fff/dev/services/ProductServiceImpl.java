@@ -129,16 +129,17 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = getProductByID(id);
 
-        List<Item> itemList = new LinkedList<>();
+        List<Item> savedItems = new LinkedList<>();
         for (Item item : items) {
             item.setItemID(generateRandomItemID());
             item = save(item);
 
             product.addToStorage(item);
-            itemList.add(item);
+            savedItems.add(item);
         }
+        save(product);
 
-        return itemList;
+        return savedItems;
     }
 
     @Override

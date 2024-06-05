@@ -17,6 +17,6 @@ public interface CategoryService {
     Category updateChildren(String name, List<Category> children);
     Category updateProducts(String name, List<Product> products);
     void addCategoryDiscount(String name, Discount discount);
-    void addProduct(Product product, String[] categories);
+    void addProduct(long id, String[] categories);
 
 }

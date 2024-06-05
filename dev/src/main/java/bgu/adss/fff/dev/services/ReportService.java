@@ -7,7 +7,7 @@ import bgu.adss.fff.dev.domain.models.Report;
 
 public interface ReportService {
 
-    Report createReport(Report report);
+    Report createReport(Report report, String[] categories);
 
     InventoryReport getInventoryReport(long id);
     OutOfStockReport getOutOfStockReport(long id);

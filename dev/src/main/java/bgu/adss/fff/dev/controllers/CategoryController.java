@@ -86,10 +86,9 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/product/{categories}")
-    public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto, @PathVariable("categories") String[] categories) {
-        Product product = ProductMapper.map(productDto);
-        categoryService.addProduct(product, categories);
+    @PutMapping("/product/{id}")
+    public ResponseEntity<?> addProduct(@RequestBody RequestCategoriesDto categories, @PathVariable("id") long id) {
+        categoryService.addProduct(id, categories.categories());
         return ResponseEntity.noContent().build();
     }
 
