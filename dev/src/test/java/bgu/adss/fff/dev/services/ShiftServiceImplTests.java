@@ -178,5 +178,7 @@ public class ShiftServiceImplTests {
         when(repository.findById(id)).thenReturn(Optional.of(shift));
         when(repository.save(shift)).thenReturn(shift);
         assertThrows(ShiftException.class, () -> service.assignEmployees(List.of(sheldon), date, ShiftDayPart.MORNING, branch));
+        service.reportAvailability(0L, date, ShiftDayPart.MORNING);
+        assertDoesNotThrow(() -> service.assignEmployees(List.of(sheldon), date, ShiftDayPart.MORNING, branch));
     }
 }
