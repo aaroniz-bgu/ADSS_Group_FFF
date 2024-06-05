@@ -349,6 +349,7 @@ public class ShiftServiceImpl implements ShiftService {
     }
     @Override
     public void updateCutOff(int cutOff) {
+        this.cutoff = cutOff;
         config.save(config.findById(CUTOFF_CONFIG_KEY)
                 .orElse(new ConfigurationPair(CUTOFF_CONFIG_KEY, cutOff+"")));
     }
