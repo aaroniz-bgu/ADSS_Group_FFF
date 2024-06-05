@@ -19,7 +19,7 @@ public record FullEmployeeDto(
         @JsonProperty("startDate") LocalDate startDate,
         @JsonProperty("jobType") int jobType,
         @JsonProperty("monthlySalary") float monthlySalary,
-        @JsonProperty("HourlyRate") float hourlyRate,
+        @JsonProperty("hourlyRate") float hourlyRate,
         @JsonProperty("daysOff") int daysOff,
         @JsonProperty("directManager") EmployeeDto directManager,
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")

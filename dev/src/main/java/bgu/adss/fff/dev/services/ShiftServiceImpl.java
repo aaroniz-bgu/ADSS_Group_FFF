@@ -128,6 +128,7 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public List<Shift> getShiftsByBranch(LocalDate from, LocalDate to, Branch branch) {
+        branch = branchService.getBranch(branch.getName());
         List<Shift> shifts = repository.getRangeOfShiftsByBranch(branch, from, to);
         for(Shift s: shifts) {
             s.setLocked(lockHelper(s.getDate(), s.getLockState()));
@@ -157,7 +158,8 @@ public class ShiftServiceImpl implements ShiftService {
         LocalDate curr = from;
         ShiftDayPart part = ShiftDayPart.MORNING;
 
-        for(Shift shift : shifts) {
+        List<Shift> iterate = List.copyOf(shifts);
+        for(Shift shift : iterate) {
             Shift add;
             while(shiftDatePartComparator((add = new Shift(curr, part, branch)), shift) <= 0) {
                 // Since we always flip, we need this to be like this:
@@ -207,13 +209,13 @@ public class ShiftServiceImpl implements ShiftService {
     public void lockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
         Shift shift = getShiftOrClean(date, dayPart, branch);
 
-        boolean hasShiftManger = false;
-        for(Employee emp : shift.getAssignedEmployees()) {
-            hasShiftManger |= isShiftMangerHelper(emp);
-        }
-        if(!hasShiftManger) {
-            throw ShiftException.noShiftManger(date, dayPart);
-        }
+//        boolean hasShiftManger = false;
+//        for(Employee emp : shift.getAssignedEmployees()) {
+//            hasShiftManger |= isShiftMangerHelper(emp);
+//        }
+//        if(!hasShiftManger) {
+//            throw ShiftException.noShiftManger(date, dayPart);
+//        }
 
         shift.setLocked(ShiftState.FORCE_LOCK);
         repository.save(shift);

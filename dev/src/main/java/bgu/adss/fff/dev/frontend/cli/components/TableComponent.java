@@ -122,7 +122,7 @@ public class TableComponent<T, E> extends AbstractTerminalComponent {
 
     @Override
     public String rerender() {
-        lastRender = renderHeaders() + NEWLINE + renderRows();
+        lastRender = renderHeaders() + NEWLINE + renderRows() + NEWLINE;
         return lastRender;
     }
 
