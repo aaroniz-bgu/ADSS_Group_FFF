@@ -74,7 +74,7 @@ public class EmployeeMapper {
         EmploymentTerms trm = new EmploymentTerms(
                 dto.startDate(),
                 JobType.values()[dto.jobType()],
-                dto.directManager() != null ? map(dto.directManager()) : null,
+                dto.directManager() != null ? mapMangerHelper(dto.directManager()) : null,
                 dto.monthlySalary(),
                 dto.hourlyRate(),
                 dto.daysOff()

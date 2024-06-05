@@ -174,7 +174,7 @@ public class ShiftController {
      *                the requirement is date specific or reoccurring.
      * @return ok http response if everything goes to plan.
      */
-    @PutMapping("/roles=true")
+    @PutMapping("/role=true")
     public ResponseEntity<?> requireRole(@RequestBody RequireRoleRequest request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         service.addRequiredRole(
@@ -193,7 +193,7 @@ public class ShiftController {
      *                delete it once or all of its reoccurrences in the corresponding week day to the date.
      * @return ok http response if everything goes to plan.
      */
-    @PutMapping("/roles=false")
+    @PutMapping("/role=false")
     public ResponseEntity<?> removeRequiredRole(@RequestBody RequireRoleRequest request) {
         ShiftDayPart part = ShiftDayPart.values()[request.shift()];
         service.remRequiredRole(
