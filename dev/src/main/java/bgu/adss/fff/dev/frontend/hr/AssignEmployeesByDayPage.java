@@ -51,7 +51,7 @@ public class AssignEmployeesByDayPage extends AbstractUserComponent {
         employeeInput.subscribe(this::onEmployeeInput);
 
         page.add(new LogoComponent("Assign Employees To Shift"));
-        page.add(new TableComponent<>(HEADER, rows, 150, 24));
+        page.add(new TableComponent<>(HEADER, rows, 150, 20));
         page.add(daypartInput);
         page.add(employeeInput);
     }
@@ -80,8 +80,7 @@ public class AssignEmployeesByDayPage extends AbstractUserComponent {
             }
             request = new ShiftDto(request.date(), request.shift(), request.branch(), request.isLocked(),
                     request.availableEmployees(), assigned, request.requiredRoles());
-
-
+            sendRequest();
         } catch (IllegalArgumentException e) {
             out.println("Please make sure your input is correctly separated by comma and contains only ids that are available to work that shift!");
             employeeInput.render(out);
