@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.ItemRepository;
 import bgu.adss.fff.dev.data.ProductRepository;
+import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.ProductException;
@@ -175,6 +176,21 @@ public class ProductServiceImpl implements ProductService {
         save(product);
 
         return movedItems;
+    }
+
+    @Override
+    public Discount addDiscount(long id, Discount discount) {
+
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found");
+        }
+
+        Product product = getProductByID(id);
+
+        product.setDiscount(discount);
+        save(product);
+
+        return discount;
     }
 
     @Override

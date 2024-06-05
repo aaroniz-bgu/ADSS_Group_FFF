@@ -1,6 +1,8 @@
 package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
+import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.ProductService;
@@ -71,6 +73,13 @@ public class ProductController {
         List<Item> itemsList = service.moveToShelves(id, amount.amount());
         ItemDto[] itemDtos = map(itemsList);
         return new ResponseEntity<>(itemDtos, HttpStatus.OK);
+    }
+
+    @PutMapping("/discount/{id}")
+    public ResponseEntity<?> addDiscount(@PathVariable("id") long id, @RequestBody DiscountDto discountDto) {
+        Discount discount = DiscountMapper.map(discountDto);
+        service.addDiscount(id, discount);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/storage/{id}")

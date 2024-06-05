@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 
@@ -17,5 +18,6 @@ public interface ProductService {
 
     List<Item> addItems(long id, List<Item> items);
     List<Item> moveToShelves(long id, int amount);
+    Discount addDiscount(long id, Discount discount);
 
 }
