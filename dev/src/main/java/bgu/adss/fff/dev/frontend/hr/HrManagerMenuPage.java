@@ -30,8 +30,8 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 "Un/lock shifts to reports",
                 "View shift history",
                 "Require roles",
-                "Add new roles - still unavailable",
-                "Add new branch - still unavailable",
+                "Add new roles",
+                "Add new branch",
                 "Exit"
         )));
         choiceInput.subscribe(this::onChoice);
@@ -64,6 +64,12 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                     break;
                 case 6:
                     new RequireRolesPage(out).render();
+                    break;
+                case 7:
+                    new AddRolePage(out).render();
+                    break;
+                case 8:
+                    new AddBranchPage(out).render();
                     break;
                 case 9:
                     rerender = false;
