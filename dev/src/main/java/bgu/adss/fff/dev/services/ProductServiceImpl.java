@@ -143,6 +143,41 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Item> moveToShelves(long id, int amount) {
+
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found");
+        }
+
+        if (amount <= 0) {
+            throw new ProductException("Amount must be greater than 0");
+        }
+
+        Product product = getProductByID(id);
+
+        List<Item> storage = product.getStorage();
+        List<Item> shelves = product.getShelves();
+
+        if (storage.size() < amount) {
+            throw new ProductException("Not enough items in storage");
+        }
+
+        List<Item> movedItems = new LinkedList<>();
+        for (int i = 0; i < amount; i++) {
+            Item item = storage.remove(0);
+            shelves.add(item);
+
+            movedItems.add(item);
+        }
+
+        product.setStorage(storage);
+        product.setShelves(shelves);
+        save(product);
+
+        return movedItems;
+    }
+
+    @Override
     public Product updateStorage(long id, List<Item> storage) {
 
         if (!doesProductExist(id)) {

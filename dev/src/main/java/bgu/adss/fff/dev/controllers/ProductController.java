@@ -1,9 +1,6 @@
 package bgu.adss.fff.dev.controllers;
 
-import bgu.adss.fff.dev.contracts.ItemDto;
-import bgu.adss.fff.dev.contracts.ProductDto;
-import bgu.adss.fff.dev.contracts.RequestItemDto;
-import bgu.adss.fff.dev.contracts.RequestProductDto;
+import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.ProductService;
@@ -64,6 +61,14 @@ public class ProductController {
                                       @RequestBody RequestItemDto items) {
         List<Item> itemsList = map(items);
         itemsList = service.addItems(id, itemsList);
+        ItemDto[] itemDtos = map(itemsList);
+        return new ResponseEntity<>(itemDtos, HttpStatus.OK);
+    }
+
+    @PutMapping("/item/{id}")
+    public ResponseEntity<?> moveToShelves(@PathVariable("id") long id,
+                                           @RequestBody RequestAmountDto amount) {
+        List<Item> itemsList = service.moveToShelves(id, amount.amount());
         ItemDto[] itemDtos = map(itemsList);
         return new ResponseEntity<>(itemDtos, HttpStatus.OK);
     }

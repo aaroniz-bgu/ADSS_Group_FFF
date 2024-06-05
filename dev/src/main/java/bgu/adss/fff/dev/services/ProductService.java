@@ -16,5 +16,6 @@ public interface ProductService {
     Product updateShelves(long id, List<Item> shelves);
 
     List<Item> addItems(long id, List<Item> items);
+    List<Item> moveToShelves(long id, int amount);
 
 }
