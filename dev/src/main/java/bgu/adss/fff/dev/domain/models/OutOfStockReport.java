@@ -23,6 +23,18 @@ public class OutOfStockReport extends Report {
 
         // write report
 
+        StringBuilder content = new StringBuilder();
+        for (Product product : repository.findAll()) {
+            if (product.getQuantity() < product.getMinimalQuantity()) {
+                String productRow = product.getProductName() + " is about to run out of stock\n";
+                productRow += "\tQuantity: " + product.getQuantity() + " (" + product.getStorageQuantity() +" Storage, " + product.getShelvesQuantity() + " Shelves)\n";
+                productRow += "\tMinimal Quantity: " + product.getMinimalQuantity() + "\n";
+                content.append(productRow);
+            }
+        }
+
+        setContent(content.toString());
+
     }
 
 }
