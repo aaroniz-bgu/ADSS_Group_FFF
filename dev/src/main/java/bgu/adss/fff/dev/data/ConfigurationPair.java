@@ -7,31 +7,32 @@ import jakarta.persistence.Id;
 @Entity
 public class ConfigurationPair {
     @Id
-    private String key;
+    private String ckey;
     @Column
-    private String value;
+    private String cvalue;
 
     public ConfigurationPair() {
 
     }
 
-    public ConfigurationPair(String cutOff, String fallbackCutoff) {
-
+    public ConfigurationPair(String ckey, String cvalue) {
+        this.ckey = ckey;
+        this.cvalue = cvalue;
     }
 
     public String getKey() {
-        return key;
+        return ckey;
     }
 
     public void setKey(String key) {
-        this.key = key;
+        this.ckey = key;
     }
 
     public String getValue() {
-        return value;
+        return cvalue;
     }
 
     public void setValue(String value) {
-        this.value = value;
+        this.cvalue = value;
     }
 }
