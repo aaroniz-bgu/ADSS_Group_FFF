@@ -60,7 +60,7 @@ public class ShiftAssignmentBranchPage extends AbstractUserComponent {
         input.subscribe(this::onInput);
 
         page.add(new LogoComponent("Assign Employees To Shift"));
-        page.add(new TableComponent<>(HEADER, List.of(morning, evening), 150, 24));
+        page.add(new TableComponent<>(HEADER, List.of(morning, evening), 150, 18));
         page.add(input);
 
     }
