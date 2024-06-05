@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class SystemConfiguration {
     private static final String PATH = "static/configuration.json";
+    private static final int DEF = 24;
     private File jsonFile;
 
     private static void error() {
@@ -23,7 +24,7 @@ public class SystemConfiguration {
         try {
             jsonFile = new ClassPathResource(PATH).getFile();
         } catch (IOException e) {
-            error();
+            //error();
         }
     }
 
@@ -36,9 +37,9 @@ public class SystemConfiguration {
             ConfigDetails config = new ObjectMapper().readValue(jsonFile, ConfigDetails.class);
             return config.cutoffTime;
         } catch (IOException e) {
-            error();
+            //error();
         }
-        return 0;
+        return DEF;
     }
 
     /**
@@ -50,7 +51,7 @@ public class SystemConfiguration {
         try {
             new ObjectMapper().writeValue(jsonFile, new ConfigDetails(cutoff));
         } catch(IOException e) {
-            error();
+            //error();
         }
     }
 

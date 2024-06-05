@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> unexpectedExceptionHandler(Exception ex, WebRequest request) {
+        System.out.println("[LOG SERVER ERROR]: "+ex.getMessage());
         return ResponseEntity.internalServerError().body(new ErrorDetails(500,
                 "An unexpected error occurred. Please try again later.",
                 "If the problem persists, contact support."));
