@@ -50,8 +50,11 @@ public class CategoryServiceImpl implements CategoryService{
         }
         category.setLevel(parentCategory.getLevel() + 1);
         parentCategory.getChildren().add(category);
+
+        Category addedCategory = categoryRepository.save(category);
         categoryRepository.save(parentCategory);
-        return categoryRepository.save(category);
+
+        return addedCategory;
     }
 
     @Override
