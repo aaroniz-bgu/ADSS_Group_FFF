@@ -23,4 +23,5 @@ public interface ShiftService {
 
     void addRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean reoccurring, Branch branch);
     void remRequiredRole(String role, LocalDate date, ShiftDayPart dayPart, boolean once , Branch branch);
+    void updateCutOff(int cutOff);
 }
