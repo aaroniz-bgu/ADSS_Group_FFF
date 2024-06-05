@@ -4,7 +4,6 @@ import bgu.adss.fff.dev.data.ProductRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -51,17 +50,13 @@ public abstract class Report implements Serializable {
         return reportDate;
     }
 
-    public void setReportDate(LocalDateTime reportDate) {
-        this.reportDate = reportDate;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
 
     public String getContent() {
         return content;
@@ -73,10 +68,6 @@ public abstract class Report implements Serializable {
 
     public ReportType getReportType() {
         return reportType;
-    }
-
-    public void setReportType(ReportType reportType) {
-        this.reportType = reportType;
     }
 
 }

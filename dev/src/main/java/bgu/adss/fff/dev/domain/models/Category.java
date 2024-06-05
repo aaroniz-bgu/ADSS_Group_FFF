@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 
 
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 @Entity(name="Category")
 public class Category implements Serializable {
@@ -44,10 +42,6 @@ public class Category implements Serializable {
 
     public String getCategoryName() {
         return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
     }
 
     public int getLevel() {

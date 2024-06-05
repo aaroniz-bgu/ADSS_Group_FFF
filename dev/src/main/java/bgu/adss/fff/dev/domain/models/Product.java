@@ -67,17 +67,13 @@ public class Product implements Serializable {
         return productName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+//    public void setPrice(float price) {
+//        this.price = price;
+//    }
 
     public Discount getDiscount() {
         return discount;
@@ -107,9 +103,9 @@ public class Product implements Serializable {
         return minimalQuantity;
     }
 
-    public void setMinimalQuantity(int minimalQuantity) {
-        this.minimalQuantity = minimalQuantity;
-    }
+//    public void setMinimalQuantity(int minimalQuantity) {
+//        this.minimalQuantity = minimalQuantity;
+//    }
 
     public void addToStorage(Item item) {
         storage.add(item);

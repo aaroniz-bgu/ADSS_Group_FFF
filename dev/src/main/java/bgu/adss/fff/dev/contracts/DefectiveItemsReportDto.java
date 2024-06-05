@@ -3,8 +3,6 @@ package bgu.adss.fff.dev.contracts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
-
 /**
  * Contract for DefectiveItemsReport details
  * @param reportId

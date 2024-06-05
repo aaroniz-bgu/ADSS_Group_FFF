@@ -4,8 +4,6 @@ import bgu.adss.fff.dev.domain.models.ReportType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
-
 /**
  * Contract for Report details
  * @param reportId

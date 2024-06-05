@@ -63,16 +63,16 @@ public class ProductController {
                                       @RequestBody RequestItemDto items) {
         List<Item> itemsList = map(items);
         itemsList = service.addItems(id, itemsList);
-        ItemDto[] itemDtos = map(itemsList);
-        return new ResponseEntity<>(itemDtos, HttpStatus.OK);
+        ItemDto[] itemDTOs = map(itemsList);
+        return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
     }
 
     @PutMapping("/item/{id}")
     public ResponseEntity<?> moveToShelves(@PathVariable("id") long id,
                                            @RequestBody RequestAmountDto amount) {
         List<Item> itemsList = service.moveToShelves(id, amount.amount());
-        ItemDto[] itemDtos = map(itemsList);
-        return new ResponseEntity<>(itemDtos, HttpStatus.OK);
+        ItemDto[] itemDTOs = map(itemsList);
+        return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
     }
 
     @PutMapping("/discount/{id}")

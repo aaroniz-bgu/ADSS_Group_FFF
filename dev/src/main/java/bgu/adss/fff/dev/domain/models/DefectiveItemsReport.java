@@ -3,7 +3,6 @@ package bgu.adss.fff.dev.domain.models;
 import bgu.adss.fff.dev.data.ProductRepository;
 import jakarta.persistence.Entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -4,11 +4,9 @@ import bgu.adss.fff.dev.contracts.CategoryDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.contracts.RequestCategoryDto;
 import bgu.adss.fff.dev.domain.models.Category;
-import bgu.adss.fff.dev.domain.models.Product;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

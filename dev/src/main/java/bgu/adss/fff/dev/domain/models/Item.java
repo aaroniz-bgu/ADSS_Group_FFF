@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Random;
 
 @Entity(name="Item")
 public class Item implements Serializable {
@@ -41,21 +40,17 @@ public class Item implements Serializable {
         return isDefected;
     }
 
-    public void setDefected(boolean isDefected) {
-        this.isDefected = isDefected;
-    }
-
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
-    }
+//    public void setDefected(boolean isDefected) {
+//        this.isDefected = isDefected;
+//    }
 
     public void setItemID(long itemID) {
         this.itemID = itemID;
     }
 
-    public boolean isOutOfStock() {
-        return isDefected || expirationDate.isBefore(LocalDate.now());
-    }
+//    public boolean isOutOfStock() {
+//        return isDefected || expirationDate.isBefore(LocalDate.now());
+//    }
 
     @Override
     public String toString() {

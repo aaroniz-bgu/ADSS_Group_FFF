@@ -51,8 +51,8 @@ public class ProductMapper {
         return products.stream().map(ProductMapper::map).toArray(ProductDto[]::new);
     }
 
-    public static List<Product> map(ProductDto[] productDtos) {
-        return Stream.of(productDtos).map(ProductMapper::map).collect(Collectors.toList());
+    public static List<Product> map(ProductDto[] productDTOs) {
+        return Stream.of(productDTOs).map(ProductMapper::map).collect(Collectors.toList());
     }
 
 }

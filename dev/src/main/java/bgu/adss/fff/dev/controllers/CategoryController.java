@@ -3,15 +3,11 @@ package bgu.adss.fff.dev.controllers;
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.controllers.mappers.CategoryMapper;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
-import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.controllers.mappers.ProductMapper;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
-import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.CategoryService;
-import bgu.adss.fff.dev.services.ProductService;
-import bgu.adss.fff.dev.services.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +24,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService, ProductService productService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

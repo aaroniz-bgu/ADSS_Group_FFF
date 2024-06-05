@@ -2,7 +2,6 @@ package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
-import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 
 import java.util.List;

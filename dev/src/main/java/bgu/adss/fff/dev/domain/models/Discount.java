@@ -43,24 +43,12 @@ public class Discount implements Serializable {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
     public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
     public float getDiscountPercent() {
         return discountPercent;
-    }
-
-    public void setDiscountPercent(float discountPercent) {
-        this.discountPercent = discountPercent;
     }
 
     @Override

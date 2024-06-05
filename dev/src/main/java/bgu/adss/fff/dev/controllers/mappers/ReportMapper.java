@@ -1,14 +1,11 @@
 package bgu.adss.fff.dev.controllers.mappers;
 
-
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.ReportException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
 
 public class ReportMapper {
 

@@ -35,8 +35,8 @@ public class ItemMapper {
         );
     }
 
-    public static List<Item> map(ItemDto[] itemDtos) {
-        return Stream.of(itemDtos).map(ItemMapper::map).collect(Collectors.toList());
+    public static List<Item> map(ItemDto[] itemDTOs) {
+        return Stream.of(itemDTOs).map(ItemMapper::map).collect(Collectors.toList());
     }
 
     public static List<Item> map(RequestItemDto items) {

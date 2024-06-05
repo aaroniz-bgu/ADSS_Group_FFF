@@ -5,7 +5,6 @@ import bgu.adss.fff.dev.domain.models.DefectiveItemsReport;
 import bgu.adss.fff.dev.domain.models.InventoryReport;
 import bgu.adss.fff.dev.domain.models.OutOfStockReport;
 import bgu.adss.fff.dev.domain.models.Report;
-import bgu.adss.fff.dev.services.CategoryService;
 import bgu.adss.fff.dev.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
