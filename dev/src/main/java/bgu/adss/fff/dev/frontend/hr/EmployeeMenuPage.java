@@ -20,7 +20,7 @@ public class EmployeeMenuPage extends AbstractUserComponent {
 
         page.add(new LogoComponent("Welcome "+employee.name()));
         page.add(new ListComponent<String>(
-                List.of("Update availability", "Exit")
+                List.of("Update availability", "View next week shifts", "Exit")
         ));
         InputComponent input = new InputComponent("Your choice:");
         input.subscribe(this::onChoice);
@@ -38,6 +38,9 @@ public class EmployeeMenuPage extends AbstractUserComponent {
                     new ReportAvailabilityPage(out, employee).render();
                     break;
                 case 2:
+                    new EmployeeAssignedShiftsPage(out, employee).render();
+                    break;
+                case 3:
                     rerender = false;
                     break;
                 default:
