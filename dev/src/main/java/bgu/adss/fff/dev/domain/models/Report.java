@@ -1,8 +1,10 @@
 package bgu.adss.fff.dev.domain.models;
 
+import bgu.adss.fff.dev.data.ProductRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -35,7 +37,7 @@ public abstract class Report implements Serializable {
         this.reportType = reportType;
     }
 
-    public abstract void writeReport();
+    public abstract void writeReport(ProductRepository repository);
 
     public long getReportId() {
         return reportId;

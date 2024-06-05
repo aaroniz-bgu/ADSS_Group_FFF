@@ -118,6 +118,18 @@ public class Product implements Serializable {
         shelves.add(item);
     }
 
+    public int getQuantity() {
+        return getStorageQuantity() + getShelvesQuantity();
+    }
+
+    public int getStorageQuantity() {
+        return storage.size();
+    }
+
+    public int getShelvesQuantity() {
+        return shelves.size();
+    }
+
     public String toString() {
         return "Product{" +
                 "productID=" + productID +
