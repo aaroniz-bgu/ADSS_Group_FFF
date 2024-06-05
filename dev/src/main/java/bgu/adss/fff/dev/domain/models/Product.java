@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.domain.models;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name="Product")
@@ -128,6 +129,26 @@ public class Product implements Serializable {
 
     public int getShelvesQuantity() {
         return shelves.size();
+    }
+
+    public int defectiveItemsNum(List<Item> items){
+        int defectiveItems = 0;
+        for(Item item : items){
+            if(item.isDefected()){
+                defectiveItems++;
+            }
+        }
+        return defectiveItems;
+    }
+
+    public int expiredItemsNum(List<Item> items){
+        int expiredItems = 0;
+        for(Item item : items){
+            if(item.getExpirationDate().isBefore(LocalDate.now())){
+                expiredItems++;
+            }
+        }
+        return expiredItems;
     }
 
     public String toString() {
