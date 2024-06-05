@@ -1,0 +1,13 @@
+package bgu.adss.fff.dev.contracts;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record RequestItemDto(
+        @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        @JsonProperty("expirationDate") String expirationDate,
+
+        @JsonProperty("isDefected") boolean isDefected,
+
+        @JsonProperty("amount") int amount
+) { }

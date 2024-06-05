@@ -117,6 +117,31 @@ public class ProductServiceImpl implements ProductService {
     // Additional operations
 
     @Override
+    public List<Item> addItems(long id, List<Item> items) {
+
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found");
+        }
+
+        if (items == null || items.isEmpty()) {
+            throw new ProductException("Items list is empty");
+        }
+
+        Product product = getProductByID(id);
+
+        List<Item> itemList = new LinkedList<>();
+        for (Item item : items) {
+            item.setItemID(generateRandomItemID());
+            item = save(item);
+
+            product.addToStorage(item);
+            itemList.add(item);
+        }
+
+        return itemList;
+    }
+
+    @Override
     public Product updateStorage(long id, List<Item> storage) {
 
         if (!doesProductExist(id)) {

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ReportMapper {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy HH:mm:ss");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     public static InventoryReportDto map(InventoryReport inventoryReport){
         return new InventoryReportDto(

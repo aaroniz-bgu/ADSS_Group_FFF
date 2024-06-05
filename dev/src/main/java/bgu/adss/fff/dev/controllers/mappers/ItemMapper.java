@@ -1,17 +1,19 @@
 package bgu.adss.fff.dev.controllers.mappers;
 
 import bgu.adss.fff.dev.contracts.ItemDto;
+import bgu.adss.fff.dev.contracts.RequestItemDto;
 import bgu.adss.fff.dev.domain.models.Item;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ItemMapper {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public static ItemDto map(Item item){
         return new ItemDto(
@@ -35,6 +37,19 @@ public class ItemMapper {
 
     public static List<Item> map(ItemDto[] itemDtos) {
         return Stream.of(itemDtos).map(ItemMapper::map).collect(Collectors.toList());
+    }
+
+    public static List<Item> map(RequestItemDto items) {
+        List<Item> itemList = new LinkedList<>();
+        for (int i = 0; i < items.amount(); i++) {
+            itemList.add(new Item(
+                    0,
+                    LocalDate.parse(items.expirationDate(), formatter),
+                    items.isDefected()
+            ));
+        }
+
+        return itemList;
     }
 
 }

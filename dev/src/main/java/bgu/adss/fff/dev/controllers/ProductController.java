@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.ItemDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestItemDto;
 import bgu.adss.fff.dev.contracts.RequestProductDto;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -57,6 +58,15 @@ public class ProductController {
     }
 
     // Additional operations
+
+    @PostMapping("/item/{id}")
+    public ResponseEntity<?> addItems(@PathVariable("id") long id,
+                                      @RequestBody RequestItemDto items) {
+        List<Item> itemsList = map(items);
+        itemsList = service.addItems(id, itemsList);
+        ItemDto[] itemDtos = map(itemsList);
+        return new ResponseEntity<>(itemDtos, HttpStatus.OK);
+    }
 
     @PutMapping("/storage/{id}")
     public ResponseEntity<?> updateStorage(@PathVariable("id") long id,

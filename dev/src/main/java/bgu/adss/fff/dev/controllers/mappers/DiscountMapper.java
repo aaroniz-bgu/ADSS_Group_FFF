@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DiscountMapper {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public static DiscountDto map(Discount discount){
         return new DiscountDto(
