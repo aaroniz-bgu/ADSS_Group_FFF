@@ -17,7 +17,11 @@ public class Constants {
     public static final int ACCOUNT_ID_IND = 2;
 
     /**
-     * Hours per day.
+     * Default days to cut off period.
      */
-    public static final int DAY_HOURS = 24;
+    public final static String FALLBACK_CUTOFF = "1";
+    /**
+     * Cut off config name.
+     */
+    public final static String CUTOFF_CONFIG_KEY = "CUT_OFF";
 }
