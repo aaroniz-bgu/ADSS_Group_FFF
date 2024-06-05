@@ -44,7 +44,7 @@ public class LoginPage extends AbstractUserComponent {
         try {
             EmployeeDto response = restTemplate.getForEntity(uri, EmployeeDto.class).getBody();
             AbstractUserComponent nextPage = isHr(response) ?
-                    new HrManagerMenuPage(out, response) :
+                    new HrMenuChooseMenu(out, response) :
                     new EmployeeMenuPage(out, response);
             nextPage.render();
         } catch (RestClientResponseException e) {
