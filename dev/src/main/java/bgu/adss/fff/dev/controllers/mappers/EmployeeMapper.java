@@ -126,11 +126,15 @@ public class EmployeeMapper {
         return new EmploymentTerms(
                 dto.startDate(),
                 JobType.values()[dto.jobType()],
-                dto.directManager() != null ? map(dto.directManager()) : null,
+                dto.directManager() != null ? mapMangerHelper(dto.directManager()) : null,
                 dto.monthlySalary(),
                 dto.hourlyRate(),
                 dto.daysOff()
         );
+    }
+
+    private static Employee mapMangerHelper(EmployeeDto dto) {
+        return new Employee(dto.id(), null, null, null, 0, 0, 0, null);
     }
 
     /**
