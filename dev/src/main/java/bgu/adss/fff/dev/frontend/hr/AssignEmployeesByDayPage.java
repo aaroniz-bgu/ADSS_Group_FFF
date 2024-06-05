@@ -2,8 +2,10 @@ package bgu.adss.fff.dev.frontend.hr;
 
 import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ErrorDetails;
+import bgu.adss.fff.dev.contracts.RoleDto;
 import bgu.adss.fff.dev.contracts.ShiftDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
+import bgu.adss.fff.dev.frontend.cli.components.LabelComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.components.TableComponent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
@@ -52,6 +54,7 @@ public class AssignEmployeesByDayPage extends AbstractUserComponent {
 
         page.add(new LogoComponent("Assign Employees To Shift"));
         page.add(new TableComponent<>(HEADER, rows, 150, 20));
+        page.add(new LabelComponent("[NOTE]: Employees with [M] symbol next to their names are shift managers."));
         page.add(daypartInput);
         page.add(employeeInput);
     }
@@ -107,7 +110,15 @@ public class AssignEmployeesByDayPage extends AbstractUserComponent {
 
     private void listHelper(List<List<String>> rows, ShiftDto shift) {
         for(EmployeeDto emp : shift.availableEmployees()) {
-            rows.add(List.of(emp.name(), emp.id()+"", shift.shift() == 0 ? "M" : "E"));
+            String shiftMgr = isShiftMgr(emp) ? " [M]" : "";
+            rows.add(List.of(emp.name()+shiftMgr, emp.id()+"", shift.shift() == 0 ? "M" : "E"));
         }
+    }
+
+    private boolean isShiftMgr(EmployeeDto emp) {
+        for(RoleDto role : emp.roles()) {
+            if(role.isShiftManager()) return true;
+        }
+        return false;
     }
 }
