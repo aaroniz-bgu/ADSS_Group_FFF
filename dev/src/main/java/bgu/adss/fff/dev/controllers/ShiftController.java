@@ -205,4 +205,14 @@ public class ShiftController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * updates the parameter which determines the period which employees cant change their reports after.
+     *
+     * @param cutoff the cut-off period in days
+     */
+    @PutMapping("/cutoff={cutoff}")
+    public ResponseEntity<?> updateCutOffPeriod(@PathVariable int cutoff) {
+        service.updateCutOff(cutoff);
+        return ResponseEntity.ok().build();
+    }
 }
