@@ -1,4 +1,4 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
-public class AddProductDiscount {
+public class AddProductDiscountPage {
 }

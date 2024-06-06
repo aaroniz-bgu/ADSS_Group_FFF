@@ -57,7 +57,7 @@ public class ProductMenuPage extends AbstractUserComponent {
                     System.out.println("Rendering ApplyDiscountPage");
                     break;
                 case 7:
-                    System.out.println("Rendering UpdatePricePage");
+                    new ChangeProductPricePage(out).render();
                     break;
                 case 8:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage
