@@ -116,27 +116,27 @@ public class LoginPage extends AbstractUserComponent {
                     null
             ));
             template.postForLocation(URI_PATH+"/shift", new ReportShiftRequest(
-                    LocalDate.now().with(next(DayOfWeek.SUNDAY)),
+                    LocalDate.now().plusDays(7),
                     0,
                     1
             ));
             template.postForLocation(URI_PATH+"/shift", new ReportShiftRequest(
-                    LocalDate.now().with(next(DayOfWeek.SUNDAY)),
+                    LocalDate.now().plusDays(7),
                     0,
                     2
             ));
             template.postForLocation(URI_PATH+"/shift", new ReportShiftRequest(
-                    LocalDate.now().with(next(DayOfWeek.SUNDAY)),
+                    LocalDate.now().plusDays(7),
                     0,
                     3
             ));
             template.postForLocation(URI_PATH+"/shift", new ReportShiftRequest(
-                    LocalDate.now().with(next(DayOfWeek.MONDAY)),
+                    LocalDate.now().plusDays(8),
                     0,
                     1
             ));
             template.postForLocation(URI_PATH+"/shift", new ReportShiftRequest(
-                    LocalDate.now().with(next(DayOfWeek.MONDAY)),
+                    LocalDate.now().plusDays(8),
                     0,
                     2
             ));
