@@ -118,7 +118,7 @@ public class ShiftServiceImpl implements ShiftService {
                 .orElse(new Shift(date, dayPart, false, branchService.getBranch(branch.getName())));
 
         // If one of those is assigned we cannot change this state.
-        if(out.getLockState() != ShiftState.FORCE_LOCK || out.getLockState() != ShiftState.FORCE_UNLOCK) {
+        if(!(out.getLockState() == ShiftState.FORCE_LOCK || out.getLockState() == ShiftState.FORCE_UNLOCK)) {
             out.setLocked(lockHelper(date, out.getLockState()));
         }
         return out;
@@ -349,6 +349,7 @@ public class ShiftServiceImpl implements ShiftService {
     }
     @Override
     public void updateCutOff(int cutOff) {
+        this.cutoff = cutOff;
         config.save(config.findById(CUTOFF_CONFIG_KEY)
                 .orElse(new ConfigurationPair(CUTOFF_CONFIG_KEY, cutOff+"")));
     }
