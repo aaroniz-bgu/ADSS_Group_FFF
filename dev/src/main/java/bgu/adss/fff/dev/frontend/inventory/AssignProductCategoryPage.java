@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
-public class AddCategoryPage extends AbstractUserComponent {
+public class AssignProductCategoryPage extends AbstractUserComponent {
 
     private static final String ROUTE = URI_PATH + "/category";
     private final RestTemplate restTemplate;
@@ -23,7 +23,7 @@ public class AddCategoryPage extends AbstractUserComponent {
     private String name;
     private String parentCategory;
 
-    public AddCategoryPage(PrintStream out) {
+    public AssignProductCategoryPage(PrintStream out) {
         super(out);
 
         restTemplate = new RestTemplate();
@@ -34,7 +34,7 @@ public class AddCategoryPage extends AbstractUserComponent {
         nameInput.subscribe(this::onNameInput);
         parentCategoryInput.subscribe(this::onParentCategoryInput);
 
-        page.add(new LogoComponent("Create New Category"));
+        page.add(new LogoComponent("Assign Product to Category"));
         page.add(nameInput);
         page.add(parentCategoryInput);
     }
