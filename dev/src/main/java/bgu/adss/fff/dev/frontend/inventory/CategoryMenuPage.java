@@ -37,10 +37,10 @@ public class CategoryMenuPage extends AbstractUserComponent {
 
             switch (menuOption) {
                 case 1:
-                    System.out.println("Rendering AddCategoryPage");
+                    new AddCategoryPage(out).render();
                     break;
                 case 2:
-                    System.out.println("Rendering GetCategoryPage");
+                    new GetCategoryPage(out).render();
                     break;
                 case 3:
                     System.out.println("Rendering AddProductToCategoryPage");
