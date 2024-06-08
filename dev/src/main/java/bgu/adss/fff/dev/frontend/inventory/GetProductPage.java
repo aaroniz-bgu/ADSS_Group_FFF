@@ -51,7 +51,7 @@ public class GetProductPage extends AbstractUserComponent {
 
         String discountToString = "Discount: No discount";
         if(response.discount() != null) {
-            discountToString = "Discount: " + "\n" +
+            discountToString = "Discount: " + "\n" + "\t" +
                     "Discount ID: " + response.discount().discountID() + "\n" + "\t" +
                     "Discount Start Date: " + response.discount().startDate() + "\n" + "\t" +
                     "Discount End Date: " + response.discount().endDate() + "\n" + "\t" +

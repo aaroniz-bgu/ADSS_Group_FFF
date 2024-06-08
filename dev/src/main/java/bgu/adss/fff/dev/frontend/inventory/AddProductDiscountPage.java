@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.frontend.inventory;
 
 import bgu.adss.fff.dev.contracts.DiscountDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestDiscountDto;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
@@ -10,13 +11,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
 public class AddProductDiscountPage extends AbstractUserComponent {
 
-    private static final String ROUTE = URI_PATH + "/product";
+    private static final String PRODUCT_ROUTE = URI_PATH + "/product";
+    private static final String DISCOUNT_ROUTE = URI_PATH + "/discount";
     private final RestTemplate restTemplate;
 
     private final InputComponent idInput;
@@ -93,17 +96,15 @@ public class AddProductDiscountPage extends AbstractUserComponent {
 
     private void addProductDiscount() {
 
-        ProductDto productDto = restTemplate.getForObject(ROUTE + "/" + id, ProductDto.class);
+        ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
         if(productDto == null) {
             out.println("Product with ID " + id + " not found.");
             return;
         }
+        DiscountDto discountDto = restTemplate.postForObject(DISCOUNT_ROUTE, new RequestDiscountDto( startDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), endDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), discountPercent), DiscountDto.class);
+        restTemplate.put(PRODUCT_ROUTE + "/discount/" + id, discountDto);
 
-        DiscountDto discountDto = new DiscountDto(0, this.startDate.toString(), this.endDate.toString(), this.discountPercent);
-        DiscountDto response = restTemplate.postForObject(ROUTE, discountDto, DiscountDto.class);
-        Objects.requireNonNull(response);
-
-        out.println("Discount added to product with ID " + (productDto.productName()) + " id");
+        out.println("Discount added to product " + productDto.productName() + " successfully.");
     }
 
 }
