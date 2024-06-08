@@ -51,10 +51,10 @@ public class ProductMenuPage extends AbstractUserComponent {
                     System.out.println("Rendering MoveItemsToShelvesPage");
                     break;
                 case 5:
-                    System.out.println("Rendering SetItemAsDefectivePage");
+                    new SetDefectivePage(out).render();
                     break;
                 case 6:
-                    System.out.println("Rendering ApplyDiscountPage");
+                    new AddProductDiscountPage(out).render();
                     break;
                 case 7:
                     new ChangeProductPricePage(out).render();
