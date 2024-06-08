@@ -32,6 +32,7 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                 "Require roles",
                 "Add new roles",
                 "Add new branch",
+                "Change auto locking time period",
                 "Exit"
         )));
         choiceInput.subscribe(this::onChoice);
@@ -72,6 +73,9 @@ public class HrManagerMenuPage extends AbstractUserComponent {
                     new AddBranchPage(out).render();
                     break;
                 case 9:
+                    new ChangePeriodLockPage(out).render();
+                    break;
+                case 10:
                     rerender = false;
                     break;
                 default:

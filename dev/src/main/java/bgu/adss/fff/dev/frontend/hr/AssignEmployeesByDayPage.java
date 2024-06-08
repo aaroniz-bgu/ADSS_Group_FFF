@@ -71,9 +71,10 @@ public class AssignEmployeesByDayPage extends AbstractUserComponent {
     }
 
     private void onEmployeeInput(StateEvent event) {
+        if(event.getData().isBlank()) return;
         String[] ids = event.getData().replace(" ","").split(",");
         try {
-            if (ids.length == 0) throw new IllegalArgumentException();
+            if (ids.length == 0) return;
             EmployeeDto[] assigned = new EmployeeDto[ids.length];
             for(int i = 0; i < assigned.length; i++) {
                 assigned[i] = inefficientGetEmployeeById(

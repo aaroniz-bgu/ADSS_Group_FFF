@@ -1,9 +1,17 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.data.ConfigurationPair;
 import bgu.adss.fff.dev.data.ShiftRoleRequirementRepository;
-import bgu.adss.fff.dev.data.SystemConfiguration;
-import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.data.ShiftRepository;
+import bgu.adss.fff.dev.data.SystemConfigRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
+import bgu.adss.fff.dev.domain.models.EmbeddedShiftId;
+import bgu.adss.fff.dev.domain.models.Employee;
+import bgu.adss.fff.dev.domain.models.Role;
+import bgu.adss.fff.dev.domain.models.Shift;
+import bgu.adss.fff.dev.domain.models.ShiftDayPart;
+import bgu.adss.fff.dev.domain.models.ShiftRoleRequirement;
+import bgu.adss.fff.dev.domain.models.ShiftState;
 import bgu.adss.fff.dev.exceptions.ShiftException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +20,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static bgu.adss.fff.dev.domain.models.Constants.DAY_HOURS;
+import static bgu.adss.fff.dev.domain.models.Constants.CUTOFF_CONFIG_KEY;
+import static bgu.adss.fff.dev.domain.models.Constants.FALLBACK_CUTOFF;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
+
     private final ShiftRepository repository;
     private final ShiftRoleRequirementRepository reqRoleRepository;
+    private final SystemConfigRepository config;
 
     private final RoleService roleService;
     private final EmployeeService employeeService;
@@ -31,11 +42,13 @@ public class ShiftServiceImpl implements ShiftService {
     @Autowired
     public ShiftServiceImpl(ShiftRepository repository,
                             ShiftRoleRequirementRepository reqRoleRepository,
+                            SystemConfigRepository config,
                             RoleService roleService,
                             EmployeeService employeeService,
                             BranchService branchService) {
         this.repository = repository;
         this.reqRoleRepository = reqRoleRepository;
+        this.config = config;
         this.roleService = roleService;
         this.employeeService = employeeService;
         this.branchService = branchService;
@@ -77,7 +90,8 @@ public class ShiftServiceImpl implements ShiftService {
      */
     private boolean lockHelper(LocalDate date, ShiftState currentState) {
         if(cutoff == null) {
-            cutoff = new SystemConfiguration().getCutoffTime();
+            cutoff = Integer.parseInt(config.findById(CUTOFF_CONFIG_KEY).orElseGet(() ->
+                    config.save(new ConfigurationPair(CUTOFF_CONFIG_KEY, FALLBACK_CUTOFF))).getValue());
         }
         /* Explanation if you're banging your head to understand it:
          * state == f_lock :=> true
@@ -87,7 +101,7 @@ public class ShiftServiceImpl implements ShiftService {
         return currentState == ShiftState.FORCE_LOCK || (
                 !(currentState == ShiftState.FORCE_UNLOCK)
                 &&
-                date.minusDays(cutoff / DAY_HOURS + 1).isBefore(LocalDate.now())
+                date.minusDays(cutoff + 1).isBefore(LocalDate.now())
         );
     }
 
@@ -104,7 +118,7 @@ public class ShiftServiceImpl implements ShiftService {
                 .orElse(new Shift(date, dayPart, false, branchService.getBranch(branch.getName())));
 
         // If one of those is assigned we cannot change this state.
-        if(out.getLockState() != ShiftState.FORCE_LOCK || out.getLockState() != ShiftState.FORCE_UNLOCK) {
+        if(!(out.getLockState() == ShiftState.FORCE_LOCK || out.getLockState() == ShiftState.FORCE_UNLOCK)) {
             out.setLocked(lockHelper(date, out.getLockState()));
         }
         return out;
@@ -332,5 +346,11 @@ public class ShiftServiceImpl implements ShiftService {
                 }
             }
         }
+    }
+    @Override
+    public void updateCutOff(int cutOff) {
+        this.cutoff = cutOff;
+        config.save(config.findById(CUTOFF_CONFIG_KEY)
+                .orElse(new ConfigurationPair(CUTOFF_CONFIG_KEY, cutOff+"")));
     }
 }

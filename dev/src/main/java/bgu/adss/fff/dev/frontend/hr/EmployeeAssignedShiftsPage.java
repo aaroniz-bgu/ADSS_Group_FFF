@@ -36,6 +36,9 @@ public class EmployeeAssignedShiftsPage extends AbstractUserComponent {
         final List<String> morning = new ArrayList<>();
         final List<String> evening = new ArrayList<>();
 
+        morning.add("Morning:");
+        evening.add("Evening:");
+
         for(ShiftDto shift : shifts) {
             String value = "FREE";
             List<String> li = shift.shift() == 0 ? morning : evening;
@@ -47,9 +50,6 @@ public class EmployeeAssignedShiftsPage extends AbstractUserComponent {
             }
             li.add(value);
         }
-
-        morning.add("Morning:");
-        evening.add("Evening:");
 
         page.add(new LogoComponent("Assigned shifts for: "+emp.name()));
         page.add(new TableComponent<>(HEADER, List.of(morning, evening), 150, 12));
