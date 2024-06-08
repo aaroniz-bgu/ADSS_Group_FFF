@@ -10,4 +10,5 @@ public record ProductDto(
         @JsonProperty("shelves") ItemDto[] shelves,
         @JsonProperty("storage") ItemDto[] storage,
         @JsonProperty("minimalQuantity") int minimalQuantity
-) { }
+){ }
+
