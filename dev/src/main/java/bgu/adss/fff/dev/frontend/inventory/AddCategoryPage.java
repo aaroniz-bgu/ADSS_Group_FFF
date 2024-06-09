@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.frontend.inventory;
 
 import bgu.adss.fff.dev.contracts.CategoryDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestCategoryDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
@@ -65,7 +66,7 @@ public class AddCategoryPage extends AbstractUserComponent {
 
     private void createCategory() {
         try {
-            CategoryDto category = new CategoryDto(name, 0, new CategoryDto[0], new ProductDto[0]);
+            RequestCategoryDto category = new RequestCategoryDto(name);
             CategoryDto response = restTemplate.postForObject(ROUTE + "/" + parentCategory, category, CategoryDto.class);
             Objects.requireNonNull(response);
 
