@@ -1,14 +1,12 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
-import bgu.adss.fff.dev.contracts.CategoryDto;
-import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestCategoriesDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
-import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
@@ -17,59 +15,65 @@ public class AssignProductCategoryPage extends AbstractUserComponent {
     private static final String ROUTE = URI_PATH + "/category";
     private final RestTemplate restTemplate;
 
-    private final InputComponent nameInput;
-    private final InputComponent parentCategoryInput;
+    private final InputComponent idInput;
+    private final InputComponent[] categoriesInput;
 
-    private String name;
-    private String parentCategory;
+    private long id;
+    private final String[] categories;
 
     public AssignProductCategoryPage(PrintStream out) {
         super(out);
 
         restTemplate = new RestTemplate();
 
-        nameInput = new InputComponent("Enter product name (שם): ");
-        parentCategoryInput = new InputComponent("Enter parent category (קטגורית אב) - (Enter 'Super' for no parent category): ");
+        idInput = new InputComponent("Enter product id (מקט): ");
+        categoriesInput = new InputComponent[] {
+                new InputComponent("Enter main category (קטגוריה ראשית): "),
+                new InputComponent("Enter sub category (קטגוריה משנית): "),
+                new InputComponent("Enter size category (קטגוריית גודל): ")
+        };
 
-        nameInput.subscribe(this::onNameInput);
-        parentCategoryInput.subscribe(this::onParentCategoryInput);
+        categories = new String[categoriesInput.length];
+
+        idInput.subscribe(this::onIdInput);
+        for (int i = 0; i < categoriesInput.length; i++) {
+            int finalI = i;
+            categoriesInput[i].subscribe((StateEvent event) -> onCategoryInput(event, finalI));
+        }
 
         page.add(new LogoComponent("Assign Product to Category"));
-        page.add(nameInput);
-        page.add(parentCategoryInput);
+        page.add(idInput);
+        for (InputComponent input : categoriesInput)
+            page.add(input);
     }
 
-    private void onNameInput(StateEvent event) {
+    private void onIdInput(StateEvent event) {
         try {
-            if (event.getData().isBlank())
-                throw new IllegalArgumentException("Name cannot be empty.");
-            this.name = event.getData();
+            this.id = Long.parseLong(event.getData());
         } catch (Exception e) {
-            out.println(e.getMessage());
-            nameInput.render(out);
+            out.println("Invalid id.");
+            idInput.render(out);
         }
     }
 
-    private void onParentCategoryInput(StateEvent event) {
+    private void onCategoryInput(StateEvent event, int i) {
         try {
             if (event.getData().isBlank())
-                throw new IllegalArgumentException("Parent category cannot be empty.");
-            this.parentCategory = event.getData();
+                throw new IllegalArgumentException("Category cannot be empty.");
+            this.categories[i] = event.getData();
+            if (i == categoriesInput.length - 1)
+                assignProductToCategory();
         } catch (Exception e) {
             out.println(e.getMessage());
-            parentCategoryInput.render(out);
-        } finally {
-            createCategory();
+            categoriesInput[i].render(out);
         }
     }
 
-    private void createCategory() {
+    private void assignProductToCategory() {
         try {
-            CategoryDto category = new CategoryDto(name, 0, new CategoryDto[0], new ProductDto[0]);
-            CategoryDto response = restTemplate.postForObject(ROUTE + "/" + parentCategory, category, CategoryDto.class);
-            Objects.requireNonNull(response);
-
-            out.println("Category Created - " + response.categoryName());
+            RequestCategoriesDto categoriesDto = new RequestCategoriesDto(categories);
+            restTemplate.put(ROUTE + "/product/" + id, categoriesDto);
+            out.println("Assigned Category " + String.join("/", categories) + " to Product " + id);
         } catch (Exception e) {
             out.println(e.getMessage());
         }
