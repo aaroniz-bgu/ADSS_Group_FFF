@@ -34,4 +34,19 @@ public class CategoryUtil {
                 .flatMap(subCategory -> Arrays.stream(getCategoryNamesRecursive(subCategory, levelAccepted)))
                 .toArray(String[]::new);
     }
+
+    public static void printProductsByCategoryTree(PrintStream out, CategoryDto category) {
+        printProductsByCategoryTree(out, category, 0);
+    }
+
+    private static void printProductsByCategoryTree(PrintStream out, CategoryDto category, int depth) {
+        String prefix = "\t".repeat(depth);
+        out.println(prefix + ":" + category.categoryName());
+        if (category.children().length == 0) {
+            Arrays.stream(category.products()).forEach(product -> out.println(prefix + "\t- " + product.productName()));
+        } else {
+            for (CategoryDto subCategory : category.children())
+                printProductsByCategoryTree(out, subCategory, depth + 1);
+        }
+    }
 }

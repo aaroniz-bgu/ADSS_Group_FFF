@@ -20,7 +20,7 @@ public class CategoryMenuPage extends AbstractUserComponent {
         page.add(new LabelComponent("2. Get Category"));
 
         page.add(new LabelComponent("3. Assign Category to Product"));
-        page.add(new LabelComponent("4. See Products in Category"));
+        page.add(new LabelComponent("4. See Category Products"));
 
         page.add(new LabelComponent("5. Apply Discount to Category"));
 
@@ -46,10 +46,10 @@ public class CategoryMenuPage extends AbstractUserComponent {
                     new AssignProductCategoryPage(out).render();
                     break;
                 case 4:
-                    System.out.println("Rendering SeeProductsInCategoryPage");
+                    new SeeCategoryProductsPage(out).render();
                     break;
                 case 5:
-                    System.out.println("Rendering ApplyDiscountToCategoryPage");
+                    new AddCategoryDiscountPage(out).render();
                     break;
                 case 6:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage

@@ -8,13 +8,11 @@ import bgu.adss.fff.dev.util.CategoryUtil;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
-public class GetCategoryPage extends AbstractUserComponent {
-
+public class SeeCategoryProductsPage extends AbstractUserComponent {
     private static final String ROUTE = URI_PATH + "/category";
     private final RestTemplate restTemplate;
 
@@ -22,7 +20,7 @@ public class GetCategoryPage extends AbstractUserComponent {
 
     private String name;
 
-    public GetCategoryPage(PrintStream out) {
+    public SeeCategoryProductsPage(PrintStream out) {
         super(out);
 
         restTemplate = new RestTemplate();
@@ -32,7 +30,6 @@ public class GetCategoryPage extends AbstractUserComponent {
         nameInput.subscribe(this::onNameInput);
 
         page.add(new LogoComponent("Get Category"));
-        printAllCategoryNames();
         page.add(nameInput);
     }
 
@@ -41,26 +38,16 @@ public class GetCategoryPage extends AbstractUserComponent {
             if (event.getData().isBlank())
                 throw new IllegalArgumentException("Name cannot be empty.");
             this.name = event.getData();
-            createCategory();
+            printAllCategoryProducts();
         } catch (Exception e) {
             out.println(e.getMessage());
             nameInput.render(out);
         }
     }
 
-    private void printAllCategoryNames() {
-        CategoryDto allCategories = restTemplate.getForObject(ROUTE + "/Super", CategoryDto.class);
-        Objects.requireNonNull(allCategories);
-        CategoryUtil.printCategoryNamesByLevel(out, allCategories);
-    }
-
-    private void createCategory() {
-        try {
-            CategoryDto response = restTemplate.getForObject(ROUTE + '/' + name, CategoryDto.class);
-            Objects.requireNonNull(response);
-            CategoryUtil.printCategoryNamesByTree(out, response);
-        } catch (Exception e) {
-            out.println(e.getMessage());
-        }
+    private void printAllCategoryProducts() {
+        CategoryDto category = restTemplate.getForObject(ROUTE + "/" + name, CategoryDto.class);
+        Objects.requireNonNull(category);
+        CategoryUtil.printProductsByCategoryTree(out, category);
     }
 }
