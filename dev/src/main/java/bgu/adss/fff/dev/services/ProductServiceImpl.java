@@ -7,6 +7,7 @@ import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.ProductException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Product getProductByID(long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
+        return productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found", HttpStatus.NOT_FOUND));
     }
 
     private boolean doesProductExist(long id) {
@@ -63,13 +64,13 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(Product product) {
 
         if (product == null) {
-            throw new ProductException("Product cannot be null");
+            throw new ProductException("Product cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         long id = product.getProductID();
 
         if (doesProductExist(id)) {
-            throw new ProductException("Product already exists");
+            throw new ProductException("Product already exists", HttpStatus.CONFLICT);
         }
 
         return save(product);
@@ -84,12 +85,12 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProduct(Product product) {
 
         if (product == null) {
-            throw new ProductException("Product cannot be null");
+            throw new ProductException("Product cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         long id = product.getProductID();
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         return save(product);
@@ -99,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(long id) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         deleteProductByID(id);
@@ -111,11 +112,11 @@ public class ProductServiceImpl implements ProductService {
     public List<Item> addItems(long id, List<Item> items) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         if (items == null || items.isEmpty()) {
-            throw new ProductException("Items list is empty");
+            throw new ProductException("Items list is empty", HttpStatus.BAD_REQUEST);
         }
 
         Product product = getProductByID(id);
@@ -137,11 +138,11 @@ public class ProductServiceImpl implements ProductService {
     public List<Item> moveToShelves(long id, int amount) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         if (amount <= 0) {
-            throw new ProductException("Amount must be greater than 0");
+            throw new ProductException("Amount must be greater than 0", HttpStatus.BAD_REQUEST);
         }
 
         Product product = getProductByID(id);
@@ -150,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
         List<Item> shelves = product.getShelves();
 
         if (storage.size() < amount) {
-            throw new ProductException("Not enough items in storage");
+            throw new ProductException("Not enough items in storage", HttpStatus.BAD_REQUEST);
         }
 
         List<Item> movedItems = new LinkedList<>();
@@ -172,7 +173,7 @@ public class ProductServiceImpl implements ProductService {
     public Discount addDiscount(long id, Discount discount) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         Product product = getProductByID(id);
@@ -187,7 +188,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateStorage(long id, List<Item> storage) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         Product product = getProductByID(id);
@@ -209,7 +210,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateShelves(long id, List<Item> shelves) {
 
         if (!doesProductExist(id)) {
-            throw new ProductException("Product not found");
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         Product product = getProductByID(id);

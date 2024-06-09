@@ -1,7 +1,9 @@
 package bgu.adss.fff.dev.exceptions;
 
-public class ReportException extends RuntimeException{
-    public ReportException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class ReportException extends AppException {
+    public ReportException(String message, HttpStatus status) {
+        super(message, status);
     }
 }

@@ -1,9 +1,11 @@
 package bgu.adss.fff.dev.exceptions;
 
-public class CategoryException extends RuntimeException{
+import org.springframework.http.HttpStatus;
 
-    public CategoryException(String message){
-        super(message);
+public class CategoryException extends AppException{
+
+    public CategoryException(String message, HttpStatus status){
+        super(message, status);
     }
 
 }

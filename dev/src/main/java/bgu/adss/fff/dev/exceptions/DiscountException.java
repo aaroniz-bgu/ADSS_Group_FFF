@@ -1,7 +1,9 @@
 package bgu.adss.fff.dev.exceptions;
 
-public class DiscountException extends RuntimeException{
-    public DiscountException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class DiscountException extends AppException{
+    public DiscountException(String message, HttpStatus status) {
+        super(message, status);
     }
 }

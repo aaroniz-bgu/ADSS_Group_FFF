@@ -8,6 +8,7 @@ import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.CategoryException;
 import bgu.adss.fff.dev.exceptions.ProductException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -32,20 +33,20 @@ public class CategoryServiceImpl implements CategoryService{
     public Category createCategory(Category category, String parent) {
 
         if(parent == null){
-            throw new CategoryException("Parent cannot be null");
+            throw new CategoryException("Parent cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         if(category == null){
-            throw new CategoryException("Category cannot be null");
+            throw new CategoryException("Category cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         if (categoryRepository.existsById(category.getCategoryName())) {
-            throw new CategoryException("Category already exists");
+            throw new CategoryException("Category already exists", HttpStatus.BAD_REQUEST);
         }
 
-        Category parentCategory = categoryRepository.findById(parent).orElseThrow(() -> new CategoryException("Parent not found"));
+        Category parentCategory = categoryRepository.findById(parent).orElseThrow(() -> new CategoryException("Parent not found", HttpStatus.NOT_FOUND));
         if(parentCategory.getLevel() == 3){
-            throw new CategoryException("Cannot add category to a category with level 3");
+            throw new CategoryException("Cannot add category to a category with level 3", HttpStatus.BAD_REQUEST);
         }
         category.setLevel(parentCategory.getLevel() + 1);
         parentCategory.getChildren().add(category);
@@ -60,10 +61,10 @@ public class CategoryServiceImpl implements CategoryService{
     public Category getCategory(String name) {
 
         if(name == null) {
-            throw new CategoryException("Category name cannot be null");
+            throw new CategoryException("Category name cannot be null", HttpStatus.BAD_REQUEST);
         }
 
-        return categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        return categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -77,11 +78,11 @@ public class CategoryServiceImpl implements CategoryService{
     public Category updateCategory(String name, Category category) {
 
         if (category == null) {
-            throw new CategoryException("Product cannot be null");
+            throw new CategoryException("Product cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         if (!categoryRepository.existsById(category.getCategoryName())) {
-            throw new CategoryException("Product not found");
+            throw new CategoryException("Product not found", HttpStatus.NOT_FOUND);
         }
 
         return categoryRepository.save(category);
@@ -92,7 +93,7 @@ public class CategoryServiceImpl implements CategoryService{
     public void deleteCategory(String name) {
 
         if(!categoryRepository.existsById(name)){
-            throw new CategoryException("Category not found");
+            throw new CategoryException("Category not found", HttpStatus.NOT_FOUND);
         }
 
         categoryRepository.deleteById(name);
@@ -103,10 +104,10 @@ public class CategoryServiceImpl implements CategoryService{
     public Category updateChildren(String name, List<Category> children) {
 
         if (!categoryRepository.existsById(name)) {
-            throw new ProductException("Category not found");
+            throw new ProductException("Category not found", HttpStatus.NOT_FOUND);
         }
 
-        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
 
         // Delete current children of category
         categoryRepository.deleteAll(category.getChildren());
@@ -125,10 +126,10 @@ public class CategoryServiceImpl implements CategoryService{
     public Category updateProducts(String name, List<Product> products) {
 
         if (!categoryRepository.existsById(name)) {
-            throw new ProductException("Category not found");
+            throw new ProductException("Category not found", HttpStatus.NOT_FOUND);
         }
 
-        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
 
         // Delete all products from category
         category.setProducts(new LinkedList<>());
@@ -143,7 +144,7 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public void addCategoryDiscount(String name, Discount discount) {
-        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found"));
+        Category category = categoryRepository.findById(name).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
         for(Product product : category.getProducts()){
             product.setDiscount(discount);
             productRepository.save(product);
@@ -154,19 +155,19 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public void addProduct(long id, String[] categories) {
         if(categories == null || categories.length != 3){
-            throw new ProductException("Product must belong to 3 levels of categories");
+            throw new ProductException("Product must belong to 3 levels of categories", HttpStatus.BAD_REQUEST);
         }
 
-        Category superCategory = categoryRepository.findById("Super").orElseThrow(() -> new CategoryException("Super category not found"));
+        Category superCategory = categoryRepository.findById("Super").orElseThrow(() -> new CategoryException("Super category not found", HttpStatus.NOT_FOUND));
         for(String categoryName : categories){
-            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found"));
+            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
             if(!superCategory.getChildren().contains(category)){
-                throw new ProductException("This category does not belong to the super category's children");
+                throw new ProductException("This category does not belong to the super category's children", HttpStatus.BAD_REQUEST);
             }
             superCategory = category;
         }
 
-        Product product = productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found", HttpStatus.NOT_FOUND));
 
         // Reverse the array to add the product to the most specific category first
         String[] reversedCategories = new String[3];
@@ -175,7 +176,7 @@ public class CategoryServiceImpl implements CategoryService{
         }
 
         for(String categoryName : reversedCategories){
-            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found"));
+            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
             category.getProducts().add(product);
             categoryRepository.save(category);
         }

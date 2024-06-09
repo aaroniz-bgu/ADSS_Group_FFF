@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.controllers.mappers;
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.domain.models.*;
 import bgu.adss.fff.dev.exceptions.ReportException;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -78,7 +79,7 @@ public class ReportMapper {
             return new DefectiveItemsReport(0, LocalDateTime.now(), "Defective Items Report", null);
         }
 
-        throw new ReportException("Invalid report type");
+        throw new ReportException("Invalid report type", HttpStatus.BAD_REQUEST);
     }
 
     public static ReportDto map(Report report){
