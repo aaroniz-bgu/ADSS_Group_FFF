@@ -66,6 +66,7 @@ public class MoveItemsToShelvesPage extends AbstractUserComponent {
         }
         try{
             restTemplate.put(PRODUCT_ROUTE + "/item/" + id, new RequestAmountDto(amount));
+            out.println("Moved " + amount + " items to shelves from storage.");
         } catch (Exception e) {
             out.println("Not enough items in storage.");
             return;
