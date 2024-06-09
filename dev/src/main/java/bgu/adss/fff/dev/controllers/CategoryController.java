@@ -29,14 +29,16 @@ public class CategoryController {
     }
 
     @PostMapping("/{parent}")
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody RequestCategoryDto categoryDto, @PathVariable("parent") String parent){
+    public ResponseEntity<?> createCategory(@RequestBody RequestCategoryDto categoryDto, @PathVariable("parent") String parent) {
         Category category = CategoryMapper.map(categoryDto);
-        return new ResponseEntity<>(map(categoryService.createCategory(category, parent)), HttpStatus.CREATED);
+        CategoryDto response = map(categoryService.createCategory(category, parent));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable("name") String name){
-        return ResponseEntity.ok(map(categoryService.getCategory(name)));
+    public ResponseEntity<?> getCategory(@PathVariable("name") String name) {
+        CategoryDto category = map(categoryService.getCategory(name));
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping

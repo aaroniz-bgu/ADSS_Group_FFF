@@ -1,7 +1,9 @@
 package bgu.adss.fff.dev.exceptions;
 
-public class ProductException extends RuntimeException{
-    public ProductException(String message) {
-        super(message);
+import org.springframework.http.HttpStatus;
+
+public class ProductException extends AppException {
+    public ProductException(String message, HttpStatus status) {
+        super(message, status);
     }
 }
