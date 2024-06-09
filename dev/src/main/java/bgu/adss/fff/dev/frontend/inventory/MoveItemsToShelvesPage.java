@@ -1,24 +1,28 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.exceptions.ProductException;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
+import java.time.format.DateTimeFormatter;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
 public class MoveItemsToShelvesPage extends AbstractUserComponent {
 
-    private static final String ROUTE = URI_PATH + "/product";
+    private static final String PRODUCT_ROUTE = URI_PATH + "/product";
+    private static final String AMOUNT_ROUTE = URI_PATH + "/item";
     private final RestTemplate restTemplate;
 
     private final InputComponent idInput;
     private final InputComponent quantityInput;
 
     private long id;
-    private int quantity;
+    private int amount;
 
     public MoveItemsToShelvesPage(PrintStream out) {
         super(out);
@@ -46,7 +50,7 @@ public class MoveItemsToShelvesPage extends AbstractUserComponent {
 
     private void onQuantityInput(StateEvent event) {
         try {
-            this.quantity = Integer.parseInt(event.getData());
+            this.amount = Integer.parseInt(event.getData());
             moveItemsToShelves();
         } catch (NumberFormatException e) {
             out.println(e.getMessage());
@@ -55,8 +59,17 @@ public class MoveItemsToShelvesPage extends AbstractUserComponent {
     }
 
     private void moveItemsToShelves() {
-        restTemplate.put(ROUTE + "/move/" + id + "/" + quantity, null);
-        out.println("Moved " + quantity + " items to shelves.");
+        ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
+        if(productDto == null) {
+            out.println("Product with ID " + id + " not found.");
+            return;
+        }
+        try{
+            restTemplate.put(PRODUCT_ROUTE + "/item/" + id, new RequestAmountDto(amount));
+        } catch (Exception e) {
+            out.println("Not enough items in storage.");
+            return;
+        }
     }
 
 }

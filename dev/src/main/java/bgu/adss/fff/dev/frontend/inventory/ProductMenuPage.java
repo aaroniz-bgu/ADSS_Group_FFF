@@ -48,7 +48,7 @@ public class ProductMenuPage extends AbstractUserComponent {
                     System.out.println("Rendering AddItemBatchPage");
                     break;
                 case 4:
-                    System.out.println("Rendering MoveItemsToShelvesPage");
+                    new MoveItemsToShelvesPage(out).render();
                     break;
                 case 5:
                     new SetDefectivePage(out).render();
