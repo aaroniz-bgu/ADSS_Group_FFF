@@ -17,15 +17,10 @@ public class ReportMenuPage extends AbstractUserComponent {
         page.add(new LogoComponent("Report Menu"));
 
         page.add(new LabelComponent("1. Create Inventory Report"));
-        page.add(new LabelComponent("2. Get Previous Inventory Report"));
+        page.add(new LabelComponent("2. Create Out Of Stock Report"));
+        page.add(new LabelComponent("3. Create Defective Items Report"));
 
-        page.add(new LabelComponent("3. Create Out Of Stock Report"));
-        page.add(new LabelComponent("4. Get Previous Out Of Stock Report"));
-
-        page.add(new LabelComponent("5. Create Defective Items Report"));
-        page.add(new LabelComponent("6. Get Previous Defective Items Report"));
-
-        page.add(new LabelComponent("7. Back"));
+        page.add(new LabelComponent("4. Back"));
 
         chooseMenuOption = new InputComponent("Choose an option: ");
         chooseMenuOption.subscribe(this::onChooseMenuOption);
@@ -38,24 +33,15 @@ public class ReportMenuPage extends AbstractUserComponent {
 
             switch (menuOption) {
                 case 1:
-                    System.out.println("Rendering CreateInventoryReportPage");
+                    new CreateInventoryReportPage(out).render();
                     break;
                 case 2:
-                    System.out.println("Rendering GetPreviousInventoryReportPage");
+                    new CreateStockReportPage(out).render();
                     break;
                 case 3:
-                    System.out.println("Rendering CreateOutOfStockReportPage");
+                    new CreateDefectiveItemsReportPage(out).render();
                     break;
                 case 4:
-                    System.out.println("Rendering GetPreviousOutOfStockReportPage");
-                    break;
-                case 5:
-                    System.out.println("Rendering CreateDefectiveItemsReportPage");
-                    break;
-                case 6:
-                    System.out.println("Rendering GetPreviousDefectiveItemsReportPage");
-                    break;
-                case 7:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage
                     break;
                 default:
