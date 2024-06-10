@@ -20,7 +20,7 @@ public abstract class Report implements Serializable {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 1024)
     private String content;
 
     @Column
