@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.contracts.RequestProductDto;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.exceptions.ProductException;
@@ -9,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.LinkedList;
 import java.util.Optional;
 
+import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -29,7 +30,7 @@ public class ProductServiceImplTests {
 
     @BeforeEach
     void before() {
-        product = new Product(1, "product", 10.0f, null, new LinkedList<>(), new LinkedList<>(), 5);
+        product = map(new RequestProductDto(123, "Milk", 10.0f, 5));
     }
 
     @Test
@@ -40,13 +41,13 @@ public class ProductServiceImplTests {
 
     @Test
     void testCreateAlreadyExists() {
-        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
         assertThrows(ProductException.class, () -> productService.createProduct(product));
     }
 
     @Test
     void testUpdateSuccess() {
-        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
         when(productRepository.save(product)).thenReturn(product);
         assertEquals(product, productService.updateProduct(product));
     }
@@ -71,7 +72,7 @@ public class ProductServiceImplTests {
 
     @Test
     void testDeleteSuccess() {
-        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
         productService.deleteProduct(product.getProductID());
     }
 
