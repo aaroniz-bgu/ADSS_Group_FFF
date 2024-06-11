@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static bgu.adss.fff.dev.controllers.mappers.DiscountMapper.map;
@@ -30,7 +31,8 @@ public class DiscountServiceImplTests {
 
     @BeforeEach
     void before() {
-        discount = map(new RequestDiscountDto("01-07-2024", "31-07-2024", 0.1f));
+        discount = new Discount(1, LocalDate.parse("2024-07-01"), LocalDate.parse("2024-07-31"),
+                0.1f);
     }
 
     @Test
