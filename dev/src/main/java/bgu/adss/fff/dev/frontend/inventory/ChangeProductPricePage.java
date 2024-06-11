@@ -66,9 +66,11 @@ public class ChangeProductPricePage extends AbstractUserComponent {
             out.println("Product with ID " + id + " not found.");
             return;
         }
-        ProductDto updatedProduct = new ProductDto(this.id, response.productName(), this.price, response.discount(), response.shelves(), response.storage(), response.minimalQuantity());
+        ProductDto updatedProduct = new ProductDto(this.id, response.productName(),
+                this.price, response.discount(), response.shelves(), response.storage(), response.minimalQuantity());
         restTemplate.put(ROUTE, updatedProduct);
-        out.println("Product's price changed - " + response.productID() + "(" + response.productName() + ") - " + response.price());
+        out.println("Product's price changed - " + response.productID() + "(" + response.productName()
+                + ") - " + response.price());
     }
 
 }

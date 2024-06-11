@@ -86,9 +86,15 @@ public class AddItemBatchPage extends AbstractUserComponent {
             return;
         }
 
-        ItemDto[] itemDto = restTemplate.postForObject(PRODUCT_ROUTE + "/item/" + id, new RequestItemDto(expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), true,  amount), ItemDto[].class);
+        ItemDto[] itemDto = restTemplate.postForObject(
+                PRODUCT_ROUTE + "/item/" + id,
+                new RequestItemDto(
+                        expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                        true,  amount),
+                ItemDto[].class);
 
-        out.println("Added " + amount + " items to product " + productDto.productName() + " (ID: " + productDto.productID() + ").");
+        out.println("Added " + amount + " items to product " + productDto.productName() +
+                " (ID: " + productDto.productID() + ").");
     }
 
 }

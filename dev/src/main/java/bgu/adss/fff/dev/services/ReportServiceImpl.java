@@ -100,7 +100,8 @@ public class ReportServiceImpl implements ReportService {
 
         List<Category> categoryList = new LinkedList<>();
         for (String categoryName : categories) {
-            Category category = categoryRepository.findById(categoryName).orElseThrow(() -> new ReportException("Category not found", HttpStatus.BAD_REQUEST));
+            Category category = categoryRepository.findById(categoryName).orElseThrow(
+                    () -> new ReportException("Category not found", HttpStatus.BAD_REQUEST));
             categoryList.add(category);
         }
         inventoryReport.setCategories(categoryList);
@@ -116,7 +117,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public InventoryReport getInventoryReport(long id) {
-        return inventoryReportRepository.findById(id).orElseThrow(() -> new ReportException("Inventory report not found", HttpStatus.NOT_FOUND));
+        return inventoryReportRepository.findById(id).orElseThrow(
+                () -> new ReportException("Inventory report not found", HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -147,7 +149,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public OutOfStockReport getOutOfStockReport(long id) {
-        return outOfStockReportRepository.findById(id).orElseThrow(() -> new ReportException("Out of stock report not found", HttpStatus.NOT_FOUND));
+        return outOfStockReportRepository.findById(id).orElseThrow(
+                () -> new ReportException("Out of stock report not found", HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -177,6 +180,7 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public DefectiveItemsReport getDefectiveItemsReport(long id) {
-        return defectiveItemsReportRepository.findById(id).orElseThrow(() -> new ReportException("Defective items report not found", HttpStatus.NOT_FOUND));
+        return defectiveItemsReportRepository.findById(id).orElseThrow(
+                () -> new ReportException("Defective items report not found", HttpStatus.NOT_FOUND));
     }
 }

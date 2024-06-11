@@ -30,7 +30,8 @@ public class AddCategoryPage extends AbstractUserComponent {
         restTemplate = new RestTemplate();
 
         nameInput = new InputComponent("Enter product name (שם): ");
-        parentCategoryInput = new InputComponent("Enter parent category (קטגורית אב) - (Enter 'Super' for no parent category): ");
+        parentCategoryInput = new InputComponent(
+                "Enter parent category (קטגורית אב) - (Enter 'Super' for no parent category): ");
 
         nameInput.subscribe(this::onNameInput);
         parentCategoryInput.subscribe(this::onParentCategoryInput);
@@ -67,7 +68,8 @@ public class AddCategoryPage extends AbstractUserComponent {
     private void createCategory() {
         try {
             RequestCategoryDto category = new RequestCategoryDto(name);
-            CategoryDto response = restTemplate.postForObject(ROUTE + "/" + parentCategory, category, CategoryDto.class);
+            CategoryDto response = restTemplate.postForObject(
+                    ROUTE + "/" + parentCategory, category, CategoryDto.class);
             Objects.requireNonNull(response);
 
             out.println("Category Created - " + response.categoryName());
