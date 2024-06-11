@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 
 public abstract class AppException extends RuntimeException {
 
+    /**
+     * Used to generalize all custom exceptions that this app uses.
+     */
     protected final HttpStatus status;
 
     protected AppException(String message, HttpStatus status) {

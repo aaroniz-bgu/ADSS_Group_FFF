@@ -20,6 +20,11 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
 
+    /**
+     * ProductServiceImpl constructor
+     * @param productRepository product repository
+     * @param itemRepository item repository
+     */
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository, ItemRepository itemRepository) {
         this.productRepository = productRepository;
@@ -60,6 +65,11 @@ public class ProductServiceImpl implements ProductService {
 
     // Basic CRUD operations
 
+    /**
+     * Create a new product
+     * @param product which creat a new product according to it
+     * @return created product
+     */
     @Override
     public Product createProduct(Product product) {
 
@@ -76,11 +86,21 @@ public class ProductServiceImpl implements ProductService {
         return save(product);
     }
 
+    /**
+     * Get a product by id
+     * @param id product id
+     * @return product
+     */
     @Override
     public Product getProduct(long id) {
         return getProductByID(id);
     }
 
+    /**
+     * Update a product
+     * @param product product to update
+     * @return updated product
+     */
     @Override
     public Product updateProduct(Product product) {
 
@@ -96,6 +116,10 @@ public class ProductServiceImpl implements ProductService {
         return save(product);
     }
 
+    /**
+     * Delete a product
+     * @param id product id
+     */
     @Override
     public void deleteProduct(long id) {
 
@@ -108,6 +132,12 @@ public class ProductServiceImpl implements ProductService {
 
     // Additional operations
 
+    /**
+     * Add items to a product
+     * @param id product id
+     * @param items list of items to add
+     * @return list of added items
+     */
     @Override
     public List<Item> addItems(long id, List<Item> items) {
 
@@ -134,6 +164,12 @@ public class ProductServiceImpl implements ProductService {
         return savedItems;
     }
 
+    /**
+     * Move items from storage to shelves
+     * @param id product id
+     * @param amount amount of items to move from storage to shelves
+     * @return list of moved items
+     */
     @Override
     public List<Item> moveToShelves(long id, int amount) {
 
@@ -169,6 +205,12 @@ public class ProductServiceImpl implements ProductService {
         return movedItems;
     }
 
+    /**
+     * Add a discount to a product
+     * @param id product id
+     * @param discount discount to add
+     * @return added discount
+     */
     @Override
     public Discount addDiscount(long id, Discount discount) {
 
@@ -184,6 +226,12 @@ public class ProductServiceImpl implements ProductService {
         return discount;
     }
 
+    /**
+     * Update storage of a product
+     * @param id product id
+     * @param storage list of items to update storage
+     * @return updated product
+     */
     @Override
     public Product updateStorage(long id, List<Item> storage) {
 
@@ -206,6 +254,12 @@ public class ProductServiceImpl implements ProductService {
         return save(product);
     }
 
+    /**
+     * Update shelves of a product
+     * @param id product id
+     * @param shelves list of items to update shelves
+     * @return updated product
+     */
     @Override
     public Product updateShelves(long id, List<Item> shelves) {
 

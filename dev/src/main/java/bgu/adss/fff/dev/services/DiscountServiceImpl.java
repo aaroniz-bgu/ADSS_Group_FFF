@@ -14,6 +14,10 @@ public class DiscountServiceImpl implements DiscountService {
 
     private final DiscountRepository discountRepository;
 
+    /**
+     * DiscountServiceImpl constructor
+     * @param discountRepository discount repository
+     */
     @Autowired
     public DiscountServiceImpl(DiscountRepository discountRepository) {
         this.discountRepository = discountRepository;
@@ -33,6 +37,11 @@ public class DiscountServiceImpl implements DiscountService {
         return id;
     }
 
+    /**
+     * Create a new discount
+     * @param discount discount to create
+     * @return created discount
+     */
     @Override
     public Discount createDiscount(Discount discount) {
 
@@ -49,11 +58,21 @@ public class DiscountServiceImpl implements DiscountService {
         return discountRepository.save(discount);
     }
 
+    /**
+     * Get a discount by id
+     * @param id discount id
+     * @return discount
+     */
     @Override
     public Discount getDiscount(long id) {
         return discountRepository.findById(id).orElseThrow(() -> new DiscountException("Discount not found", HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Update a discount
+     * @param discount discount to update
+     * @return updated discount
+     */
     @Override
     public Discount updateDiscount(Discount discount) {
 
@@ -68,6 +87,10 @@ public class DiscountServiceImpl implements DiscountService {
         return discountRepository.save(discount);
     }
 
+    /**
+     * Delete a discount
+     * @param id discount id
+     */
     @Override
     public void deleteDiscount(long id) {
 
