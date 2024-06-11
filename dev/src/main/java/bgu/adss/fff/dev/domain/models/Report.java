@@ -28,6 +28,14 @@ public abstract class Report implements Serializable {
 
     public Report(){}
 
+    /**
+     * Report constructor
+     * @param reportId report id
+     * @param reportDate report date
+     * @param title report title
+     * @param content report content
+     * @param reportType report type
+     */
     public Report(long reportId, LocalDateTime reportDate, String title, String content, ReportType reportType) {
         this.reportId = reportId;
         this.reportDate = reportDate;
@@ -36,36 +44,64 @@ public abstract class Report implements Serializable {
         this.reportType = reportType;
     }
 
+    /**
+     * Write a report
+     * @param repository product repository
+     */
     public abstract void writeReport(ProductRepository repository);
 
+    /**
+     * Get report id
+     * @return report id
+     */
     public long getReportId() {
         return reportId;
     }
 
+    /**
+     * Set report id
+     * @param reportId report id
+     */
     public void setReportId(long reportId) {
         this.reportId = reportId;
     }
 
+    /**
+     * Get report date
+     * @return report date
+     */
     public LocalDateTime getReportDate() {
         return reportDate;
     }
 
+    /**
+     * Get report title
+     * @return report title
+     */
     public String getTitle() {
         return title;
     }
 
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-
+    /**
+     * Get report content
+     * @return report content
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * Set report content
+     * @param content report content
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * Get report type
+     * @return report type
+     */
     public ReportType getReportType() {
         return reportType;
     }

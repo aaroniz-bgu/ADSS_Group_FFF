@@ -22,6 +22,13 @@ public class Discount implements Serializable {
     @Column
     private float discountPercent;
 
+    /**
+     * Discount constructor
+     * @param discountID discount id
+     * @param startDate discount start date
+     * @param endDate discount end date
+     * @param discountPercent discount percent
+     */
     public Discount(long discountID, LocalDate startDate, LocalDate endDate, float discountPercent) {
         this.discountID = discountID;
         this.startDate = startDate;
@@ -31,22 +38,42 @@ public class Discount implements Serializable {
 
     public Discount() { }
 
+    /**
+     * Get discount id
+     * @return discount id
+     */
     public long getDiscountID() {
         return discountID;
     }
 
+    /**
+     * Set discount id
+     * @param discountID discount id
+     */
     public void setDiscountID(long discountID) {
         this.discountID = discountID;
     }
 
+    /**
+     * Get discount start date
+     * @return discount start date
+     */
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    /**
+     * Get discount end date
+     * @return discount end date
+     */
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    /**
+     * Get discount percent
+     * @return discount percent
+     */
     public float getDiscountPercent() {
         return discountPercent;
     }

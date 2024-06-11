@@ -20,6 +20,11 @@ public class CategoryServiceImpl implements CategoryService{
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
+    /**
+     * CategoryServiceImpl constructor
+     * @param repository category repository
+     * @param productRepository product repository
+     */
     @Autowired
     public CategoryServiceImpl(CategoryRepository repository, ProductRepository productRepository) {
         this.categoryRepository = repository;
@@ -28,7 +33,12 @@ public class CategoryServiceImpl implements CategoryService{
         repository.save(superCategory);
     }
 
-
+    /**
+     * Create a new category
+     * @param category category to create
+     * @param parent parent category
+     * @return created category
+     */
     @Override
     public Category createCategory(Category category, String parent) {
 
@@ -58,6 +68,11 @@ public class CategoryServiceImpl implements CategoryService{
         return addedCategory;
     }
 
+    /**
+     * Get a category by name
+     * @param name category name
+     * @return category
+     */
     @Override
     public Category getCategory(String name) {
 
@@ -69,6 +84,10 @@ public class CategoryServiceImpl implements CategoryService{
                 () -> new CategoryException("Category not found", HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Get all categories
+     * @return list of categories
+     */
     @Override
     public List<Category> getCategories() {
 
@@ -76,6 +95,12 @@ public class CategoryServiceImpl implements CategoryService{
 
     }
 
+    /**
+     * Update a category
+     * @param name category name
+     * @param category category to update
+     * @return updated category
+     */
     @Override
     public Category updateCategory(String name, Category category) {
 
@@ -91,6 +116,10 @@ public class CategoryServiceImpl implements CategoryService{
 
     }
 
+    /**
+     * Delete a category
+     * @param name category name
+     */
     @Override
     public void deleteCategory(String name) {
 
@@ -102,6 +131,12 @@ public class CategoryServiceImpl implements CategoryService{
 
     }
 
+    /**
+     * Update children of a category
+     * @param name category name
+     * @param children list of children
+     * @return updated category
+     */
     @Override
     public Category updateChildren(String name, List<Category> children) {
 
@@ -125,6 +160,12 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepository.save(category);
     }
 
+    /**
+     * Update products of a category
+     * @param name category name
+     * @param products list of products
+     * @return updated category
+     */
     @Override
     public Category updateProducts(String name, List<Product> products) {
 
@@ -146,6 +187,11 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepository.save(category);
     }
 
+    /**
+     * Add a discount to a category
+     * @param name category name
+     * @param discount discount to add
+     */
     @Override
     public void addCategoryDiscount(String name, Discount discount) {
         Category category = categoryRepository.findById(name).orElseThrow(
@@ -157,6 +203,11 @@ public class CategoryServiceImpl implements CategoryService{
         categoryRepository.save(category);
     }
 
+    /**
+     * Add a product to a category
+     * @param id product id
+     * @param categories list of categories - representing the 3 level categories
+     */
     @Override
     public void addProduct(long id, String[] categories) {
         if(categories == null || categories.length != 3){

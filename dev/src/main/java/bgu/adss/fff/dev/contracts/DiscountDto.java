@@ -3,6 +3,12 @@ package bgu.adss.fff.dev.contracts;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/** Contract for Discount details
+ * @param discountID
+ * @param startDate
+ * @param endDate
+ * @param discountPercent
+ */
 public record DiscountDto(
         @JsonProperty("discountID") long discountID,
 

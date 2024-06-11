@@ -11,6 +11,11 @@ import java.util.stream.Stream;
 
 public class ProductMapper {
 
+    /**
+     * Maps Product to ProductDto
+     * @param product Product to be mapped to ProductDto
+     * @return productDto
+     */
     public static ProductDto map(Product product){
         return new ProductDto(
                 product.getProductID(),
@@ -23,6 +28,11 @@ public class ProductMapper {
         );
     }
 
+    /**
+     * Maps ProductDto to Product
+     * @param productDto ProductDto to be mapped to Product
+     * @return product
+     */
     public static Product map(ProductDto productDto){
         return new Product(
                 productDto.productID(),
@@ -35,6 +45,11 @@ public class ProductMapper {
         );
     }
 
+    /**
+     * Maps RequestProductDto to Product
+     * @param requestProductDto RequestProductDto to be mapped to Product
+     * @return product
+     */
     public static Product map(RequestProductDto requestProductDto) {
         return new Product(
                 requestProductDto.productID(),
@@ -47,10 +62,20 @@ public class ProductMapper {
         );
     }
 
+    /**
+     * Maps an array of products to an array of productDtos
+     * @param products array of products to be mapped to array of productDtos
+     * @return array of productDtos
+     */
     public static ProductDto[] map(List<Product> products) {
         return products.stream().map(ProductMapper::map).toArray(ProductDto[]::new);
     }
 
+    /**
+     * Maps an array of productDtos to an array of products
+     * @param productDTOs array of productDtos to be mapped to array of products
+     * @return array of products
+     */
     public static List<Product> map(ProductDto[] productDTOs) {
         return Stream.of(productDTOs).map(ProductMapper::map).collect(Collectors.toList());
     }

@@ -22,6 +22,14 @@ public class ReportServiceImpl implements ReportService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    /**
+     * ReportServiceImpl constructor
+     * @param inventoryReportRepository inventory report repository
+     * @param outOfStockReportRepository out of stock report repository
+     * @param defectiveItemsReportRepository defective items report repository
+     * @param productRepository product repository
+     * @param categoryRepository category repository
+     */
     @Autowired
     public ReportServiceImpl(
             InventoryReportRepository inventoryReportRepository,
@@ -36,6 +44,8 @@ public class ReportServiceImpl implements ReportService {
         this.categoryRepository = categoryRepository;
     }
 
+    // Helper methods
+
     private long generateRandomItemID(JpaRepository<? extends Report, Long> repository) {
         long id =  new Random().nextLong();
 
@@ -46,6 +56,12 @@ public class ReportServiceImpl implements ReportService {
         return id;
     }
 
+    /**
+     * Create a new report
+     * @param report report to create
+     * @param categories categories to include in the report
+     * @return created report
+     */
     @Override
     public Report createReport(Report report, String[] categories) {
         if (report == null)
@@ -65,6 +81,12 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    /**
+     * Create an inventory report
+     * @param inventoryReport inventory report to create
+     * @param categories categories to include in the report
+     * @return created inventory report
+     */
     private InventoryReport createInventoryReport(InventoryReport inventoryReport, String[] categories) {
 
         if (inventoryReport == null)
@@ -88,12 +110,22 @@ public class ReportServiceImpl implements ReportService {
         return inventoryReportRepository.save(inventoryReport);
     }
 
+    /**
+     * Get an inventory report by id
+     * @param id inventory report id
+     * @return inventory report
+     */
     @Override
     public InventoryReport getInventoryReport(long id) {
         return inventoryReportRepository.findById(id).orElseThrow(
                 () -> new ReportException("Inventory report not found", HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Create an out of stock report
+     * @param outOfStockReport out of stock report to create
+     * @return created out of stock report
+     */
     private OutOfStockReport createOutOfStockReport(OutOfStockReport outOfStockReport) {
 
         if (outOfStockReport == null)
@@ -110,12 +142,22 @@ public class ReportServiceImpl implements ReportService {
         return outOfStockReportRepository.save(outOfStockReport);
     }
 
+    /**
+     * Get an out of stock report by id
+     * @param id out of stock report id
+     * @return out of stock report
+     */
     @Override
     public OutOfStockReport getOutOfStockReport(long id) {
         return outOfStockReportRepository.findById(id).orElseThrow(
                 () -> new ReportException("Out of stock report not found", HttpStatus.NOT_FOUND));
     }
 
+    /**
+     * Create a defective items report
+     * @param defectiveItemsReport defective items report to create
+     * @return created defective items report
+     */
     private DefectiveItemsReport createDefectiveItemsReport(DefectiveItemsReport defectiveItemsReport) {
 
         if (defectiveItemsReport == null)
@@ -131,6 +173,11 @@ public class ReportServiceImpl implements ReportService {
         return defectiveItemsReportRepository.save(defectiveItemsReport);
     }
 
+    /**
+     * Get a defective items report by id
+     * @param id defective items report id
+     * @return defective items report
+     */
     @Override
     public DefectiveItemsReport getDefectiveItemsReport(long id) {
         return defectiveItemsReportRepository.findById(id).orElseThrow(
