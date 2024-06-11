@@ -33,17 +33,52 @@ public class ProductServiceImplTests {
     }
 
     @Test
-    void testCreate() {
+    void testCreateSuccess() {
         when(productRepository.save(product)).thenReturn(product);
         assertEquals(product, productService.createProduct(product));
     }
 
     @Test
-    void testGet() {
+    void testCreateAlreadyExists() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        assertThrows(ProductException.class, () -> productService.createProduct(product));
+    }
+
+    @Test
+    void testUpdateSuccess() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        assertEquals(product, productService.updateProduct(product));
+    }
+
+    @Test
+    void testUpdateNotFound() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.empty());
+        assertThrows(ProductException.class, () -> productService.updateProduct(product));
+    }
+
+    @Test
+    void testGetSuccess() {
         when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
         assertEquals(product, productService.getProduct(product.getProductID()));
-        when(productRepository.findById(-1L)).thenReturn(Optional.empty());
-        assertThrows(ProductException.class, () -> productService.getProduct(-1L));
+    }
+
+    @Test
+    void testGetNotFound() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.empty());
+        assertThrows(ProductException.class, () -> productService.getProduct(product.getProductID()));
+    }
+
+    @Test
+    void testDeleteSuccess() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        productService.deleteProduct(product.getProductID());
+    }
+
+    @Test
+    void testDeleteNotFound() {
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.empty());
+        assertThrows(ProductException.class, () -> productService.deleteProduct(product.getProductID()));
     }
 
 }
