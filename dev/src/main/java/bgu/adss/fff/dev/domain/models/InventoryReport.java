@@ -55,7 +55,8 @@ public class InventoryReport extends Report {
      * @param content report content
      * @param categories report categories
      */
-    public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content, List<Category> categories) {
+    public InventoryReport(
+            long reportId, LocalDateTime reportDate, String title, String content, List<Category> categories) {
         super(reportId, reportDate, title, content, ReportType.INVENTORY);
         this.categories = categories;
     }
