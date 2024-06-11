@@ -40,7 +40,8 @@ public class DiscountServiceImpl implements DiscountService {
             throw new DiscountException("Discount cannot be null", HttpStatus.BAD_REQUEST);
         }
 
-        discount.setDiscountID(generateRandomDiscountID());
+        if (discount.getDiscountID() == 0)
+            discount.setDiscountID(generateRandomDiscountID());
 
         if (doesDiscountExist(discount.getDiscountID())) {
             throw new DiscountException("Discount already exists", HttpStatus.BAD_REQUEST);
