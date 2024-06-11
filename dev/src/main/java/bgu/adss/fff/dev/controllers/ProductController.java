@@ -29,6 +29,15 @@ public class ProductController {
 
     // Basic CRUD operations
 
+    /**
+     * Establishes a new product in the system.
+     * @param request The request containing the product details:<br>
+     *                - {@code long productID}: The product's unique identifier.<br>
+     *                - {@code String productName}: The product's name.<br>
+     *                - {@code float price}: The product's price.<br>
+     *                - {@code int minimalQuantity}: The minimal quantity of the product to be kept in stock.<br>
+     * @return ResponseEntity containing the created product if successful, or an error message if not.
+     */
     @PostMapping
     public ResponseEntity<?> createProduct(@RequestBody RequestProductDto request) {
         Product product = service.createProduct(map(request));
@@ -36,6 +45,11 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.CREATED);
     }
 
+    /**
+     * Fetches product by its unique identifier.
+     * @param id The product's unique identifier.
+     * @return ResponseEntity containing the product if found, or an error message if not.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable("id") long id){
         Product product = service.getProduct(id);
@@ -43,6 +57,17 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+    /**
+     * Updates product that is already in the system.
+     * @param request The request containing the product details:<br>
+     *                - {@code long productID}: The product's unique identifier.<br>
+     *                - {@code String productName}: The product's name.<br>
+     *                - {@code float price}: The product's price.<br>
+     *                - {@code ItemDto[] storage}: The product's storage.<br>
+     *                - {@code ItemDto[] shelves}: The product's shelves.<br>
+     *                - {@code int minimalQuantity}: The minimal quantity of the product to be kept in stock.<br>
+     * @return ResponseEntity containing the updated product if successful, or an error message if not.
+     */
     @PutMapping
     public ResponseEntity<?> updateProduct(@RequestBody ProductDto request) {
         Product product = service.updateProduct(map(request));
@@ -50,6 +75,11 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+    /**
+     * Deletes product by its unique identifier.
+     * @param id The product's unique identifier.
+     * @return an empty ResponseEntity if successful, or an error message if not.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") long id) {
         service.deleteProduct(id);
@@ -58,6 +88,15 @@ public class ProductController {
 
     // Additional operations
 
+    /**
+     * Adds items to the product's storage.
+     * @param id The product's unique identifier.
+     * @param items The items to be added to the storage.
+     *              - {@code String expirationDate}: The item's expiration date.
+     *              - {@code boolean isDefected}: Whether the item is defected.
+     *              - {@code int amount}: The amount of the item.
+     * @return ResponseEntity containing the created items if successful, or an error message if not.
+     */
     @PostMapping("/item/{id}")
     public ResponseEntity<?> addItems(@PathVariable("id") long id,
                                       @RequestBody RequestItemDto items) {
@@ -67,6 +106,12 @@ public class ProductController {
         return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
     }
 
+    /**
+     * Moves items from the product's storage to its shelves.
+     * @param id The product's unique identifier.
+     * @param amount An object containing the amount of items to move.
+     * @return ResponseEntity containing the moved items if successful, or an error message if not.
+     */
     @PutMapping("/item/{id}")
     public ResponseEntity<?> moveToShelves(@PathVariable("id") long id,
                                            @RequestBody RequestAmountDto amount) {
@@ -75,6 +120,16 @@ public class ProductController {
         return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
     }
 
+    /**
+     * Adds discount to the product.
+     * @param id The product's unique identifier.
+     * @param discountDto The discount details (The discount needs to be created first):<br>
+     *                    - {@code long discountID}: The discount unique identifier.<br>
+     *                    - {@code String startDate}: The discount start date.<br>
+     *                    - {@code String endDate}: The discount end date.<br>
+     *                    - {@code float discountPercent}: The discount percentage.
+     * @return an empty ResponseEntity if successful, or an error message if not.
+     */
     @PutMapping("/discount/{id}")
     public ResponseEntity<?> addDiscount(@PathVariable("id") long id, @RequestBody DiscountDto discountDto) {
         Discount discount = DiscountMapper.map(discountDto);
@@ -82,6 +137,15 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Updates the storage with an updated set of items.
+     * @param id The product's unique identifier.
+     * @param items The updated items to be stored (They need to be created first):<br>
+     *              - {@code long itemID}: The item's unique identifier.<br>
+     *              - {@code String expirationDate}: The item's expiration date.<br>
+     *              - {@code boolean isDefected}: Whether the item is defected.
+     * @return ResponseEntity containing the updated product if successful, or an error message if not.
+     */
     @PutMapping("/storage/{id}")
     public ResponseEntity<?> updateStorage(@PathVariable("id") long id,
                                            @RequestBody ItemDto[] items) {
@@ -91,6 +155,15 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+    /**
+     * Updates the shelves with an updated set of items.
+     * @param id The product's unique identifier.
+     * @param items The updated items to be stored (They need to be created first):<br>
+     *              - {@code long itemID}: The item's unique identifier.<br>
+     *              - {@code String expirationDate}: The item's expiration date.<br>
+     *              - {@code boolean isDefected}: Whether the item is defected.
+     * @return ResponseEntity containing the updated product if successful, or an error message if not.
+     */
     @PutMapping("/shelves/{id}")
     public ResponseEntity<?> updateShelves(@PathVariable("id") long id,
                                            @RequestBody ItemDto[] items) {
