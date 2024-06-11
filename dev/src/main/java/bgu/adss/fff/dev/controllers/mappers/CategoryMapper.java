@@ -26,13 +26,18 @@ public class CategoryMapper {
 
     /**
      * Maps a requestCategoryDto to a category
-     * @param dto
+     * @param dto requestCategoryDto that converts to category
      * @return category
      */
     public static Category map(RequestCategoryDto dto){
         return new Category(dto.categoryName(), 0, new LinkedList<>(), new LinkedList<>());
     }
 
+    /**
+     * Maps a categoryDto to a category
+     * @param categoryDto categoryDto that converts to category
+     * @return category
+     */
     public static Category map(CategoryDto categoryDto){
         return new Category(
                 categoryDto.categoryName(),
@@ -42,10 +47,20 @@ public class CategoryMapper {
         );
     }
 
+    /**
+     * Maps a list of categories to an array of categoryDtos
+     * @param categories list of categories
+     * @return array of categoryDtos
+     */
     public static CategoryDto[] map(List<Category> categories) {
         return categories.stream().map(CategoryMapper::map).toArray(CategoryDto[]::new);
     }
 
+    /**
+     * Maps an array of categoryDtos to a list of categories
+     * @param categoryDtos array of categoryDtos
+     * @return list of categories
+     */
     public static List<Category> map(CategoryDto[] categoryDtos) {
         return Stream.of(categoryDtos).map(CategoryMapper::map).collect(Collectors.toList());
     }
