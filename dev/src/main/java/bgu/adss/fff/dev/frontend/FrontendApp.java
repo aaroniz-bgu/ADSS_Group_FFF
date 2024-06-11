@@ -50,7 +50,7 @@ public class FrontendApp extends TerminalApp {
 
             restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(1, "Red Apples", 5.0f, 20));
             restTemplate.put(URI_PATH + "/category/product/" + 1, new RequestCategoriesDto(new String[] {"Food", "Fruits", "Apple"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(2, "Bananas", 3.0f, 20));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(2, "Small Bananas", 3.0f, 20));
             restTemplate.put(URI_PATH + "/category/product/" + 2, new RequestCategoriesDto(new String[] {"Food", "Fruits", "Banana"}));
             restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(3, "Gezer Gamadi", 2.0f, 10));
             restTemplate.put(URI_PATH + "/category/product/" + 3, new RequestCategoriesDto(new String[] {"Food", "Vegetables", "Carrot"}));
