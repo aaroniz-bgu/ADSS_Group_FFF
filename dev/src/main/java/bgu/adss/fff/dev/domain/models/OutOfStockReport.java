@@ -11,10 +11,21 @@ public class OutOfStockReport extends Report {
 
     public OutOfStockReport() {}
 
+    /**
+     * OutOfStockReport constructor
+     * @param reportId report id
+     * @param reportDate report date
+     * @param title report title
+     * @param content report content
+     */
     public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content) {
         super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK);
     }
 
+    /**
+     * Write a report
+     * @param repository product repository
+     */
     @Override
     public void writeReport(ProductRepository repository) {
         if (repository == null)
