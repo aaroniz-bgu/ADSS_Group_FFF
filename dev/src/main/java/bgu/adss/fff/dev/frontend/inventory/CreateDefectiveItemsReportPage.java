@@ -3,6 +3,7 @@ package bgu.adss.fff.dev.frontend.inventory;
 import bgu.adss.fff.dev.contracts.ReportDto;
 import bgu.adss.fff.dev.contracts.RequestReportDto;
 import bgu.adss.fff.dev.domain.models.ReportType;
+import bgu.adss.fff.dev.frontend.cli.components.LabelComponent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,17 +20,16 @@ public class CreateDefectiveItemsReportPage extends AbstractUserComponent {
         super(out);
         restTemplate = new RestTemplate();
 
-        page.add(new LogoComponent("Create Out of Stock Report"));
-        createReport();
+        page.add(new LogoComponent("Create Defective Items Report"));
+        page.add(new LabelComponent(createReport()));
     }
 
-    private void createReport() {
+    private String createReport() {
         RequestReportDto requestReportDto = new RequestReportDto(ReportType.DEFECTIVE_ITEMS, new String[0]);
         ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
         if (report != null) {
-            out.println("Out of Stock Report created successfully: ");
-            out.println(report.title());
-            out.println(report.content());
+            return report.title() + "\n" + report.content() + "\n";
         }
+        return "Fail";
     }
 }

@@ -6,8 +6,12 @@ import bgu.adss.fff.dev.contracts.RequestCategoryDto;
 import bgu.adss.fff.dev.contracts.RequestProductDto;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import bgu.adss.fff.dev.frontend.cli.uikit.TerminalApp;
+import bgu.adss.fff.dev.frontend.inventory.CreateStockReportPage;
 import bgu.adss.fff.dev.frontend.inventory.InventoryMenuPage;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 public class FrontendApp extends TerminalApp {
     public static final String URI_PATH = "http://localhost:8080";
@@ -61,6 +65,11 @@ public class FrontendApp extends TerminalApp {
             restTemplate.put(URI_PATH + "/category/product/" + 7, new RequestCategoriesDto(new String[] {"Drinks", "Non-Alcoholic", "Water"}));
             restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(8, "Coca Cola", 3.0f, 150));
             restTemplate.put(URI_PATH + "/category/product/" + 8, new RequestCategoriesDto(new String[] {"Drinks", "Non-Alcoholic", "Soda"}));
+
+            // If it is a monday or a thursday, generate and show the report
+             if (LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.THURSDAY) {
+                 new CreateStockReportPage(System.out).render();
+             }
         } catch (Exception e) {
             e.printStackTrace();
         }
