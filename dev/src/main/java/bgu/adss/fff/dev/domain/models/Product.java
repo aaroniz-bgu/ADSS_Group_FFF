@@ -45,7 +45,9 @@ public class Product implements Serializable {
     @Column
     private int minimalQuantity;
 
-    public Product(long productID, String productName, float price, Discount discount, List<Item> shelves, List<Item> storage, int minimalQuantity) {
+    public Product(
+            long productID, String productName, float price, Discount discount,
+            List<Item> shelves, List<Item> storage, int minimalQuantity) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;

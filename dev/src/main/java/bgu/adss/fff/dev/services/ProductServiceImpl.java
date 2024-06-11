@@ -41,7 +41,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Product getProductByID(long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductException("Product not found", HttpStatus.NOT_FOUND));
+        return productRepository.findById(id).orElseThrow(
+                () -> new ProductException("Product not found", HttpStatus.NOT_FOUND));
     }
 
     private boolean doesProductExist(long id) {

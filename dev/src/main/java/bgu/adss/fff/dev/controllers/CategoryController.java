@@ -29,7 +29,9 @@ public class CategoryController {
     }
 
     @PostMapping("/{parent}")
-    public ResponseEntity<?> createCategory(@RequestBody RequestCategoryDto categoryDto, @PathVariable("parent") String parent) {
+    public ResponseEntity<?> createCategory(
+            @RequestBody RequestCategoryDto categoryDto,
+            @PathVariable("parent") String parent) {
         Category category = CategoryMapper.map(categoryDto);
         CategoryDto response = map(categoryService.createCategory(category, parent));
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -78,7 +80,9 @@ public class CategoryController {
     }
 
     @PutMapping("/discount/{name}")
-    public ResponseEntity<?> addCategoryDiscount(@PathVariable("name") String name, @RequestBody DiscountDto discountDto) {
+    public ResponseEntity<?> addCategoryDiscount(
+            @PathVariable("name") String name,
+            @RequestBody DiscountDto discountDto) {
         Discount discount = DiscountMapper.map(discountDto);
         categoryService.addCategoryDiscount(name, discount);
         return ResponseEntity.noContent().build();

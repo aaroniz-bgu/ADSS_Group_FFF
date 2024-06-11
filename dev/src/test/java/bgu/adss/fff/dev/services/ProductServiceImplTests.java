@@ -89,7 +89,8 @@ public class ProductServiceImplTests {
         when(productRepository.existsById(product.getProductID())).thenReturn(true);
         when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
 
-        Discount discount = DiscountMapper.map(new RequestDiscountDto("01-07-2024", "31-07-2024", 0.1f));
+        Discount discount = DiscountMapper.map(
+                new RequestDiscountDto("01-07-2024", "31-07-2024", 0.1f));
         productService.addDiscount(product.getProductID(), discount);
 
         when(productRepository.existsById(product.getProductID())).thenReturn(true);

@@ -52,7 +52,8 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public Discount getDiscount(long id) {
-        return discountRepository.findById(id).orElseThrow(() -> new DiscountException("Discount not found", HttpStatus.NOT_FOUND));
+        return discountRepository.findById(id).orElseThrow(
+                () -> new DiscountException("Discount not found", HttpStatus.NOT_FOUND));
     }
 
     @Override

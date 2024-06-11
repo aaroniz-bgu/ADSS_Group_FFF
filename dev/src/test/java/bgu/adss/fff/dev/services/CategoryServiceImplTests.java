@@ -73,7 +73,8 @@ public class CategoryServiceImplTests {
     @Test
     void testUpdateNotFound() {
         when(categoryRepository.findById(category.getCategoryName())).thenReturn(Optional.empty());
-        assertThrows(CategoryException.class, () -> categoryService.updateCategory(category.getCategoryName(), category));
+        assertThrows(CategoryException.class,
+                () -> categoryService.updateCategory(category.getCategoryName(), category));
     }
 
     @Test
