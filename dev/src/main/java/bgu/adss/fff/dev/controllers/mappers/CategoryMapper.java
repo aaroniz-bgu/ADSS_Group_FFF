@@ -13,13 +13,22 @@ import java.util.stream.Stream;
 public class CategoryMapper {
 
 
-
+    /**
+     * Maps a category to a categoryDto
+     * @param category
+     * @return categoryDto
+     */
     public static CategoryDto map(Category category){
         CategoryDto[] children = CategoryMapper.map(category.getChildren());
         ProductDto[] products = ProductMapper.map(category.getProducts());
         return new CategoryDto(category.getCategoryName(), category.getLevel(), children, products);
     }
 
+    /**
+     * Maps a requestCategoryDto to a category
+     * @param dto
+     * @return category
+     */
     public static Category map(RequestCategoryDto dto){
         return new Category(dto.categoryName(), 0, new LinkedList<>(), new LinkedList<>());
     }
