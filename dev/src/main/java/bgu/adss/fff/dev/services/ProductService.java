@@ -20,5 +20,6 @@ public interface ProductService {
     List<Item> addItems(long id, List<Item> items);
     List<Item> moveToShelves(long id, int amount);
     Discount addDiscount(long id, Discount discount);
+    void setItemDefective(long id, long itemID, boolean isDefective);
 
 }

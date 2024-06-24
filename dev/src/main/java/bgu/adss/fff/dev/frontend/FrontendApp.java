@@ -48,22 +48,22 @@ public class FrontendApp extends TerminalApp {
             restTemplate.postForLocation(URI_PATH + "/category/Non-Alcoholic", new RequestCategoryDto("Water"));
             restTemplate.postForLocation(URI_PATH + "/category/Non-Alcoholic", new RequestCategoryDto("Soda"));
 
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(1, "Red Apples", 5.0f, 20));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(1, "Red Apples", 5.0f, 20, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 1, new RequestCategoriesDto(new String[] {"Food", "Fruits", "Apple"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(2, "Small Bananas", 3.0f, 20));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(2, "Small Bananas", 3.0f, 20, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 2, new RequestCategoriesDto(new String[] {"Food", "Fruits", "Banana"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(3, "Gezer Gamadi", 2.0f, 10));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(3, "Gezer Gamadi", 2.0f, 10, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 3, new RequestCategoriesDto(new String[] {"Food", "Vegetables", "Carrot"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(4, "Red Tomatoes", 4.0f, 15));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(4, "Red Tomatoes", 4.0f, 15, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 4, new RequestCategoriesDto(new String[] {"Food", "Vegetables", "Tomato"}));
 
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(5, "Goldstar", 10.0f, 100));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(5, "Goldstar", 10.0f, 100, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 5, new RequestCategoriesDto(new String[] {"Drinks", "Alcoholic", "Beer"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(6, "Cabernet Sauvignon", 50.0f, 50));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(6, "Cabernet Sauvignon", 50.0f, 50, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 6, new RequestCategoriesDto(new String[] {"Drinks", "Alcoholic", "Wine"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(7, "Ein Gedi", 5.0f, 200));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(7, "Ein Gedi", 5.0f, 200, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 7, new RequestCategoriesDto(new String[] {"Drinks", "Non-Alcoholic", "Water"}));
-            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(8, "Coca Cola", 3.0f, 150));
+            restTemplate.postForLocation(URI_PATH + "/product", new RequestProductDto(8, "Coca Cola", 3.0f, 150, 1));
             restTemplate.put(URI_PATH + "/category/product/" + 8, new RequestCategoriesDto(new String[] {"Drinks", "Non-Alcoholic", "Soda"}));
 
             // If it is a monday or a thursday, generate and show the report

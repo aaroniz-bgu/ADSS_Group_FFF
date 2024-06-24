@@ -121,6 +121,19 @@ public class ProductController {
     }
 
     /**
+     * Sets an item as defective.
+     * @param id The product's unique identifier.
+     * @param item The item to update.
+     * @return an empty ResponseEntity if successful, or an error message if not.
+     */
+    @PutMapping("/item/defective/{id}")
+    public ResponseEntity<?> setItemDefective(@PathVariable("id") long id,
+                                              @RequestBody ItemDto item) {
+        service.setItemDefective(id, item.itemID(), item.isDefected());
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Adds discount to the product.
      * @param id The product's unique identifier.
      * @param discountDto The discount details (The discount needs to be created first):<br>

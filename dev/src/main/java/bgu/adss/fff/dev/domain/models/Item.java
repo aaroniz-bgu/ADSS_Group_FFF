@@ -58,6 +58,10 @@ public class Item implements Serializable {
         return isDefected;
     }
 
+    public void setDefective(boolean isDefected) {
+        this.isDefected = isDefected;
+    }
+
     /**
      * Set item id
      * @param itemID item id

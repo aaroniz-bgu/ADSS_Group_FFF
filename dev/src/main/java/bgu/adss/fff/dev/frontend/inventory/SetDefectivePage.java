@@ -16,43 +16,70 @@ public class SetDefectivePage extends AbstractUserComponent {
     private static final String ROUTE = URI_PATH + "/product";
     private final RestTemplate restTemplate;
 
-    private final InputComponent idInput;
+    private final InputComponent productIDInput;
+    private final InputComponent itemIDInput;
 
-    private long id;
+    private long productID;
+    private long itemID;
 
     public SetDefectivePage(PrintStream out) {
         super(out);
 
         restTemplate = new RestTemplate();
 
-        idInput = new InputComponent("Enter product ID (מק''ט): ");
+        productIDInput = new InputComponent("Enter product ID (מק''ט): ");
+        itemIDInput = new InputComponent("Enter item ID (מספר מוצר): ");
 
-        idInput.subscribe(this::onIdInput);
+        productIDInput.subscribe(this::onProductIDInput);
+        itemIDInput.subscribe(this::onItemIDInput);
 
-        page.add(new LogoComponent("Change price of a Product"));
-        page.add(idInput);
+        page.add(new LogoComponent("Set Item as Defective"));
+        page.add(productIDInput);
+        page.add(itemIDInput);
     }
 
-    private void onIdInput(StateEvent event) {
+    private void onProductIDInput(StateEvent event) {
         try {
-            this.id = Long.parseUnsignedLong(event.getData());
+            this.productID = Long.parseUnsignedLong(event.getData());
+            printAvailableItems();
+        } catch (NumberFormatException e) {
+            out.println(e.getMessage());
+            productIDInput.render(out);
+        }
+    }
+
+    private void onItemIDInput(StateEvent event) {
+        try {
+            this.itemID = Long.parseUnsignedLong(event.getData());
             setItemDefective();
         } catch (NumberFormatException e) {
             out.println(e.getMessage());
-            idInput.render(out);
+            itemIDInput.render(out);
+        }
+    }
+
+    private void printAvailableItems() {
+        ProductDto response = restTemplate.getForObject(ROUTE + "/" + productID, ProductDto.class);
+        if(response == null) {
+            out.println("Product with ID " + productID + " not found.");
+            return;
+        }
+        out.println("Available items for product " + productID + ":");
+        out.println("Shelves:");
+        for(ItemDto item : response.shelves()) {
+            out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate());
+        }
+        out.println("Storage:");
+        for(ItemDto item : response.storage()) {
+            out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate() +
+                    ", Defective: " + item.isDefected());
         }
     }
 
     private void setItemDefective() {
 
-        ItemDto response = restTemplate.getForObject(ROUTE + "/" + id, ItemDto.class);
-        if(response == null) {
-            out.println("Product with ID " + id + " not found.");
-            return;
-        }
-        ItemDto defectiveItem = new ItemDto(this.id, response.expirationDate(), true);
-        restTemplate.put(ROUTE, defectiveItem);
-        out.println("Item with ID " + id + " was set as defective.");
+        restTemplate.put(ROUTE + "/item/defective/" + productID, new ItemDto(this.itemID, null, true));
+        out.println("Item with ID " + itemID + " was set as defective.");
     }
 
 }

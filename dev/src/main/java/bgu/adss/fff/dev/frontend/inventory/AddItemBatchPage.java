@@ -90,7 +90,7 @@ public class AddItemBatchPage extends AbstractUserComponent {
                 PRODUCT_ROUTE + "/item/" + id,
                 new RequestItemDto(
                         expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                        true,  amount),
+                        false,  amount),
                 ItemDto[].class);
 
         out.println("Added " + amount + " items to product " + productDto.productName() +
