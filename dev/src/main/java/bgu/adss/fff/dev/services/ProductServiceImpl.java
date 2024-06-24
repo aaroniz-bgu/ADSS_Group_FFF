@@ -283,4 +283,15 @@ public class ProductServiceImpl implements ProductService {
         return save(product);
     }
 
+    @Override
+    public Product updateSupplier(long id, long supplierID) {
+        if (!doesProductExist(id)) {
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
+        }
+
+        Product product = getProductByID(id);
+        product.setSupplierID(supplierID);
+        return save(product);
+    }
+
 }

@@ -45,6 +45,9 @@ public class Product implements Serializable {
     @Column
     private int minimalQuantity;
 
+    @Column
+    private long supplierID;
+
     /**
      * Product constructor
      * @param productID product id
@@ -54,10 +57,11 @@ public class Product implements Serializable {
      * @param shelves product shelves
      * @param storage product storage
      * @param minimalQuantity product minimal quantity
+     * @param supplierID supplier id
      */
     public Product(
             long productID, String productName, float price, Discount discount,
-            List<Item> shelves, List<Item> storage, int minimalQuantity) {
+            List<Item> shelves, List<Item> storage, int minimalQuantity, int supplierID) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
@@ -65,6 +69,7 @@ public class Product implements Serializable {
         this.shelves = shelves;
         this.storage = storage;
         this.minimalQuantity = minimalQuantity;
+        this.supplierID = supplierID;
     }
 
     public Product() {
@@ -192,6 +197,18 @@ public class Product implements Serializable {
     }
 
     /**
+     * Get the supplier of the product
+     * @return supplier id
+     */
+    public long getSupplierID() { return supplierID; }
+
+    /**
+     * Set the supplier of the product
+     * @param supplierID supplier id
+     */
+    public void setSupplierID(long supplierID) { this.supplierID = supplierID; }
+
+    /**
      * Get quantity of items that are defected
      * @param items list of items
      * @return quantity of defected items
@@ -230,6 +247,7 @@ public class Product implements Serializable {
                 ", shelves=" + shelves +
                 ", storage=" + storage +
                 ", minimalQuantity=" + minimalQuantity +
+                ", supplierID=" +
                 '}';
     }
 }

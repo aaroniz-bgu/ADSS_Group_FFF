@@ -172,4 +172,12 @@ public class ProductController {
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
+
+    @PutMapping("/supplier/{id}")
+    public ResponseEntity<?> updateSupplier(@PathVariable("id") long id,
+                                           @RequestBody long supplierID) {
+        Product product = service.updateSupplier(id, supplierID);
+        ProductDto productDto = map(product);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
 }
