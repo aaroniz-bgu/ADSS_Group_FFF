@@ -22,11 +22,13 @@ public class AddProductPage extends AbstractUserComponent {
     private final InputComponent nameInput;
     private final InputComponent priceInput;
     private final InputComponent minimalAmountInput;
+    private final InputComponent supplierInput;
 
     private long id;
     private String name;
     private float price;
     private int minimalAmount;
+    private long supplierID;
 
     public AddProductPage(PrintStream out) {
         super(out);
@@ -37,17 +39,20 @@ public class AddProductPage extends AbstractUserComponent {
         nameInput = new InputComponent("Enter product name (שם): ");
         priceInput = new InputComponent("Enter product price (מחיר): ");
         minimalAmountInput = new InputComponent("Enter minimal amount (כמות מינימלית): ");
+        supplierInput = new InputComponent("Enter supplier ID (מספר ספק): ");
 
         idInput.subscribe(this::onIdInput);
         nameInput.subscribe(this::onNameInput);
         priceInput.subscribe(this::onPriceInput);
         minimalAmountInput.subscribe(this::onMinimalAmountInput);
+        supplierInput.subscribe(this::onSupplierInput);
 
         page.add(new LogoComponent("Create New Product"));
         page.add(idInput);
         page.add(nameInput);
         page.add(priceInput);
         page.add(minimalAmountInput);
+        page.add(supplierInput);
     }
 
     private void onIdInput(StateEvent event) {
@@ -88,16 +93,25 @@ public class AddProductPage extends AbstractUserComponent {
             if (minimalAmount < 0)
                 throw new IllegalArgumentException("Minimal amount cannot be negative.");
             this.minimalAmount = minimalAmount;
-            createProduct();
         } catch (NumberFormatException e) {
             out.println(e.getMessage());
             minimalAmountInput.render(out);
         }
     }
 
+    private void onSupplierInput(StateEvent event) {
+        try {
+            this.supplierID = Long.parseUnsignedLong(event.getData());
+            createProduct();
+        } catch (NumberFormatException e) {
+            out.println(e.getMessage());
+            supplierInput.render(out);
+        }
+    }
+
     private void createProduct() {
         ProductDto product = new ProductDto(id, name, price, null,
-                new ItemDto[0], new ItemDto[0], minimalAmount);
+                new ItemDto[0], new ItemDto[0], minimalAmount, supplierID);
         ProductDto response = restTemplate.postForObject(ROUTE, product, ProductDto.class);
         Objects.requireNonNull(response);
 

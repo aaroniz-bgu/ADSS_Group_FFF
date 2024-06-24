@@ -19,6 +19,7 @@ public record ProductDto(
         @JsonProperty("discount") DiscountDto discount,
         @JsonProperty("shelves") ItemDto[] shelves,
         @JsonProperty("storage") ItemDto[] storage,
-        @JsonProperty("minimalQuantity") int minimalQuantity
+        @JsonProperty("minimalQuantity") int minimalQuantity,
+        @JsonProperty("supplierID") long supplierID
 ){ }
 

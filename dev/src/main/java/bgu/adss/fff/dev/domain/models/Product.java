@@ -61,7 +61,7 @@ public class Product implements Serializable {
      */
     public Product(
             long productID, String productName, float price, Discount discount,
-            List<Item> shelves, List<Item> storage, int minimalQuantity, int supplierID) {
+            List<Item> shelves, List<Item> storage, int minimalQuantity, long supplierID) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;

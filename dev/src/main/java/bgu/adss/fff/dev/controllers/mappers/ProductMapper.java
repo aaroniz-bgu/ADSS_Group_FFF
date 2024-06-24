@@ -24,7 +24,8 @@ public class ProductMapper {
                 product.getDiscount() == null ? null : DiscountMapper.map(product.getDiscount()),
                 ItemMapper.map(product.getShelves()),
                 ItemMapper.map(product.getStorage()),
-                product.getMinimalQuantity()
+                product.getMinimalQuantity(),
+                product.getSupplierID()
         );
     }
 
@@ -41,7 +42,8 @@ public class ProductMapper {
                 productDto.discount() == null ? null : DiscountMapper.map(productDto.discount()),
                 ItemMapper.map(productDto.shelves()),
                 ItemMapper.map(productDto.storage()),
-                productDto.minimalQuantity()
+                productDto.minimalQuantity(),
+                productDto.supplierID()
         );
     }
 
@@ -58,7 +60,8 @@ public class ProductMapper {
                 null,
                 new LinkedList<>(),
                 new LinkedList<>(),
-                requestProductDto.minimalQuantity()
+                requestProductDto.minimalQuantity(),
+                requestProductDto.supplierID()
         );
     }
 

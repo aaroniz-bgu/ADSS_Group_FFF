@@ -13,5 +13,6 @@ public record RequestProductDto(
         @JsonProperty("productID") long productID,
         @JsonProperty("productName") String productName,
         @JsonProperty("price") float price,
-        @JsonProperty("minimalQuantity") int minimalQuantity
+        @JsonProperty("minimalQuantity") int minimalQuantity,
+        @JsonProperty("supplierID") long supplierID
 ) { }
