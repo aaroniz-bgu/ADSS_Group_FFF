@@ -65,6 +65,8 @@ public class ProductServiceImpl implements ProductService {
         return id;
     }
 
+    private void checkShortage
+
     // Basic CRUD operations
 
     /**
@@ -184,24 +186,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product product = getProductByID(id);
+        List<Item> movedItems = product.moveToShelves(amount);
 
-        List<Item> storage = product.getStorage();
-        List<Item> shelves = product.getShelves();
-
-        if (storage.size() < amount) {
-            throw new ProductException("Not enough items in storage", HttpStatus.BAD_REQUEST);
-        }
-
-        List<Item> movedItems = new LinkedList<>();
-        for (int i = 0; i < amount; i++) {
-            Item item = storage.remove(0);
-            shelves.add(item);
-
-            movedItems.add(item);
-        }
-
-        product.setStorage(storage);
-        product.setShelves(shelves);
         save(product);
 
         return movedItems;
@@ -314,6 +300,74 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductByID(id);
         product.setSupplierID(supplierID);
         return save(product);
+    }
+
+    @Override
+    public List<Item> sellItems(long id, int amount){
+        if(!doesProductExist(id)){
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
+        }
+
+        Product product = getProductByID(id);
+
+        if(amount <= 0){
+            throw new ProductException("Amount must be greater than 0", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Item> shelves = product.getShelves();
+
+        if(shelves.size() < amount){
+            throw new ProductException("Not enough items in shelves", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Item> soldItems = new LinkedList<>();
+        for(int i = 0; i < amount; i++){
+            Item item = shelves.remove(0);
+            soldItems.add(item);
+        }
+
+        if(product.getShelves().size() < product.getMinimalQuantity()){
+            product.moveToShelves(Math.min(product.getStorage().size(), product.getMinimalQuantity() - product.getShelves().size()));
+        }
+
+        if(product.getShelvesQuantity() + product.getStorageQuantity() < product.getMinimalQuantity()){
+            //TODO notifyShortage(id);
+            //TODO orderItems(id);
+        }
+
+        product.setShelves(shelves);
+        save(product);
+
+        return soldItems;
+    }
+
+    @Override
+    public Item throwItem(long productId, long itemId){
+
+        if(!doesProductExist(productId)){
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
+        }
+
+        Product product = getProductByID(productId);
+
+        if(!product.containsItem(itemId)){
+            throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
+        }
+
+        Item item = product.removeItem(itemId);
+
+        if(product.getShelves().size() < product.getMinimalQuantity()){
+            product.moveToShelves(Math.min(product.getStorage().size(), product.getMinimalQuantity() - product.getShelves().size()));
+        }
+
+        if(product.getShelvesQuantity() + product.getStorageQuantity() < product.getMinimalQuantity()){
+            //TODO notifyShortage(id);
+            //TODO orderItems(id);
+        }
+
+        save(product);
+
+        return item;
     }
 
 }

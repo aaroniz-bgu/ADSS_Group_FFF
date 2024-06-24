@@ -21,5 +21,7 @@ public interface ProductService {
     List<Item> moveToShelves(long id, int amount);
     Discount addDiscount(long id, Discount discount);
     void setItemDefective(long id, long itemID, boolean isDefective);
+    List<Item> sellItems(long id, int amount);
+    Item throwItem(long productId, long itemId);
 
 }

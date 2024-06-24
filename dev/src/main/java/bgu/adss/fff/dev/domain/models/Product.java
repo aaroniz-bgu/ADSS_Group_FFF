@@ -1,9 +1,12 @@
 package bgu.adss.fff.dev.domain.models;
 
+import bgu.adss.fff.dev.exceptions.ProductException;
 import jakarta.persistence.*;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity(name="Product")
@@ -236,6 +239,72 @@ public class Product implements Serializable {
             }
         }
         return expiredItems;
+    }
+
+    public List<Item> moveToShelves(int amount) {
+        if (storage.size() < amount) {
+            throw new ProductException("Not enough items in storage", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Item> movedItems = new LinkedList<>();
+        for (int i = 0; i < amount; i++) {
+            Item item = storage.remove(0);
+            shelves.add(item);
+
+            movedItems.add(item);
+        }
+
+        return movedItems;
+    }
+
+    public boolean containsItem(long itemID) {
+        for (Item item : shelves) {
+            if (item.getItemID() == itemID) {
+                return true;
+            }
+        }
+
+        for (Item item : storage) {
+            if (item.getItemID() == itemID) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public Item getItem(long itemID) {
+        for (Item item : shelves) {
+            if (item.getItemID() == itemID) {
+                return item;
+            }
+        }
+
+        for (Item item : storage) {
+            if (item.getItemID() == itemID) {
+                return item;
+            }
+        }
+
+        throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
+    }
+
+    public Item removeItem(long itemID) {
+        for (Item item : shelves) {
+            if (item.getItemID() == itemID) {
+                shelves.remove(item);
+                return item;
+            }
+        }
+
+        for (Item item : storage) {
+            if (item.getItemID() == itemID) {
+                storage.remove(item);
+                return item;
+            }
+        }
+
+        throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
     }
 
     public String toString() {

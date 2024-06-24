@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
+import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -193,4 +194,19 @@ public class ProductController {
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
+
+    @PutMapping("/sell/{id}")
+    public ResponseEntity<?> sellItems(@PathVariable("id") long id, @RequestBody RequestAmountDto amount) {
+        List<Item> items = service.sellItems(id, amount.amount());
+        ItemDto[] itemDTOs = map(items);
+        return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
+    }
+
+    @PutMapping("/throwItem/{id}")
+    public ResponseEntity<?> throwItem(@PathVariable("id") long id, @RequestBody ItemDto request) {
+        Item item = service.throwItem(id, request.itemID());
+        ItemDto itemDto = ItemMapper.map(item);
+        return ResponseEntity.noContent().build();
+    }
+
 }
