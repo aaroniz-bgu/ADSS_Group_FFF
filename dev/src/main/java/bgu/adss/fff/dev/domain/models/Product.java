@@ -12,6 +12,8 @@ import java.util.List;
 @Entity(name="Product")
 public class Product implements Serializable {
 
+    private static final float QUANTITY_MUL_ABOVE_MINIMAL = 1.5f;
+
     @Id
     private long productID;
 
@@ -51,6 +53,8 @@ public class Product implements Serializable {
     @Column
     private long supplierID;
 
+    @Column float supplierPrice;
+
     /**
      * Product constructor
      * @param productID product id
@@ -64,7 +68,7 @@ public class Product implements Serializable {
      */
     public Product(
             long productID, String productName, float price, Discount discount,
-            List<Item> shelves, List<Item> storage, int minimalQuantity, long supplierID) {
+            List<Item> shelves, List<Item> storage, int minimalQuantity, long supplierID, float supplierPrice) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
@@ -73,6 +77,7 @@ public class Product implements Serializable {
         this.storage = storage;
         this.minimalQuantity = minimalQuantity;
         this.supplierID = supplierID;
+        this.supplierPrice = supplierPrice;
     }
 
     public Product() {
@@ -101,6 +106,14 @@ public class Product implements Serializable {
      */
     public float getPrice() {
         return price;
+    }
+
+    /**
+     * Get discounted price
+     * @return discounted price
+     */
+    public float getDiscountedPrice() {
+        return discount != null && discount.isValid() ? price * (1 - discount.getDiscountPercent() / 100.0f) : price;
     }
 
     /**
@@ -212,6 +225,18 @@ public class Product implements Serializable {
     public void setSupplierID(long supplierID) { this.supplierID = supplierID; }
 
     /**
+     * Get the supplier price of the product
+     * @return supplier price
+     */
+    public float getSupplierPrice() { return supplierPrice; }
+
+    /**
+     * Set the supplier price of the product
+     * @param supplierPrice supplier price
+     */
+    public void setSupplierPrice(float supplierPrice) { this.supplierPrice = supplierPrice; }
+
+    /**
      * Get quantity of items that are defected
      * @param items list of items
      * @return quantity of defected items
@@ -273,38 +298,23 @@ public class Product implements Serializable {
         return false;
     }
 
-    public Item getItem(long itemID) {
-        for (Item item : shelves) {
-            if (item.getItemID() == itemID) {
-                return item;
-            }
-        }
-
-        for (Item item : storage) {
-            if (item.getItemID() == itemID) {
-                return item;
-            }
-        }
+    public void removeItem(long itemID) {
+        shelves.removeIf(item -> item.getItemID() == itemID);
+        storage.removeIf(item -> item.getItemID() == itemID);
 
         throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
     }
 
-    public Item removeItem(long itemID) {
-        for (Item item : shelves) {
-            if (item.getItemID() == itemID) {
-                shelves.remove(item);
-                return item;
-            }
-        }
+    public int getShortage() {
+        int targetQuantity = (int) (minimalQuantity * QUANTITY_MUL_ABOVE_MINIMAL);
+        int shortage =  targetQuantity - getQuantity();
+        return Math.max(shortage, 0);
+    }
 
-        for (Item item : storage) {
-            if (item.getItemID() == itemID) {
-                storage.remove(item);
-                return item;
-            }
+    public void reorderItems() {
+        if (shelves.size() < minimalQuantity){
+            moveToShelves(Math.min(storage.size(), minimalQuantity - shelves.size()));
         }
-
-        throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
     }
 
     public String toString() {

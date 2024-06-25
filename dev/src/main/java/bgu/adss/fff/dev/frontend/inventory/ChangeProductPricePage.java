@@ -69,7 +69,7 @@ public class ChangeProductPricePage extends AbstractUserComponent {
         ProductDto updatedProduct = new ProductDto(
                 this.id, response.productName(),
                 this.price, response.discount(), response.shelves(), response.storage(),
-                response.minimalQuantity(), response.supplierID()
+                response.minimalQuantity(), response.supplierID(), response.supplierPrice()
         );
         restTemplate.put(ROUTE, updatedProduct);
         out.println("Product's price changed - " + response.productID() + "(" + response.productName()

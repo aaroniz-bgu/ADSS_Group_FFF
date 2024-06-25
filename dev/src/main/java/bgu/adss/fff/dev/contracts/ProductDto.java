@@ -20,6 +20,7 @@ public record ProductDto(
         @JsonProperty("shelves") ItemDto[] shelves,
         @JsonProperty("storage") ItemDto[] storage,
         @JsonProperty("minimalQuantity") int minimalQuantity,
-        @JsonProperty("supplierID") long supplierID
+        @JsonProperty("supplierID") long supplierID,
+        @JsonProperty("supplierPrice") float supplierPrice
 ){ }
 

@@ -1,5 +1,7 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.contracts.RequestItemDto;
+import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.data.ItemRepository;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Discount;
@@ -10,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -163,6 +168,9 @@ public class ProductServiceImpl implements ProductService {
             product.addToStorage(item);
             savedItems.add(item);
         }
+
+        product.reorderItems();
+
         save(product);
 
         return savedItems;
@@ -292,18 +300,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateSupplier(long id, long supplierID) {
+    public Product updateSupplier(long id, long supplierID, float price) {
         if (!doesProductExist(id)) {
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
 
+        if (price <= 0) {
+            throw new ProductException("Price must be greater than 0", HttpStatus.BAD_REQUEST);
+        }
+
         Product product = getProductByID(id);
+
+        if (product.getSupplierPrice() < price) {
+            throw new ProductException("Price must be less than the current supplier price", HttpStatus.BAD_REQUEST);
+        }
+
         product.setSupplierID(supplierID);
+        product.setSupplierPrice(price);
+
         return save(product);
     }
 
     @Override
-    public List<Item> sellItems(long id, int amount){
+    public String sellItems(long id, int amount){
+
         if(!doesProductExist(id)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
@@ -320,29 +340,38 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductException("Not enough items in shelves", HttpStatus.BAD_REQUEST);
         }
 
+        String message = "Selling " + amount + " items from product " + id + ".\n";
+
+        float priceBeforeDiscount = amount * product.getPrice();
+        float priceAfterDiscount = amount * product.getDiscountedPrice();
+        if (priceBeforeDiscount == priceAfterDiscount)
+            message += "Total Price: " + priceAfterDiscount + "₪.\n";
+        else
+            message += "Total Price: " + amount * product.getDiscountedPrice() +
+                "₪ (Before Discount: " + amount * product.getPrice() + "₪)" + ".\n";
+
         List<Item> soldItems = new LinkedList<>();
         for(int i = 0; i < amount; i++){
             Item item = shelves.remove(0);
             soldItems.add(item);
         }
 
-        if(product.getShelves().size() < product.getMinimalQuantity()){
-            product.moveToShelves(Math.min(product.getStorage().size(), product.getMinimalQuantity() - product.getShelves().size()));
-        }
+        product.reorderItems();
 
-        if(product.getShelvesQuantity() + product.getStorageQuantity() < product.getMinimalQuantity()){
-            //TODO notifyShortage(id);
-            //TODO orderItems(id);
+        if(product.getQuantity() < product.getMinimalQuantity()){
+            message += orderItems(id);
         }
 
         product.setShelves(shelves);
         save(product);
 
-        return soldItems;
+        return message;
     }
 
     @Override
-    public Item throwItem(long productId, long itemId){
+    public boolean throwItem(long productId, long itemId){
+
+        boolean returnValue = false;
 
         if(!doesProductExist(productId)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
@@ -354,20 +383,54 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
         }
 
-        Item item = product.removeItem(itemId);
+        product.removeItem(itemId);
 
-        if(product.getShelves().size() < product.getMinimalQuantity()){
-            product.moveToShelves(Math.min(product.getStorage().size(), product.getMinimalQuantity() - product.getShelves().size()));
-        }
+        product.reorderItems();
 
-        if(product.getShelvesQuantity() + product.getStorageQuantity() < product.getMinimalQuantity()){
-            //TODO notifyShortage(id);
-            //TODO orderItems(id);
+        if (product.getQuantity() < product.getMinimalQuantity()){
+            returnValue = !Objects.equals(orderItems(productId), "");
         }
 
         save(product);
 
-        return item;
+        return returnValue;
+    }
+
+    @Override
+    public String orderItems(long id){
+        if(!doesProductExist(id)){
+            throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
+        }
+
+        Product product = getProductByID(id);
+
+        int shortage = product.getShortage();
+        if(shortage <= 0){
+            return "";
+        }
+
+        notifySupplier(id, shortage);
+        return "Product " + id + " - Ordered " + shortage + " items from supplier.";
+    }
+
+    public String orderItems(){
+        List<Product> products = productRepository.findAll();
+        StringBuilder message = new StringBuilder();
+        message.append("Ordering items from suppliers:\n");
+        for(Product product : products){
+            message.append(orderItems(product.getProductID())).append("\n");
+        }
+        return message.toString();
+    }
+
+    // TODO: Replace with actual supplier notification
+    private void notifySupplier(long id, int amount){
+        String expirationDate = LocalDate.now().plusDays(
+                4 + (long)(Math.random() * 10)
+        ).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        RequestItemDto requestItemDto = new RequestItemDto(expirationDate, false, amount);
+        List<Item> items = ItemMapper.map(requestItemDto);
+        addItems(id, items);
     }
 
 }

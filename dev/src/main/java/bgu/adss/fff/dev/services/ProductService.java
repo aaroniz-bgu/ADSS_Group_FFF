@@ -15,13 +15,15 @@ public interface ProductService {
 
     Product updateStorage(long id, List<Item> storage);
     Product updateShelves(long id, List<Item> shelves);
-    Product updateSupplier(long id, long supplierID);
+    Product updateSupplier(long id, long supplierID, float price);
 
     List<Item> addItems(long id, List<Item> items);
     List<Item> moveToShelves(long id, int amount);
     Discount addDiscount(long id, Discount discount);
     void setItemDefective(long id, long itemID, boolean isDefective);
-    List<Item> sellItems(long id, int amount);
-    Item throwItem(long productId, long itemId);
+    String sellItems(long id, int amount);
+    boolean throwItem(long productId, long itemId);
+    String orderItems(long id);
+    String orderItems();
 
 }

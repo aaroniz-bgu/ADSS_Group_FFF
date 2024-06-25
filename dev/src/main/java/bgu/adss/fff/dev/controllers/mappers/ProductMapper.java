@@ -25,7 +25,8 @@ public class ProductMapper {
                 ItemMapper.map(product.getShelves()),
                 ItemMapper.map(product.getStorage()),
                 product.getMinimalQuantity(),
-                product.getSupplierID()
+                product.getSupplierID(),
+                product.getSupplierPrice()
         );
     }
 
@@ -43,7 +44,8 @@ public class ProductMapper {
                 ItemMapper.map(productDto.shelves()),
                 ItemMapper.map(productDto.storage()),
                 productDto.minimalQuantity(),
-                productDto.supplierID()
+                productDto.supplierID(),
+                productDto.supplierPrice()
         );
     }
 
@@ -61,7 +63,8 @@ public class ProductMapper {
                 new LinkedList<>(),
                 new LinkedList<>(),
                 requestProductDto.minimalQuantity(),
-                requestProductDto.supplierID()
+                requestProductDto.supplierID(),
+                requestProductDto.supplierPrice()
         );
     }
 

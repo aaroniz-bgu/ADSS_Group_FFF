@@ -187,26 +187,66 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+    /**
+     * Updates the product's supplier.
+     * @param id The product's unique identifier.
+     * @param supplier The supplier details:<br>
+     *                 - {@code long supplierID}: The supplier's unique identifier.<br>
+     *                 - {@code float supplierPrice}: The supplier's price.
+     * @return ResponseEntity containing the updated product if successful, or an error message if not.
+     */
     @PutMapping("/supplier/{id}")
     public ResponseEntity<?> updateSupplier(@PathVariable("id") long id,
-                                           @RequestBody long supplierID) {
-        Product product = service.updateSupplier(id, supplierID);
+                                           @RequestBody RequestSupplierDto supplier) {
+        Product product = service.updateSupplier(id, supplier.id(), supplier.price());
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-    @PutMapping("/sell/{id}")
+    /**
+     * Sells items from the product's shelves.
+     * @param id The product's unique identifier.
+     * @param amount An object containing the amount of items to sell.
+     * @return ResponseEntity containing the sold items if successful, or an error message if not.
+     */
+    @PostMapping("/sell/{id}")
     public ResponseEntity<?> sellItems(@PathVariable("id") long id, @RequestBody RequestAmountDto amount) {
-        List<Item> items = service.sellItems(id, amount.amount());
-        ItemDto[] itemDTOs = map(items);
-        return new ResponseEntity<>(itemDTOs, HttpStatus.OK);
+        String message = service.sellItems(id, amount.amount());
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
-    @PutMapping("/throwItem/{id}")
-    public ResponseEntity<?> throwItem(@PathVariable("id") long id, @RequestBody ItemDto request) {
-        Item item = service.throwItem(id, request.itemID());
-        ItemDto itemDto = ItemMapper.map(item);
-        return ResponseEntity.noContent().build();
+    /**
+     * Throws an item from the product's storage.
+     * @param id The product's unique identifier.
+     * @param itemID The item's unique identifier.
+     * @return ResponseEntity containing whether the product is under minimal quantity if successful,
+     * or an error message if not.
+     */
+    @PutMapping("/throw/{id}")
+    public ResponseEntity<Boolean> throwItem(@PathVariable("id") long id, @RequestBody long itemID) {
+        boolean underMinimal = service.throwItem(id, itemID);
+        return new ResponseEntity<>(underMinimal, HttpStatus.OK);
+    }
+
+    /**
+     * Orders items for the product.
+     * @param id The product's unique identifier.
+     * @return ResponseEntity containing the order message if successful, or an error message if not.
+     */
+    @PostMapping("/order/{id}")
+    public ResponseEntity<?> orderNeededItems(@PathVariable("id") long id) {
+        String message = service.orderItems(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
+     * Orders items for all products.
+     * @return ResponseEntity containing the order message if successful, or an error message if not.
+     */
+    @PostMapping("/order")
+    public ResponseEntity<?> orderItems() {
+        String message = service.orderItems();
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 }
