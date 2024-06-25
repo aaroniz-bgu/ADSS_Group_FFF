@@ -70,8 +70,6 @@ public class ProductServiceImpl implements ProductService {
         return id;
     }
 
-    private void checkShortage
-
     // Basic CRUD operations
 
     /**

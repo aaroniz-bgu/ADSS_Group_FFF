@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name="Discount")
 public class Discount implements Serializable {
@@ -76,6 +77,11 @@ public class Discount implements Serializable {
      */
     public float getDiscountPercent() {
         return discountPercent;
+    }
+
+    public boolean isValid(){
+        return LocalDateTime.now().isAfter(startDate.atStartOfDay()) &&
+                LocalDateTime.now().isBefore(endDate.plusDays(1).atStartOfDay());
     }
 
     @Override

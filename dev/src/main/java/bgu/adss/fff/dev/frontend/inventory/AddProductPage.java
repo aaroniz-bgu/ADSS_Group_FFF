@@ -57,6 +57,7 @@ public class AddProductPage extends AbstractUserComponent {
         page.add(priceInput);
         page.add(minimalAmountInput);
         page.add(supplierInput);
+        page.add(supplierPriceInput);
     }
 
     private void onIdInput(StateEvent event) {
