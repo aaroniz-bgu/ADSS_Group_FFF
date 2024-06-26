@@ -18,10 +18,16 @@ public class RoleField {
 
     public RoleField() { }
 
-    protected RoleField(Employee employee, Role role, String field, String value) {
+    public RoleField(Employee employee, Role role, String field, String value) {
         this.id = new RoleFieldKey(employee, role, field);
         this.value = value;
     }
+
+    public RoleField(RoleFieldKey id, String value) {
+        this.id = id;
+        this.value = value;
+    }
+
 
     public Employee getEmployee() {
         return id.employee;
@@ -44,7 +50,7 @@ public class RoleField {
     }
 
     @Embeddable
-    private static class RoleFieldKey implements Serializable {
+    public static class RoleFieldKey implements Serializable {
 
         @Column
         @ManyToOne
@@ -55,9 +61,9 @@ public class RoleField {
         @Column
         private String field;
 
-        protected RoleFieldKey() { }
+        public RoleFieldKey() { }
 
-        protected RoleFieldKey(Employee employee, Role role, String field) {
+        public RoleFieldKey(Employee employee, Role role, String field) {
             this.employee = employee;
             this.role = role;
             this.field = field;
