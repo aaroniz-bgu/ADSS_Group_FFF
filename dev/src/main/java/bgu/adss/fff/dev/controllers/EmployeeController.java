@@ -167,4 +167,23 @@ public class EmployeeController {
         // https://stackoverflow.com/a/827045/19275130 :
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/role/{role}customField?field={field},val={val}")
+    public ResponseEntity<?> updateRoleField(
+            @PathVariable("id") long id,
+            @PathVariable("role") String role,
+            @PathVariable("field") String field,
+            @PathVariable("val") String val
+    ) {
+        return ResponseEntity.ok(service.updateCustomField(id, role, field, val));
+    }
+
+    @PostMapping("/{id}/role/{role}customField?field={field}")
+    public ResponseEntity<?> updateRoleField(
+            @PathVariable("id") long id,
+            @PathVariable("role") String role,
+            @PathVariable("field") String field
+    ) {
+        return ResponseEntity.ok(service.getCustomField(id, role, field));
+    }
 }
