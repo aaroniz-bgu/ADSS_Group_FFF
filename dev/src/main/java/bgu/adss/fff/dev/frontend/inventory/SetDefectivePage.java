@@ -59,27 +59,32 @@ public class SetDefectivePage extends AbstractUserComponent {
     }
 
     private void printAvailableItems() {
-        ProductDto response = restTemplate.getForObject(ROUTE + "/" + productID, ProductDto.class);
-        if(response == null) {
-            out.println("Product with ID " + productID + " not found.");
-            return;
-        }
-        out.println("Available items for product " + productID + ":");
-        out.println("Shelves:");
-        for(ItemDto item : response.shelves()) {
-            out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate());
-        }
-        out.println("Storage:");
-        for(ItemDto item : response.storage()) {
-            out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate() +
-                    ", Defective: " + item.isDefected());
-        }
+
+        try {
+            ProductDto response = restTemplate.getForObject(ROUTE + "/" + productID, ProductDto.class);
+            if(response == null) {
+                out.println("Product with ID " + productID + " not found.");
+                return;
+            }
+            out.println("Available items for product " + productID + ":");
+            out.println("Shelves:");
+            for(ItemDto item : response.shelves()) {
+                out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate());
+            }
+            out.println("Storage:");
+            for(ItemDto item : response.storage()) {
+                out.println("\t- Item ID: " + item.itemID() + ", Expiration Date: " + item.expirationDate() +
+                        ", Defective: " + item.isDefected());
+            }
+        } catch (Exception e) { out.println(e.getMessage()); }
     }
 
     private void setItemDefective() {
 
-        restTemplate.put(ROUTE + "/item/defective/" + productID, new ItemDto(this.itemID, null, true));
-        out.println("Item with ID " + itemID + " was set as defective.");
+        try {
+            restTemplate.put(ROUTE + "/item/defective/" + productID, new ItemDto(this.itemID, null, true));
+            out.println("Item with ID " + itemID + " was set as defective.");
+        } catch (Exception e) { out.println(e.getMessage()); }
     }
 
 }

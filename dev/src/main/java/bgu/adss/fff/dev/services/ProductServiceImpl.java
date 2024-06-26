@@ -416,7 +416,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
         notifySupplier(id, shortage);
-        return "Product " + id + " - Ordered " + shortage + " items from supplier.";
+        return "WARNING: Product " + product.getProductName() +
+                " is at shortage - Ordered " + shortage + " items from supplier.";
     }
 
     public String orderItems(){

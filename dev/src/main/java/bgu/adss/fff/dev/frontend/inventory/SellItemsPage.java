@@ -60,18 +60,19 @@ public class SellItemsPage extends AbstractUserComponent {
     }
 
     private void sellItems() {
-        ProductDto product = restTemplate.getForObject(ROUTE + "/" + id, ProductDto.class);
-        if (product == null) {
-            out.println("Product not found");
-            return;
-        }
-
-        RequestAmountDto amountDto = new RequestAmountDto(this.amount);
         try {
-            String response = restTemplate.postForObject(ROUTE + "/sell/" + id, amountDto, String.class);
-            if (!Objects.equals(response, "")) {
-                out.println("WARNING: " + response);
+
+            ProductDto product = restTemplate.getForObject(ROUTE + "/" + id, ProductDto.class);
+            if (product == null) {
+                out.println("Product not found");
+                return;
             }
+
+            RequestAmountDto amountDto = new RequestAmountDto(this.amount);
+
+            String response = restTemplate.postForObject(ROUTE + "/sell/" + id, amountDto, String.class);
+            out.println(response);
+
         } catch (Exception e) {
             out.println(e.getMessage());
         }

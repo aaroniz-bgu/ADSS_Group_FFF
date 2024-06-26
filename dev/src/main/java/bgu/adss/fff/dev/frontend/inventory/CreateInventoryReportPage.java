@@ -46,12 +46,15 @@ public class CreateInventoryReportPage extends AbstractUserComponent {
     }
 
     private void createReport() {
-        RequestReportDto requestReportDto = new RequestReportDto(ReportType.INVENTORY, categories);
-        ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
-        if (report != null) {
-            out.println("Inventory Report created successfully: ");
-            out.println(report.title());
-            out.println(report.content());
-        }
+
+        try {
+            RequestReportDto requestReportDto = new RequestReportDto(ReportType.INVENTORY, categories);
+            ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
+            if (report != null) {
+                out.println("Inventory Report created successfully: ");
+                out.println(report.title());
+                out.println(report.content());
+            }
+        } catch (Exception e) { out.println(e.getMessage()); }
     }
 }

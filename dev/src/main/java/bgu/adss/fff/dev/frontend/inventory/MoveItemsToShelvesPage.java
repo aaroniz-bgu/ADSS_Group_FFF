@@ -59,17 +59,17 @@ public class MoveItemsToShelvesPage extends AbstractUserComponent {
     }
 
     private void moveItemsToShelves() {
-        ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
-        if(productDto == null) {
-            out.println("Product with ID " + id + " not found.");
-            return;
-        }
-        try{
+        try {
+            ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
+            if(productDto == null) {
+                out.println("Product with ID " + id + " not found.");
+                return;
+            }
+
             restTemplate.put(PRODUCT_ROUTE + "/item/" + id, new RequestAmountDto(amount));
             out.println("Moved " + amount + " items to shelves from storage.");
         } catch (Exception e) {
-            out.println("Not enough items in storage.");
-            return;
+            out.println(e.getMessage());
         }
     }
 

@@ -127,11 +127,16 @@ public class AddProductPage extends AbstractUserComponent {
     }
 
     private void createProduct() {
-        ProductDto product = new ProductDto(id, name, price, null,
-                new ItemDto[0], new ItemDto[0], minimalAmount, supplierID, supplierPrice);
-        ProductDto response = restTemplate.postForObject(ROUTE, product, ProductDto.class);
-        Objects.requireNonNull(response);
 
-        out.println("Product Created - " + response.productID() + ":" + response.productName());
+        try {
+            ProductDto product = new ProductDto(id, name, price, null,
+                    new ItemDto[0], new ItemDto[0], minimalAmount, supplierID, supplierPrice);
+            ProductDto response = restTemplate.postForObject(ROUTE, product, ProductDto.class);
+            Objects.requireNonNull(response);
+
+            out.println("Product Created - " + response.productID() + ":" + response.productName());
+        } catch (Exception e) {
+            out.println(e.getMessage());
+        }
     }
 }

@@ -46,8 +46,10 @@ public class SeeCategoryProductsPage extends AbstractUserComponent {
     }
 
     private void printAllCategoryProducts() {
-        CategoryDto category = restTemplate.getForObject(ROUTE + "/" + name, CategoryDto.class);
-        Objects.requireNonNull(category);
-        CategoryUtil.printProductsByCategoryTree(out, category);
+        try {
+            CategoryDto category = restTemplate.getForObject(ROUTE + "/" + name, CategoryDto.class);
+            Objects.requireNonNull(category);
+            CategoryUtil.printProductsByCategoryTree(out, category);
+        } catch (Exception e) { out.println(e.getMessage()); }
     }
 }
