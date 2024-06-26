@@ -369,7 +369,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean throwItem(long productId, long itemId){
 
-        boolean returnValue = false;
+        boolean needToOrder = false;
 
         if(!doesProductExist(productId)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
@@ -394,12 +394,12 @@ public class ProductServiceImpl implements ProductService {
         product.reorderItems();
 
         if (product.getQuantity() < product.getMinimalQuantity()){
-            returnValue = !Objects.equals(orderItems(productId), "");
+            needToOrder = !Objects.equals(orderItems(productId), "");
         }
 
         save(product);
 
-        return returnValue;
+        return needToOrder ;
     }
 
     @Override

@@ -244,7 +244,7 @@ public class ProductController {
      * @return ResponseEntity containing the order message if successful, or an error message if not.
      */
     @PostMapping("/order")
-    public ResponseEntity<?> orderItems() {
+    public ResponseEntity<?> orderAllNeededItems() {
         String message = service.orderItems();
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
