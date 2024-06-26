@@ -66,5 +66,13 @@ public class RoleField {
             this.role = role;
             this.field = field;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if(o instanceof RoleFieldKey o1) {
+                return o1.employee.equals(employee) && o1.role.equals(role) && o1.field.equals(field);
+            }
+            return false;
+        }
     }
 }
