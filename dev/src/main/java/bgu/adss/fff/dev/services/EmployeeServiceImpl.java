@@ -1,10 +1,12 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.EmployeeRepository;
+import bgu.adss.fff.dev.data.RoleFieldRepository;
 import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
 import bgu.adss.fff.dev.domain.models.Role;
+import bgu.adss.fff.dev.domain.models.RoleField;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,17 @@ import static bgu.adss.fff.dev.util.EmployeeUtilHelper.getBankDetailsHelper;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository repository;
+    private final RoleFieldRepository fieldRepository;
     private final RoleService roleService;
     private final BranchService branchService;
 
     @Autowired
     public EmployeeServiceImpl(EmployeeRepository repository,
+                               RoleFieldRepository fieldRepository,
                                RoleService roleService,
                                BranchService branchService) {
         this.repository = repository;
+        this.fieldRepository = fieldRepository;
         this.roleService = roleService;
         this.branchService = branchService;
     }
@@ -169,6 +174,60 @@ public class EmployeeServiceImpl implements EmployeeService {
         emp.setTerms(terms);
         repository.save(emp);
         return emp;
+    }
+
+    /**
+     * Updates/ creates a field for the given employee, with the given role.
+     *
+     * @param emp The employee which associated with this field, for which it's need to be updated.
+     * @param role The role which is associated with this custom field.
+     * @param field The name of the custom field which has to be updated.
+     * @param val The updated value which will be saved.
+     */
+    @Override
+    public void updateCustomField(Employee emp, Role role, String field, String val) {
+        // Retrieve resources:
+        long empId = emp.getId();
+        emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
+        role = roleService.getRole(role.getName());
+
+        field = field.toLowerCase();
+        val = val.toLowerCase();
+
+        if(!emp.getRoles().contains(role)) throw EmployeeException.illegalField(
+                empId, "role: "+role.getName(), "Role doesn't exist for this employee");
+
+        RoleField.RoleFieldKey fieldId = new RoleField.RoleFieldKey(emp, role, field);
+        RoleField fieldObj = fieldRepository.findById(fieldId).orElse(new RoleField(fieldId, val));
+        fieldObj.setValue(val);
+        fieldRepository.save(fieldObj);
+    }
+
+    /**
+     * Retrieves a field of the given employee and role.
+     *
+     * @param emp The employee.
+     * @param role The role.
+     * @param field The field's name.
+     * @return RoleField Object.
+     */
+    @Override
+    public RoleField getCustomField(Employee emp, Role role, String field) {
+        // Retrieve resources:
+        long empId = emp.getId();
+        emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
+        role = roleService.getRole(role.getName());
+
+        field = field.toLowerCase();
+        String finalField = field;
+
+        if(!emp.getRoles().contains(role)) throw EmployeeException.illegalField(
+                empId, "role: "+role.getName(), "Role doesn't exist for this employee");
+
+        return fieldRepository.findById(new RoleField.RoleFieldKey(emp, role, field)).orElseThrow(
+                () -> EmployeeException.illegalField(empId, "field: "+ finalField,
+                        "This field was never saved/ given to this employee, therefore cannot be found.")
+        );
     }
 
     /**

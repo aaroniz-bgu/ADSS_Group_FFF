@@ -3,6 +3,8 @@ package bgu.adss.fff.dev.services;
 import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.domain.models.Role;
+import bgu.adss.fff.dev.domain.models.RoleField;
 
 import java.util.List;
 
@@ -15,4 +17,7 @@ public interface EmployeeService {
     void removeEmployee(long id);
 
     Employee updateEmployementTerms(long id, EmploymentTerms terms);
+
+    void updateCustomField(Employee emp, Role role, String field, String val);
+    RoleField getCustomField(Employee emp, Role role, String field);
 }
