@@ -87,6 +87,18 @@ public class Delivery {
         this.license = license;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getTruckNumber() {
+        return truckNumber;
+    }
+
+    public void setTruckNumber(long truckNumber) {
+        this.truckNumber = truckNumber;
+    }
+
     public List<Branch> getDestinations() {
         return destinations;
     }
