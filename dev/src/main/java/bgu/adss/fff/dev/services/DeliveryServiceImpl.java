@@ -42,8 +42,20 @@ public class DeliveryServiceImpl implements DeliveryService{
     /**
      * @return All the deliveries in the system.
      */
+    @Override
     public List<Delivery> getDeliveries() {
         return repository.findAll();
+    }
+
+    /**
+     * Returns the delivery with the specified id.
+     *
+     * @param id the delivery id.
+     * @return The delivery object associated with the given id if exists.
+     */
+    @Override
+    public Delivery getDelivery(long id) {
+        return repository.findById(id).orElseThrow(() -> DeliveryException.notFound(id));
     }
 
     /**
