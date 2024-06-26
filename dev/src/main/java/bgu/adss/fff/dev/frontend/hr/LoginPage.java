@@ -1,25 +1,27 @@
 package bgu.adss.fff.dev.frontend.hr;
 
-import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.contracts.EmployeeDto;
+import bgu.adss.fff.dev.contracts.ErrorDetails;
+import bgu.adss.fff.dev.contracts.FullEmployeeDto;
+import bgu.adss.fff.dev.contracts.ReportShiftRequest;
+import bgu.adss.fff.dev.contracts.RoleDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
-import static java.time.temporal.TemporalAdjusters.next;
 
 public class LoginPage extends AbstractUserComponent {
 
     private static final String ROUTE = "/employee";
     private static final String DEBUG_MANAGER = "SYSADMIN-000";
     private static final String LOAD_TEST = "LOAD-TEST";
+    private static final String DELIVERY_REG = "make-delivery";
 
     private final RestTemplate restTemplate;
 
@@ -45,7 +47,10 @@ public class LoginPage extends AbstractUserComponent {
         } else if(ans.equals(LOAD_TEST)) {
             loadTest();
             return;
+        } else if(ans.equals(DELIVERY_REG)) {
+            new CreateDeliveryPage(out).render();
         }
+
         String uri =  URI_PATH + ROUTE + "/" + ans;
         try {
             EmployeeDto response = restTemplate.getForEntity(uri, EmployeeDto.class).getBody();
