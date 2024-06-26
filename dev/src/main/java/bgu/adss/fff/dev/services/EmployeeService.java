@@ -18,6 +18,6 @@ public interface EmployeeService {
 
     Employee updateEmployementTerms(long id, EmploymentTerms terms);
 
-    void updateCustomField(Employee emp, Role role, String field, String val);
+    RoleField updateCustomField(Employee emp, Role role, String field, String val);
     RoleField getCustomField(Employee emp, Role role, String field);
 }

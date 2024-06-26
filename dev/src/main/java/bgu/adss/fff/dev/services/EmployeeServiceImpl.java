@@ -179,13 +179,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * Updates/ creates a field for the given employee, with the given role.
      *
-     * @param emp The employee which associated with this field, for which it's need to be updated.
-     * @param role The role which is associated with this custom field.
+     * @param emp   The employee which associated with this field, for which it's need to be updated.
+     * @param role  The role which is associated with this custom field.
      * @param field The name of the custom field which has to be updated.
-     * @param val The updated value which will be saved.
+     * @param val   The updated value which will be saved.
+     * @return for testing, but basically the new field object created.
      */
     @Override
-    public void updateCustomField(Employee emp, Role role, String field, String val) {
+    public RoleField updateCustomField(Employee emp, Role role, String field, String val) {
         // Retrieve resources:
         long empId = emp.getId();
         emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
@@ -200,7 +201,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         RoleField.RoleFieldKey fieldId = new RoleField.RoleFieldKey(emp, role, field);
         RoleField fieldObj = fieldRepository.findById(fieldId).orElse(new RoleField(fieldId, val));
         fieldObj.setValue(val);
-        fieldRepository.save(fieldObj);
+        return fieldRepository.save(fieldObj);
     }
 
     /**
@@ -222,7 +223,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         String finalField = field;
 
         if(!emp.getRoles().contains(role)) throw EmployeeException.illegalField(
-                empId, "role: "+role.getName(), "Role doesn't exist for this employee");
+                empId, "role: " + role.getName(), "Role doesn't exist for this employee");
 
         return fieldRepository.findById(new RoleField.RoleFieldKey(emp, role, field)).orElseThrow(
                 () -> EmployeeException.illegalField(empId, "field: "+ finalField,
