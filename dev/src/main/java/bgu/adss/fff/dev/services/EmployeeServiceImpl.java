@@ -179,18 +179,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * Updates/ creates a field for the given employee, with the given role.
      *
-     * @param emp   The employee which associated with this field, for which it's need to be updated.
-     * @param role  The role which is associated with this custom field.
+     * @param empId     The employee which associated with this field, for which it's need to be updated.
+     * @param roleName  The role which is associated with this custom field.
      * @param field The name of the custom field which has to be updated.
      * @param val   The updated value which will be saved.
      * @return for testing, but basically the new field object created.
      */
     @Override
-    public RoleField updateCustomField(Employee emp, Role role, String field, String val) {
+    public RoleField updateCustomField(long empId, String roleName, String field, String val) {
         // Retrieve resources:
-        long empId = emp.getId();
-        emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
-        role = roleService.getRole(role.getName());
+        Employee emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
+        Role role = roleService.getRole(roleName);
 
         field = field.toLowerCase();
         val = val.toLowerCase();
@@ -207,17 +206,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * Retrieves a field of the given employee and role.
      *
-     * @param emp The employee.
-     * @param role The role.
+     * @param empId The employee's identifier.
+     * @param roleName The role.
      * @param field The field's name.
      * @return RoleField Object.
      */
     @Override
-    public RoleField getCustomField(Employee emp, Role role, String field) {
+    public RoleField getCustomField(long empId, String roleName, String field) {
         // Retrieve resources:
-        long empId = emp.getId();
-        emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
-        role = roleService.getRole(role.getName());
+        Employee emp = repository.findById(empId).orElseThrow(() -> EmployeeException.notFound(empId));
+        Role role = roleService.getRole(roleName);
 
         field = field.toLowerCase();
         String finalField = field;
