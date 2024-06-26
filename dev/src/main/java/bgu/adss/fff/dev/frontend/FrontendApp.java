@@ -28,6 +28,7 @@ public class FrontendApp extends TerminalApp {
             template.postForLocation(URI_PATH + "/role", new RoleDto("hr-manager", false, true));
             template.postForLocation(URI_PATH + "/role", new RoleDto("cashier", false, false));
             template.postForLocation(URI_PATH + "/role", new RoleDto("storekeeper", false, false));
+            template.postForLocation(URI_PATH + "/role", new RoleDto("driver", false, false));
         } catch (Exception e) {
             if(IS_DEBUG) {
                 System.out.println("There wa an error reaching the server please inform support immediately.");

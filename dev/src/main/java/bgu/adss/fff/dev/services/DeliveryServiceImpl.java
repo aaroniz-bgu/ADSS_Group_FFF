@@ -1,6 +1,6 @@
 package bgu.adss.fff.dev.services;
 
-import bgu.adss.fff.dev.contracts.DeliveryRepository;
+import bgu.adss.fff.dev.data.DeliveryRepository;
 import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Delivery;
 import bgu.adss.fff.dev.domain.models.Employee;
