@@ -8,6 +8,7 @@ import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
+import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
@@ -68,7 +69,9 @@ public class SellItemsPage extends AbstractUserComponent {
         RequestAmountDto amountDto = new RequestAmountDto(this.amount);
         try {
             String response = restTemplate.postForObject(ROUTE + "/sell/" + id, amountDto, String.class);
-            out.println(response);
+            if (!Objects.equals(response, "")) {
+                out.println("WARNING: " + response);
+            }
         } catch (Exception e) {
             out.println(e.getMessage());
         }

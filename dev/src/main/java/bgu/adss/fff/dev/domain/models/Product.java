@@ -13,7 +13,8 @@ import java.util.List;
 @Entity(name="Product")
 public class Product implements Serializable {
 
-    private static final float QUANTITY_MUL_ABOVE_MINIMAL = 1.5f;
+    private static final float QUANTITY_MUL_ABOVE_MINIMAL_LOW = 1.5f;
+    private static final float QUANTITY_MUL_ABOVE_MINIMAL_HIGH = 2.0f;
 
     @Id
     private long productID;
@@ -307,7 +308,9 @@ public class Product implements Serializable {
     }
 
     public int getShortage() {
-        int targetQuantity = (int) (minimalQuantity * QUANTITY_MUL_ABOVE_MINIMAL);
+        double quantity_mul_above_minimal = Math.random() *
+                (QUANTITY_MUL_ABOVE_MINIMAL_HIGH - QUANTITY_MUL_ABOVE_MINIMAL_LOW) + QUANTITY_MUL_ABOVE_MINIMAL_LOW;
+        int targetQuantity = (int) (minimalQuantity * quantity_mul_above_minimal);
         int shortage =  targetQuantity - getQuantity();
         return Math.max(shortage, 0);
     }

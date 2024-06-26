@@ -377,8 +377,16 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = getProductByID(productId);
 
+        Item item = itemRepository.findById(itemId).orElseThrow(
+                () -> new ProductException("Item not found", HttpStatus.NOT_FOUND));
+
         if(!product.containsItem(itemId)){
             throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
+        }
+
+        if(!item.isThrowable()){
+            throw new ProductException("Item cannot be removed since it is not defected nor out-of-date",
+                    HttpStatus.BAD_REQUEST);
         }
 
         product.removeItem(itemId);
