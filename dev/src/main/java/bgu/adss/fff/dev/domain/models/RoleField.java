@@ -52,10 +52,8 @@ public class RoleField {
     @Embeddable
     public static class RoleFieldKey implements Serializable {
 
-        @Column
         @ManyToOne
         private Employee employee;
-        @Column
         @ManyToOne
         private Role role;
         @Column

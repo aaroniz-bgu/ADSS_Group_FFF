@@ -19,10 +19,8 @@ public class Delivery {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column
     @ManyToOne
     private Branch source;
-    @Column
     @ManyToOne
     private Employee driver;
     @Column
