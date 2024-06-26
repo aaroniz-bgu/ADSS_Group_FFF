@@ -46,10 +46,13 @@ public class RoleField {
     @Embeddable
     private static class RoleFieldKey implements Serializable {
 
+        @Column
         @ManyToOne
         private Employee employee;
+        @Column
         @ManyToOne
         private Role role;
+        @Column
         private String field;
 
         protected RoleFieldKey() { }
