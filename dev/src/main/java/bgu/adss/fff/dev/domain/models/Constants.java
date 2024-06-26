@@ -24,4 +24,9 @@ public class Constants {
      * Cut off config name.
      */
     public final static String CUTOFF_CONFIG_KEY = "CUT_OFF";
+
+    /**
+     * The time when a morning shift becomes evening shift.
+     */
+    public final static int SHIFT_CHANGE_HOUR = 15;
 }
