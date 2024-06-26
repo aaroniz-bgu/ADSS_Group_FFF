@@ -43,10 +43,11 @@ public class Delivery {
     public Delivery() { }
     public Delivery(
             Branch source, Employee driver, LocalDateTime startTime,
-            String license, List<Branch> destinations) {
+            long truckNumber, String license, List<Branch> destinations) {
         this.source = source;
         this.driver = driver;
         this.startTime = startTime;
+        this.truckNumber = truckNumber;
         this.license = license;
         this.destinations = destinations;
     }
