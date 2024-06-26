@@ -8,6 +8,10 @@ public class DeliveryException extends AppException {
         super(message, status);
     }
 
+    public static DeliveryException notFound(long id) {
+        return new DeliveryException("Delivery with id " + id + " was not found.", HttpStatus.NOT_FOUND);
+    }
+
     public static DeliveryException noAvailableDriver() {
         return new DeliveryException("No available drivers at this date and time.", HttpStatus.NOT_FOUND);
     }
