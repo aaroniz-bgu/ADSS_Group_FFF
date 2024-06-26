@@ -28,6 +28,8 @@ public class Delivery {
     @Column
     private LocalDateTime startTime;
     @Column
+    private long truckNumber;
+    @Column
     private String license;
 
     @ManyToMany(fetch = FetchType.EAGER)
