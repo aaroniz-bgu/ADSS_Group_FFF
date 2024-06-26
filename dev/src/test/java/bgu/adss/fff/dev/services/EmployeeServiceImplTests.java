@@ -136,7 +136,7 @@ public class EmployeeServiceImplTests {
                 .thenReturn(Optional.empty());
         when(fieldRepository.save(any())).then(i -> i.getArguments()[0]);
 
-        RoleField output = service.updateCustomField(driver, role, field, value);
+        RoleField output = service.updateCustomField(driver.getId(), role.getName(), field, value);
 
         assertEquals(field.toLowerCase(), output.getField());
         assertEquals(value.toLowerCase(), output.getValue());
@@ -159,7 +159,7 @@ public class EmployeeServiceImplTests {
         when(fieldRepository.findById(new RoleField.RoleFieldKey(driver, role, field.toLowerCase())))
                 .thenReturn(Optional.of(new RoleField(driver, role, field.toLowerCase(), value.toLowerCase())));
 
-        RoleField output = service.getCustomField(driver, role, field);
+        RoleField output = service.getCustomField(driver.getId(), role.getName(), field);
 
         assertEquals(field.toLowerCase(), output.getField());
         assertEquals(value.toLowerCase(), output.getValue());

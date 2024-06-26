@@ -134,7 +134,7 @@ public class DeliveryServiceImpl implements DeliveryService{
             // emp \in registerDelivery.availableDrivers => emp is driver => driver \in emp.getRoles()
             if(driver == null) driver = getDriverRole(emp);
             // if the license is fitting the requirement:
-            if(employeeService.getCustomField(emp, driver, LICENSE_FIELD).getValue().equals(license))
+            if(employeeService.getCustomField(emp.getId(), driver.getName(), LICENSE_FIELD).getValue().equals(license))
                 return emp;
         }
         return null;
