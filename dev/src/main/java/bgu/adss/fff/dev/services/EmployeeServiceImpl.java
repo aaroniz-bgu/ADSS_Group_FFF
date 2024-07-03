@@ -58,7 +58,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // Set the branch of the employee to the branch instance from the db, since the branch name is the only
         // thing that is supplied by the client.
         employee.setBranch(branchService.getBranch(employee.getBranch().getName()));
-        return repository.save(employee);
+        return repository.saveAndFlush(employee);
     }
 
     /**
@@ -130,7 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         toUpdate.setBranch(branchService.getBranch(employee.getBranch().getName()));
 
-        return repository.save(toUpdate);
+        return repository.saveAndFlush(toUpdate);
     }
 
     /**
@@ -172,7 +172,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         terms.setEmployee(emp);
         terms.setManager(mgr);
         emp.setTerms(terms);
-        repository.save(emp);
+        repository.saveAndFlush(emp);
         return emp;
     }
 
@@ -200,7 +200,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         RoleField.RoleFieldKey fieldId = new RoleField.RoleFieldKey(emp, role, field);
         RoleField fieldObj = fieldRepository.findById(fieldId).orElse(new RoleField(fieldId, val));
         fieldObj.setValue(val);
-        return fieldRepository.save(fieldObj);
+        return fieldRepository.saveAndFlush(fieldObj);
     }
 
     /**

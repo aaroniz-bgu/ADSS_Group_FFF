@@ -86,7 +86,7 @@ public class DeliveryServiceImpl implements DeliveryService{
         hasStorekeepersAvailable(start, destinationsConverted);
 
         Delivery delivery = new Delivery(sourceBranch, goodDriver, start, truckNumber, license, destinationsConverted);
-        return repository.save(delivery);
+        return repository.saveAndFlush(delivery);
     }
 
     /**
