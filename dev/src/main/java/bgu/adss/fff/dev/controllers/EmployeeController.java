@@ -168,7 +168,7 @@ public class EmployeeController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/role/{role}customField?field={field},val={val}")
+    @PutMapping("/{id}/role/{role}/customField/field={field},val={val}")
     public ResponseEntity<?> updateRoleField(
             @PathVariable("id") long id,
             @PathVariable("role") String role,
@@ -178,7 +178,7 @@ public class EmployeeController {
         return ResponseEntity.ok(service.updateCustomField(id, role, field, val));
     }
 
-    @PostMapping("/{id}/role/{role}customField?field={field}")
+    @PostMapping("/{id}/role/{role}/customField/field={field}")
     public ResponseEntity<?> updateRoleField(
             @PathVariable("id") long id,
             @PathVariable("role") String role,

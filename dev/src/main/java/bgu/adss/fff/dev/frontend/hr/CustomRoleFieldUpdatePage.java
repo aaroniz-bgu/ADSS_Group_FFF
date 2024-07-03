@@ -67,6 +67,6 @@ public class CustomRoleFieldUpdatePage extends AbstractUserComponent {
     }
 
     private String constructFinalPath() {
-        return URI_PATH + "employee/" + id + "/role/" + role + "customField?field=" + field + ",val=" + value;
+        return URI_PATH + "/employee/" + id + "/role/" + role + "/customField/field=" + field + ",val=" + value;
     }
 }
