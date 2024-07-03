@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.RoleRepository;
+import bgu.adss.fff.dev.data.RoleStarter;
 import bgu.adss.fff.dev.domain.models.Role;
 import bgu.adss.fff.dev.exceptions.RoleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,17 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository repository;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository repository) { this.repository = repository; }
+    public RoleServiceImpl(RoleRepository repository) {
+        this.repository = repository;
+
+        new RoleStarter(this).loadRoles();
+    }
 
     /**
      * Creates a new role in the system.
@@ -28,7 +32,7 @@ public class RoleServiceImpl implements RoleService {
         if(repository.existsById(role.getName())) {
             throw RoleException.alreadyExists(role.getName());
         }
-        return repository.save(role);
+        return repository.saveAndFlush(role);
     }
 
     /**

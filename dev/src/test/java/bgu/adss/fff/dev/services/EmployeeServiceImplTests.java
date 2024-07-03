@@ -1,9 +1,13 @@
 package bgu.adss.fff.dev.services;
 
-import bgu.adss.fff.dev.data.BranchRepository;
 import bgu.adss.fff.dev.data.EmployeeRepository;
-import bgu.adss.fff.dev.data.RoleRepository;
-import bgu.adss.fff.dev.domain.models.*;
+import bgu.adss.fff.dev.data.RoleFieldRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
+import bgu.adss.fff.dev.domain.models.Employee;
+import bgu.adss.fff.dev.domain.models.EmploymentTerms;
+import bgu.adss.fff.dev.domain.models.JobType;
+import bgu.adss.fff.dev.domain.models.Role;
+import bgu.adss.fff.dev.domain.models.RoleField;
 import bgu.adss.fff.dev.exceptions.EmployeeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -34,6 +40,9 @@ public class EmployeeServiceImplTests {
     private BranchService branchService;
     @MockBean
     private RoleService roleService;
+    @MockBean
+    private RoleFieldRepository fieldRepository;
+
     Branch branch1;
     Branch branch2;
 
@@ -109,5 +118,52 @@ public class EmployeeServiceImplTests {
         gal.getTerms().setHourlyRate(1);
         gal.getTerms().setDaysOff(1);
         assertEquals(gal, service.updateEmployementTerms(gal.getId() ,gal.getTerms()));
+    }
+
+    @Test
+    void testUpdateCustomField() {
+        Role role = new Role("driver", false, false);
+        Employee driver = new Employee(159248367L, "Driver Driver",
+                List.of(role),
+                null, 0,0,0, new Branch("main"));
+
+        String field = "LiCEnSE";
+        String value = "C1";
+
+        when(employeeRepository.findById(159248367L)).thenReturn(Optional.of(driver));
+        when(roleService.getRole("driver")).thenReturn(role);
+        when(fieldRepository.findById(new RoleField.RoleFieldKey(driver, role, field.toLowerCase())))
+                .thenReturn(Optional.empty());
+        when(fieldRepository.save(any())).then(i -> i.getArguments()[0]);
+
+        RoleField output = service.updateCustomField(driver.getId(), role.getName(), field, value);
+
+        assertEquals(field.toLowerCase(), output.getField());
+        assertEquals(value.toLowerCase(), output.getValue());
+        assertEquals(driver, output.getEmployee());
+        assertEquals(role, output.getRole());
+    }
+
+    @Test
+    void testGetCustomField() {
+        Role role = new Role("driver", false, false);
+        Employee driver = new Employee(159248367L, "Driver Driver",
+                List.of(role),
+                null, 0,0,0, new Branch("main"));
+
+        String field = "LiCEnSE";
+        String value = "C1";
+
+        when(employeeRepository.findById(159248367L)).thenReturn(Optional.of(driver));
+        when(roleService.getRole("driver")).thenReturn(role);
+        when(fieldRepository.findById(new RoleField.RoleFieldKey(driver, role, field.toLowerCase())))
+                .thenReturn(Optional.of(new RoleField(driver, role, field.toLowerCase(), value.toLowerCase())));
+
+        RoleField output = service.getCustomField(driver.getId(), role.getName(), field);
+
+        assertEquals(field.toLowerCase(), output.getField());
+        assertEquals(value.toLowerCase(), output.getValue());
+        assertEquals(driver, output.getEmployee());
+        assertEquals(role, output.getRole());
     }
 }

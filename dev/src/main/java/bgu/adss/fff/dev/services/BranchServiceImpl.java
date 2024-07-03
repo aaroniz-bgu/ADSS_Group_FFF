@@ -15,6 +15,10 @@ public class BranchServiceImpl implements BranchService {
     @Autowired
     public BranchServiceImpl(BranchRepository repository) {
         this.repository = repository;
+
+        if(!repository.existsById("main")) {
+            repository.saveAndFlush(new Branch("main"));
+        }
     }
 
     /**
@@ -27,7 +31,8 @@ public class BranchServiceImpl implements BranchService {
         if(repository.existsById(branch.getName())) {
             throw BranchException.alreadyExists(branch.getName());
         }
-        return repository.save(branch);
+
+        return repository.saveAndFlush(branch);
     }
 
     /**

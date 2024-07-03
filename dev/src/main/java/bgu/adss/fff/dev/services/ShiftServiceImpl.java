@@ -232,14 +232,14 @@ public class ShiftServiceImpl implements ShiftService {
 //        }
 
         shift.setLocked(ShiftState.FORCE_LOCK);
-        repository.save(shift);
+        repository.saveAndFlush(shift);
     }
 
     @Override
     public void unlockShift(LocalDate date, ShiftDayPart dayPart, Branch branch) {
         Shift shift = getShiftOrClean(date, dayPart, branch);
         shift.setLocked(ShiftState.FORCE_UNLOCK);
-        repository.save(shift);
+        repository.saveAndFlush(shift);
     }
 
     @Override
@@ -250,7 +250,7 @@ public class ShiftServiceImpl implements ShiftService {
             throw ShiftException.locked(date);
         }
         shift.addOrRemoveAvailableEmployee(emp);
-        repository.save(shift);
+        repository.saveAndFlush(shift);
     }
 
     @Override
@@ -302,7 +302,7 @@ public class ShiftServiceImpl implements ShiftService {
         // TODO Check if all roles are fulfilled...
 
         shift.setAssignedEmployees(emps);
-        repository.save(shift);
+        repository.saveAndFlush(shift);
     }
 
     private boolean isShiftMangerHelper(Employee emp) {
@@ -325,7 +325,7 @@ public class ShiftServiceImpl implements ShiftService {
         } else {
             Shift shift = getShiftOrClean(date, dayPart, branch);
             shift.addRequiredRole(roleInstance);
-            repository.save(shift);
+            repository.saveAndFlush(shift);
         }
     }
 
@@ -335,7 +335,7 @@ public class ShiftServiceImpl implements ShiftService {
         if(once) {
             Shift shift = getShiftOrClean(date, dayPart, branch);
             shift.removeRequiredRole(roleInstance);
-            repository.save(shift);
+            repository.saveAndFlush(shift);
         } else {
             List<ShiftRoleRequirement> reqs = reqRoleRepository.findByIdWeekDayAndIdPartAndIdBranchName(
                     date.getDayOfWeek(), dayPart, branch.getName());
