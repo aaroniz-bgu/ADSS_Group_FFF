@@ -75,7 +75,7 @@ public class ChangeProductPricePage extends AbstractUserComponent {
             );
             restTemplate.put(ROUTE, updatedProduct);
             out.println("Product's price changed - " + response.productID() + "(" + response.productName()
-                    + ") - " + response.price());
+                    + ") - " + this.price);
 
         } catch (Exception e) { out.println(e.getMessage()); }
     }
