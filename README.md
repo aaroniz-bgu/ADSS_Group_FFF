@@ -1,19 +1,24 @@
-# ADSS_Group_FFF
+# Second Milestone
+## Group FFF, Human Resources Module
 
-Supermarket management fullstack application developed in Java using the Spring Framework.
-Our project for the Analysis and Design of Software Systems course (@ BGU).
+IDs - 322985979, 211616701
+Names - Noam Argaman, Shalev Kayat
 
-### Documentation:
+**FOR INSTRUCTIONS SEE THE `INSTRUCTIONS.PDF` FILE IN THE docs DIRECTORY**
 
-`TODO`
+Technologies Used:
+- SQLite
+- Spring Boot MVC Framework
 
-### Team:
-
-Aaron Iziyaev, Daniel Sachs, Shalev Kayat and Noam Argaman.
-
-Development led by Aaron Iziyaev.
-
-#### Modules & developers
-1. Integration - Aaron Iziyaev
-2. HR, Inventory management - Aaron Iziyaev & Daniel Sachs
-3. Suppliers, Deliveries - Shalev Kayat & Noam Argaman
+Tables at the Database:
+- `category`
+- `category_hierarchy`
+- `category_products`
+- `product`
+- `product_discount`
+- `item`
+- `shelves_items`
+- `storage_items`
+- `report`
+- `inventory_report_category`
+- `discount`
