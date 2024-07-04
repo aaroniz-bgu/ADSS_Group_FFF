@@ -1,5 +1,5 @@
 # Second Milestone
-## Group FFF, Human Resources Module
+## Group FFF, Inventory Module
 
 IDs - 322985979, 211616701
 Names - Noam Argaman, Shalev Kayat
