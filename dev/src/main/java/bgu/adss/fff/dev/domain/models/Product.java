@@ -301,10 +301,11 @@ public class Product implements Serializable {
     }
 
     public void removeItem(long itemID) {
-        shelves.removeIf(item -> item.getItemID() == itemID);
-        storage.removeIf(item -> item.getItemID() == itemID);
+        boolean removed = shelves.removeIf(item -> item.getItemID() == itemID);
+        removed |= storage.removeIf(item -> item.getItemID() == itemID);
 
-        throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
+        if (!removed)
+            throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
     }
 
     public int getShortage() {
