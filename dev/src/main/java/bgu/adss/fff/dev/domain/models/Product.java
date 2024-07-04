@@ -1,13 +1,20 @@
 package bgu.adss.fff.dev.domain.models;
 
+import bgu.adss.fff.dev.exceptions.ProductException;
 import jakarta.persistence.*;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity(name="Product")
 public class Product implements Serializable {
+
+    private static final float QUANTITY_MUL_ABOVE_MINIMAL_LOW = 1.5f;
+    private static final float QUANTITY_MUL_ABOVE_MINIMAL_HIGH = 2.0f;
 
     @Id
     private long productID;
@@ -48,6 +55,8 @@ public class Product implements Serializable {
     @Column
     private long supplierID;
 
+    @Column float supplierPrice;
+
     /**
      * Product constructor
      * @param productID product id
@@ -61,7 +70,7 @@ public class Product implements Serializable {
      */
     public Product(
             long productID, String productName, float price, Discount discount,
-            List<Item> shelves, List<Item> storage, int minimalQuantity, long supplierID) {
+            List<Item> shelves, List<Item> storage, int minimalQuantity, long supplierID, float supplierPrice) {
         this.productID = productID;
         this.productName = productName;
         this.price = price;
@@ -70,6 +79,7 @@ public class Product implements Serializable {
         this.storage = storage;
         this.minimalQuantity = minimalQuantity;
         this.supplierID = supplierID;
+        this.supplierPrice = supplierPrice;
     }
 
     public Product() {
@@ -98,6 +108,14 @@ public class Product implements Serializable {
      */
     public float getPrice() {
         return price;
+    }
+
+    /**
+     * Get discounted price
+     * @return discounted price
+     */
+    public float getDiscountedPrice() {
+        return discount != null && discount.isValid() ? price * (1 - discount.getDiscountPercent() / 100.0f) : price;
     }
 
     /**
@@ -209,6 +227,18 @@ public class Product implements Serializable {
     public void setSupplierID(long supplierID) { this.supplierID = supplierID; }
 
     /**
+     * Get the supplier price of the product
+     * @return supplier price
+     */
+    public float getSupplierPrice() { return supplierPrice; }
+
+    /**
+     * Set the supplier price of the product
+     * @param supplierPrice supplier price
+     */
+    public void setSupplierPrice(float supplierPrice) { this.supplierPrice = supplierPrice; }
+
+    /**
      * Get quantity of items that are defected
      * @param items list of items
      * @return quantity of defected items
@@ -236,6 +266,60 @@ public class Product implements Serializable {
             }
         }
         return expiredItems;
+    }
+
+    public List<Item> moveToShelves(int amount) {
+        if (storage.size() < amount) {
+            throw new ProductException("Not enough items in storage", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Item> movedItems = new LinkedList<>();
+        for (int i = 0; i < amount; i++) {
+            Item item = storage.remove(0);
+            shelves.add(item);
+
+            movedItems.add(item);
+        }
+
+        return movedItems;
+    }
+
+    public boolean containsItem(long itemID) {
+        for (Item item : shelves) {
+            if (item.getItemID() == itemID) {
+                return true;
+            }
+        }
+
+        for (Item item : storage) {
+            if (item.getItemID() == itemID) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void removeItem(long itemID) {
+        boolean removed = shelves.removeIf(item -> item.getItemID() == itemID);
+        removed |= storage.removeIf(item -> item.getItemID() == itemID);
+
+        if (!removed)
+            throw new ProductException("Item not found", HttpStatus.NOT_FOUND);
+    }
+
+    public int getShortage() {
+        double quantity_mul_above_minimal = Math.random() *
+                (QUANTITY_MUL_ABOVE_MINIMAL_HIGH - QUANTITY_MUL_ABOVE_MINIMAL_LOW) + QUANTITY_MUL_ABOVE_MINIMAL_LOW;
+        int targetQuantity = (int) (minimalQuantity * quantity_mul_above_minimal);
+        int shortage =  targetQuantity - getQuantity();
+        return Math.max(shortage, 0);
+    }
+
+    public void reorderItems() {
+        if (shelves.size() < minimalQuantity){
+            moveToShelves(Math.min(storage.size(), minimalQuantity - shelves.size()));
+        }
     }
 
     public String toString() {

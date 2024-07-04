@@ -25,8 +25,9 @@ public class ProductMenuPage extends AbstractUserComponent {
 
         page.add(new LabelComponent("6. Apply Discount"));
         page.add(new LabelComponent("7. Update Price"));
+        page.add(new LabelComponent("8. Sell Items"));
 
-        page.add(new LabelComponent("8. Back"));
+        page.add(new LabelComponent("9. Back"));
 
         chooseMenuOption = new InputComponent("Choose an option: ");
         chooseMenuOption.subscribe(this::onChooseMenuOption);
@@ -60,6 +61,9 @@ public class ProductMenuPage extends AbstractUserComponent {
                     new ChangeProductPricePage(out).render();
                     break;
                 case 8:
+                    new SellItemsPage(out).render();
+                    break;
+                case 9:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage
                     break;
                 default:

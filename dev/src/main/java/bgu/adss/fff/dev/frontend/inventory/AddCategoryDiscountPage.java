@@ -97,21 +97,27 @@ public class AddCategoryDiscountPage extends AbstractUserComponent {
 
     private void addCategoryDiscount() {
 
-        CategoryDto categoryDto = restTemplate.getForObject(CATEGORY_ROUTE + "/" + categoryName, CategoryDto.class);
-        if(categoryDto == null) {
-            out.println("Category " + categoryName + " not found.");
-            return;
-        }
-        DiscountDto discountDto = restTemplate.postForObject(
-                DISCOUNT_ROUTE,
-                new RequestDiscountDto(
-                        startDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                        endDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                        discountPercent),
-                DiscountDto.class
-        );
-        restTemplate.put(CATEGORY_ROUTE + "/discount/" + categoryName, discountDto);
+        try {
 
-        out.println("Discount added to category " + categoryDto.categoryName() + " successfully.");
+            CategoryDto categoryDto = restTemplate.getForObject(CATEGORY_ROUTE + "/" + categoryName, CategoryDto.class);
+            if (categoryDto == null) {
+                out.println("Category " + categoryName + " not found.");
+                return;
+            }
+            DiscountDto discountDto = restTemplate.postForObject(
+                    DISCOUNT_ROUTE,
+                    new RequestDiscountDto(
+                            startDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                            endDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                            discountPercent),
+                    DiscountDto.class
+            );
+            restTemplate.put(CATEGORY_ROUTE + "/discount/" + categoryName, discountDto);
+
+            out.println("Discount added to category " + categoryDto.categoryName() + " successfully.");
+
+        } catch (Exception e) {
+            out.println(e.getMessage());
+        }
     }
 }

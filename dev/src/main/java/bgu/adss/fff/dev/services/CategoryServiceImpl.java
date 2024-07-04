@@ -22,15 +22,15 @@ public class CategoryServiceImpl implements CategoryService{
 
     /**
      * CategoryServiceImpl constructor
-     * @param repository category repository
+     * @param categoryRepository category repository
      * @param productRepository product repository
      */
     @Autowired
-    public CategoryServiceImpl(CategoryRepository repository, ProductRepository productRepository) {
-        this.categoryRepository = repository;
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
+        this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-        Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
-        repository.save(superCategory);
+//        Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
+//        this.categoryRepository.save(superCategory);
     }
 
     /**

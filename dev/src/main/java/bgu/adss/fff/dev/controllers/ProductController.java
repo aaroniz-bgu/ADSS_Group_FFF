@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.controllers;
 
 import bgu.adss.fff.dev.contracts.*;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
+import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -121,6 +122,19 @@ public class ProductController {
     }
 
     /**
+     * Sets an item as defective.
+     * @param id The product's unique identifier.
+     * @param item The item to update.
+     * @return an empty ResponseEntity if successful, or an error message if not.
+     */
+    @PutMapping("/item/defective/{id}")
+    public ResponseEntity<?> setItemDefective(@PathVariable("id") long id,
+                                              @RequestBody ItemDto item) {
+        service.setItemDefective(id, item.itemID(), item.isDefected());
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * Adds discount to the product.
      * @param id The product's unique identifier.
      * @param discountDto The discount details (The discount needs to be created first):<br>
@@ -173,11 +187,66 @@ public class ProductController {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
+    /**
+     * Updates the product's supplier.
+     * @param id The product's unique identifier.
+     * @param supplier The supplier details:<br>
+     *                 - {@code long supplierID}: The supplier's unique identifier.<br>
+     *                 - {@code float supplierPrice}: The supplier's price.
+     * @return ResponseEntity containing the updated product if successful, or an error message if not.
+     */
     @PutMapping("/supplier/{id}")
     public ResponseEntity<?> updateSupplier(@PathVariable("id") long id,
-                                           @RequestBody long supplierID) {
-        Product product = service.updateSupplier(id, supplierID);
+                                           @RequestBody RequestSupplierDto supplier) {
+        Product product = service.updateSupplier(id, supplier.id(), supplier.price());
         ProductDto productDto = map(product);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
+
+    /**
+     * Sells items from the product's shelves.
+     * @param id The product's unique identifier.
+     * @param amount An object containing the amount of items to sell.
+     * @return ResponseEntity containing the sold items if successful, or an error message if not.
+     */
+    @PostMapping("/sell/{id}")
+    public ResponseEntity<?> sellItems(@PathVariable("id") long id, @RequestBody RequestAmountDto amount) {
+        String message = service.sellItems(id, amount.amount());
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
+     * Throws an item from the product's storage.
+     * @param id The product's unique identifier.
+     * @param itemID The item's unique identifier.
+     * @return ResponseEntity containing whether the product is under minimal quantity if successful,
+     * or an error message if not.
+     */
+    @PutMapping("/throw/{id}")
+    public ResponseEntity<Boolean> throwItem(@PathVariable("id") long id, @RequestBody long itemID) {
+        boolean underMinimal = service.throwItem(id, itemID);
+        return new ResponseEntity<>(underMinimal, HttpStatus.OK);
+    }
+
+    /**
+     * Orders items for the product.
+     * @param id The product's unique identifier.
+     * @return ResponseEntity containing the order message if successful, or an error message if not.
+     */
+    @PostMapping("/order/{id}")
+    public ResponseEntity<?> orderNeededItems(@PathVariable("id") long id) {
+        String message = service.orderItems(id);
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    /**
+     * Orders items for all products.
+     * @return ResponseEntity containing the order message if successful, or an error message if not.
+     */
+    @PostMapping("/order")
+    public ResponseEntity<?> orderAllNeededItems() {
+        String message = service.orderItems();
+        return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
 }

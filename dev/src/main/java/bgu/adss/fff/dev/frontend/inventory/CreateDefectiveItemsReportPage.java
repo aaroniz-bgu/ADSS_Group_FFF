@@ -25,11 +25,14 @@ public class CreateDefectiveItemsReportPage extends AbstractUserComponent {
     }
 
     private String createReport() {
-        RequestReportDto requestReportDto = new RequestReportDto(ReportType.DEFECTIVE_ITEMS, new String[0]);
-        ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
-        if (report != null) {
-            return report.title() + "\n" + report.content() + "\n";
-        }
-        return "Fail";
+
+        try {
+            RequestReportDto requestReportDto = new RequestReportDto(ReportType.DEFECTIVE_ITEMS, new String[0]);
+            ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
+            if (report != null) {
+                return report.title() + "\n" + report.content() + "\n";
+            }
+            return "Fail";
+        } catch (Exception e) { out.println(e.getMessage()); return "Fail"; }
     }
 }

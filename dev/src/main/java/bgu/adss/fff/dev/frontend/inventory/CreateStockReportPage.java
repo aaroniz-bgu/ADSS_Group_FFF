@@ -25,11 +25,14 @@ public class CreateStockReportPage extends AbstractUserComponent {
     }
 
     private String createReport() {
-        RequestReportDto requestReportDto = new RequestReportDto(ReportType.OUT_OF_STOCK, new String[0]);
-        ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
-        if (report != null) {
-            return report.title() + "\n" + report.content() + "\n";
-        }
-        return "Fail";
+
+        try {
+            RequestReportDto requestReportDto = new RequestReportDto(ReportType.OUT_OF_STOCK, new String[0]);
+            ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
+            if (report != null) {
+                return report.title() + "\n" + report.content() + "\n";
+            }
+            return "Fail";
+        } catch (Exception e) { return e.getMessage(); }
     }
 }

@@ -138,7 +138,7 @@ public class CategoryServiceImplTests {
         when(categoryRepository.findById(category3.getCategoryName())).thenReturn(Optional.of(category3));
 
         Product product = new Product(1L, "Goat Cheese 5% Fat", 2.5f, null,
-                new LinkedList<>(), new LinkedList<>(), 5);
+                new LinkedList<>(), new LinkedList<>(), 5, 1, 3.0f);
         when(productRepository.save(product)).thenReturn(product);
         when(productRepository.existsById(product.getProductID())).thenReturn(false);
         assertEquals(product, productService.createProduct(product));
@@ -169,7 +169,7 @@ public class CategoryServiceImplTests {
         when(categoryRepository.findById(category2.getCategoryName())).thenReturn(Optional.of(category2));
 
         Product product = new Product(1L, "Goat Cheese 5% Fat", 2.5f,
-                null, new LinkedList<>(), new LinkedList<>(), 5);
+                null, new LinkedList<>(), new LinkedList<>(), 5, 1, 3.0f);
         when(productRepository.save(product)).thenReturn(product);
         when(productRepository.existsById(product.getProductID())).thenReturn(false);
         assertEquals(product, productService.createProduct(product));

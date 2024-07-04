@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -38,7 +37,7 @@ public class ProductServiceImplTests {
 
     @BeforeEach
     void before() {
-        product = map(new RequestProductDto(123, "Milk", 10.0f, 5));
+        product = map(new RequestProductDto(123, "Milk", 10.0f, 5, 1, 3.0f));
     }
 
     @Test
@@ -69,17 +68,23 @@ public class ProductServiceImplTests {
         when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
         when(productRepository.save(product)).thenReturn(product);
 
+        int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
         productService.addItems(product.getProductID(), items);
-        assertEquals(10, productService.getProduct(product.getProductID()).getStorage().size());
+        int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
+        assertEquals(beforeAmount + 10, afterAmount);
     }
 
     @Test
     void testUpdateMoveItems() {
         testUpdateAddItems();
 
+        int beforeStorage = productService.getProduct(product.getProductID()).getStorage().size();
+        int beforeShelves = productService.getProduct(product.getProductID()).getShelves().size();
         productService.moveToShelves(product.getProductID(), 5);
-        assertEquals(5, productService.getProduct(product.getProductID()).getStorage().size());
-        assertEquals(5, productService.getProduct(product.getProductID()).getShelves().size());
+        int afterStorage = productService.getProduct(product.getProductID()).getStorage().size();
+        int afterShelves = productService.getProduct(product.getProductID()).getShelves().size();
+        assertEquals(beforeStorage - 5, afterStorage);
+        assertEquals(beforeShelves + 5, afterShelves);
     }
 
     @Test
@@ -127,6 +132,98 @@ public class ProductServiceImplTests {
     void testDeleteNotFound() {
         when(productRepository.findById(product.getProductID())).thenReturn(Optional.empty());
         assertThrows(ProductException.class, () -> productService.deleteProduct(product.getProductID()));
+    }
+
+    @Test
+    void testUpdateSupplier() {
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        productService.updateSupplier(product.getProductID(), 2, 2.5f);
+        assertEquals(productRepository.findById(product.getProductID()).orElseThrow().getSupplierID(), 2);
+        assertEquals(productRepository.findById(product.getProductID()).orElseThrow().getSupplierPrice(), 2.5f);
+    }
+
+    @Test
+    void testUpdateSupplierPriceNotLowEnough() {
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        assertThrows(ProductException.class, () -> productService.updateSupplier(product.getProductID(), 2, 5.0f));
+    }
+
+    @Test
+    void testSellItems() {
+        testUpdateAddItems();
+
+        int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
+        productService.sellItems(product.getProductID(), 5);
+        int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
+        assertEquals(beforeAmount - 5, afterAmount);
+    }
+
+    @Test
+    void testSellItemsMoreThanCanSell() {
+        testUpdateAddItems();
+
+        assertThrows(ProductException.class, () -> productService.sellItems(product.getProductID(), 100));
+    }
+
+    @Test
+    void testThrowStorageItem() {
+        testUpdateAddItems();
+
+        long itemID = productService.getProduct(product.getProductID()).getStorage().get(0).getItemID();
+        System.out.println(itemID);
+
+        int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
+        productService.setItemDefective(product.getProductID(), itemID, true);
+        productService.throwItem(product.getProductID(), itemID);
+        int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
+        assertEquals(beforeAmount - 1, afterAmount);
+    }
+
+    @Test
+    void testThrowShelfItem() {
+        testUpdateAddItems();
+
+        long itemID = productService.getProduct(product.getProductID()).getShelves().get(0).getItemID();
+
+        int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
+        productService.setItemDefective(product.getProductID(), itemID, true);
+        productService.throwItem(product.getProductID(), itemID);
+        int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
+        assertEquals(beforeAmount - 1, afterAmount);
+    }
+
+    @Test
+    void testThrowItemNotDefective() {
+        testUpdateAddItems();
+
+        long itemID = productService.getProduct(product.getProductID()).getStorage().get(0).getItemID();
+
+        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), itemID));
+    }
+
+    @Test
+    void testThrowItemNotFound() {
+        testUpdateAddItems();
+
+        long fakeItemID = 100;
+        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), fakeItemID));
+    }
+
+    @Test
+    void testOrderItems() {
+        testCreateSuccess();
+
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+
+        productService.orderItems(product.getProductID());
+        int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
+        assertTrue(afterAmount >= product.getMinimalQuantity());
     }
 
 }

@@ -96,17 +96,23 @@ public class AddProductDiscountPage extends AbstractUserComponent {
 
     private void addProductDiscount() {
 
-        ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
-        if(productDto == null) {
-            out.println("Product with ID " + id + " not found.");
-            return;
-        }
-        DiscountDto discountDto = restTemplate.postForObject(DISCOUNT_ROUTE,
-                new RequestDiscountDto( startDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                        endDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), discountPercent), DiscountDto.class);
-        restTemplate.put(PRODUCT_ROUTE + "/discount/" + id, discountDto);
+        try {
 
-        out.println("Discount added to product " + productDto.productName() + " successfully.");
+            ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
+            if(productDto == null) {
+                out.println("Product with ID " + id + " not found.");
+                return;
+            }
+            DiscountDto discountDto = restTemplate.postForObject(DISCOUNT_ROUTE,
+                    new RequestDiscountDto( startDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                            endDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), discountPercent), DiscountDto.class);
+            restTemplate.put(PRODUCT_ROUTE + "/discount/" + id, discountDto);
+
+            out.println("Discount added to product " + productDto.productName() + " successfully.");
+
+        } catch (Exception e) {
+            out.println(e.getMessage());
+        }
     }
 
 }

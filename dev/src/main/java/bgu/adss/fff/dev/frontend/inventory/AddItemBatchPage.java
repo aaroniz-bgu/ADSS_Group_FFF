@@ -78,23 +78,26 @@ public class AddItemBatchPage extends AbstractUserComponent {
     }
 
     private void addItems() {
+        try {
 
-        System.out.println(id);
-        ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
-        if(productDto == null) {
-            out.println("Product with ID " + id + " not found.");
-            return;
+            ProductDto productDto = restTemplate.getForObject(PRODUCT_ROUTE + "/" + id, ProductDto.class);
+            if (productDto == null) {
+                out.println("Product with ID " + id + " not found.");
+                return;
+            }
+
+            ItemDto[] itemDto = restTemplate.postForObject(
+                    PRODUCT_ROUTE + "/item/" + id,
+                    new RequestItemDto(
+                            expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
+                            false, amount),
+                    ItemDto[].class);
+
+            out.println("Added " + amount + " items to product " + productDto.productName() +
+                    " (ID: " + productDto.productID() + ").");
+        } catch (Exception e) {
+            out.println(e.getMessage());
         }
-
-        ItemDto[] itemDto = restTemplate.postForObject(
-                PRODUCT_ROUTE + "/item/" + id,
-                new RequestItemDto(
-                        expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                        true,  amount),
-                ItemDto[].class);
-
-        out.println("Added " + amount + " items to product " + productDto.productName() +
-                " (ID: " + productDto.productID() + ").");
     }
 
 }
