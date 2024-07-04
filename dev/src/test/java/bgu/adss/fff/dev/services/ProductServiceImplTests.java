@@ -38,7 +38,7 @@ public class ProductServiceImplTests {
 
     @BeforeEach
     void before() {
-        product = map(new RequestProductDto(123, "Milk", 10.0f, 5));
+        product = map(new RequestProductDto(123, "Milk", 10.0f, 5, 1, 3.0f));
     }
 
     @Test
