@@ -17,5 +17,6 @@ public record DefectiveItemsReportDto(
         @JsonProperty("reportDate") String reportDate,
 
         @JsonProperty("title") String title,
-        @JsonProperty("content") String content
+        @JsonProperty("content") String content,
+        @JsonProperty("branch") String branch
 ) { }

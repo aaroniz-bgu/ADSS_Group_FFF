@@ -19,5 +19,6 @@ public record ReportDto(
 
         @JsonProperty("title") String title,
         @JsonProperty("content") String content,
-        @JsonProperty("reportType")ReportType reportType
+        @JsonProperty("reportType")ReportType reportType,
+        @JsonProperty("branch") String branch
 ) { }
