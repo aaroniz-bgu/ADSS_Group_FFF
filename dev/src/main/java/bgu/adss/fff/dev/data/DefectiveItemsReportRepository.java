@@ -1,9 +1,15 @@
 package bgu.adss.fff.dev.data;
 
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.DefectiveItemsReport;
+import bgu.adss.fff.dev.domain.models.Employee;
 import bgu.adss.fff.dev.domain.models.InventoryReport;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface DefectiveItemsReportRepository extends JpaRepository<DefectiveItemsReport, Long> { }
+public interface DefectiveItemsReportRepository extends JpaRepository<DefectiveItemsReport, Long> {
+    List<DefectiveItemsReport> findDefectiveItemsReportByBranch(Branch branch);
+}
