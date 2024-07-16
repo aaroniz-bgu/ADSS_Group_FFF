@@ -8,3 +8,4 @@ out/
 out/*
 
 /release/META-INF/
+#/mydatabase.db
