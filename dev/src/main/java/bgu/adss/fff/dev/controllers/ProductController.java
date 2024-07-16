@@ -1,21 +1,35 @@
 package bgu.adss.fff.dev.controllers;
 
-import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.contracts.DiscountDto;
+import bgu.adss.fff.dev.contracts.ItemDto;
+import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestAmountDto;
+import bgu.adss.fff.dev.contracts.RequestItemDto;
+import bgu.adss.fff.dev.contracts.RequestProductDto;
+import bgu.adss.fff.dev.contracts.RequestSupplierDto;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
-import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
 import bgu.adss.fff.dev.services.ProductService;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
 import static bgu.adss.fff.dev.controllers.mappers.ItemMapper.map;
+import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
 
 @RestController
 @RequestMapping("/product")
@@ -209,9 +223,12 @@ public class ProductController {
      * @param amount An object containing the amount of items to sell.
      * @return ResponseEntity containing the sold items if successful, or an error message if not.
      */
-    @PostMapping("/sell/{id}")
-    public ResponseEntity<?> sellItems(@PathVariable("id") long id, @RequestBody RequestAmountDto amount) {
-        String message = service.sellItems(id, amount.amount());
+    @PostMapping("/sell/{id}/branch/{branch}")
+    public ResponseEntity<?> sellItems(
+            @PathVariable("id") long id,
+            @PathVariable("branch") String branch,
+            @RequestBody RequestAmountDto amount) {
+        String message = service.sellItems(id, amount.amount(), new Branch(branch));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -222,9 +239,12 @@ public class ProductController {
      * @return ResponseEntity containing whether the product is under minimal quantity if successful,
      * or an error message if not.
      */
-    @PutMapping("/throw/{id}")
-    public ResponseEntity<Boolean> throwItem(@PathVariable("id") long id, @RequestBody long itemID) {
-        boolean underMinimal = service.throwItem(id, itemID);
+    @PutMapping("/throw/{id}/branch/{branch}")
+    public ResponseEntity<Boolean> throwItem(
+            @PathVariable("id") long id,
+            @RequestBody long itemID,
+            @RequestBody String branch) {
+        boolean underMinimal = service.throwItem(id, itemID, new Branch(branch));
         return new ResponseEntity<>(underMinimal, HttpStatus.OK);
     }
 
@@ -233,9 +253,12 @@ public class ProductController {
      * @param id The product's unique identifier.
      * @return ResponseEntity containing the order message if successful, or an error message if not.
      */
-    @PostMapping("/order/{id}")
-    public ResponseEntity<?> orderNeededItems(@PathVariable("id") long id) {
-        String message = service.orderItems(id);
+    @PostMapping("/order/{id}/branch/{branch}")
+    public ResponseEntity<?> orderNeededItems(
+            @PathVariable("id") long id,
+            @PathVariable("branch") String branch
+    ) {
+        String message = service.orderItems(id, new Branch(branch));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
@@ -243,9 +266,9 @@ public class ProductController {
      * Orders items for all products.
      * @return ResponseEntity containing the order message if successful, or an error message if not.
      */
-    @PostMapping("/order")
-    public ResponseEntity<?> orderAllNeededItems() {
-        String message = service.orderItems();
+    @PostMapping("/order/branch/{branch}")
+    public ResponseEntity<?> orderAllNeededItems(@JsonProperty("branch") String branch) {
+        String message = service.orderItems(new Branch(branch));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
