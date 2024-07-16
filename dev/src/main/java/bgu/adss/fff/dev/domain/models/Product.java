@@ -1,12 +1,18 @@
 package bgu.adss.fff.dev.domain.models;
 
 import bgu.adss.fff.dev.exceptions.ProductException;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -196,6 +202,51 @@ public class Product implements Serializable {
      */
     public int getQuantity() {
         return getStorageQuantity() + getShelvesQuantity();
+    }
+
+    /**
+     * Returns count of all the items of this product.
+     *
+     * @param branch The branch for which we count the items.
+     * @return the count of all the items of this product.
+     */
+    public int getQuantity(Branch branch) {
+        int quantity = 0;
+        for(Item i : storage) {
+            if(i.getBranch().equals(branch)) quantity++;
+        }
+        for(Item i : shelves) {
+            if(i.getBranch().equals(branch)) quantity++;
+        }
+        return quantity;
+    }
+
+    /**
+     * Returns count of this product in the storage.
+     *
+     * @param branch The branch for which we count the items.
+     * @return the count of the items of this product in the storage.
+     */
+    public int getStorageQuantity(Branch branch) {
+        int quantity = 0;
+        for(Item i : storage) {
+            if(i.getBranch().equals(branch)) quantity++;
+        }
+        return quantity;
+    }
+
+    /**
+     * Returns count of this product in the shelves.
+     *
+     * @param branch The branch for which we count the items.
+     * @return the count of the items of this product in the shelves.
+     */
+    public int getShelvesQuantity(Branch branch) {
+        int quantity = 0;
+        for(Item i : shelves) {
+            if(i.getBranch().equals(branch)) quantity++;
+        }
+        return quantity;
     }
 
     /**
