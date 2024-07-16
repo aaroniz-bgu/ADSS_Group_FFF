@@ -44,7 +44,11 @@ public class CategoryStarter {
     }
 
     public void loadCategories() {
+        List<String> categoriesLoaded = service.getCategories().stream().map(Category::getCategoryName).toList();
         for (Pair p : categories) {
+            if (categoriesLoaded.contains(p.getY())) {
+                continue;
+            }
             if (p.getX() == null && Objects.equals(p.getY(), "Super")) {
                 Category c = new Category("Super", 0, null, null);
                 service.createCategory(c, null);

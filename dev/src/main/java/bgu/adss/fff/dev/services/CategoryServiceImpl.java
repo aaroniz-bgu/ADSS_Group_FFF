@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService{
 
         if (Objects.equals(category.getCategoryName(), "Super") && parent == null) {
             Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
-            this.categoryRepository.save(superCategory);
+            return this.categoryRepository.save(superCategory);
         }
 
         if(parent == null){
