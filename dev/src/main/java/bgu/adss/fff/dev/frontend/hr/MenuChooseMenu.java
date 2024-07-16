@@ -23,7 +23,7 @@ public class MenuChooseMenu extends AbstractUserComponent {
                 if(choice == 1) {
                     new EmployeeMenuPage(out, emp).render();
                 } else if ((choice - 1) <= screensNames.size()) {
-                    screens.get(choice - 1).render();
+                    screens.get(choice - 2).render();
                 } else {
                     out.println("Please insert only numbers between 1 and 2!");
                     input.render(out);
