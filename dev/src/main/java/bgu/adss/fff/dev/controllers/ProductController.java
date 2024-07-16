@@ -243,7 +243,7 @@ public class ProductController {
     public ResponseEntity<Boolean> throwItem(
             @PathVariable("id") long id,
             @RequestBody long itemID,
-            @RequestBody String branch) {
+            @PathVariable String branch) {
         boolean underMinimal = service.throwItem(id, itemID, new Branch(branch));
         return new ResponseEntity<>(underMinimal, HttpStatus.OK);
     }
@@ -267,7 +267,7 @@ public class ProductController {
      * @return ResponseEntity containing the order message if successful, or an error message if not.
      */
     @PostMapping("/order/branch/{branch}")
-    public ResponseEntity<?> orderAllNeededItems(@JsonProperty("branch") String branch) {
+    public ResponseEntity<?> orderAllNeededItems(@PathVariable("branch") String branch) {
         String message = service.orderItems(new Branch(branch));
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
