@@ -66,7 +66,7 @@ public class InventoryMenuPage extends AbstractUserComponent {
 
     private void init(){
         // Order all items initially
-        restTemplate.postForLocation(URI_PATH + "/product/order", null);
+        restTemplate.postForLocation(URI_PATH + "/product/order/branch/" + employee.branchName(), null);
 
         // If it is a monday or a thursday, generate and show the report
         if (LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY || LocalDate.now().getDayOfWeek() == DayOfWeek.THURSDAY) {
@@ -75,7 +75,7 @@ public class InventoryMenuPage extends AbstractUserComponent {
 
         // If it is a sunday morning, order new items.
         if (LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY && LocalDateTime.now().getHour() == 10) {
-            String result = restTemplate.postForObject(URI_PATH + "/product/order", null, String.class);
+            String result = restTemplate.postForObject(URI_PATH + "/product/order/branch/" + employee.branchName(), null, String.class);
             System.out.println(result);
         }
     }
