@@ -4,6 +4,7 @@ import bgu.adss.fff.dev.contracts.RequestItemDto;
 import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.data.ItemRepository;
 import bgu.adss.fff.dev.data.ProductRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -25,6 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ItemRepository itemRepository;
+    private final BranchService branchService;
 
     /**
      * ProductServiceImpl constructor
@@ -32,9 +34,12 @@ public class ProductServiceImpl implements ProductService {
      * @param itemRepository item repository
      */
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ItemRepository itemRepository) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                              ItemRepository itemRepository,
+                              BranchService branchService) {
         this.productRepository = productRepository;
         this.itemRepository = itemRepository;
+        this.branchService = branchService;
     }
 
     // Helper methods
@@ -161,6 +166,11 @@ public class ProductServiceImpl implements ProductService {
         List<Item> savedItems = new LinkedList<>();
         for (Item item : items) {
             item.setItemID(generateRandomItemID());
+            // Since the branch in the item, is not an instance from the system but rather one we got from the client
+            // we need to access it in the system.
+            // If the client is an idiot, and have sent a nonexistent branch name, this function will let him know
+            // that he's an idiot (respectfully).
+            item.setBranch(branchService.getBranch(item.getBranch().getName()));
             item = save(item);
 
             product.addToStorage(item);
@@ -262,6 +272,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Fill with new items
         for (Item item : storage) {
+            // See the comment @ addItems
+            item.setBranch(branchService.getBranch(item.getBranch().getName()));
             product.addToStorage(item);
             save(item);
         }
@@ -290,6 +302,8 @@ public class ProductServiceImpl implements ProductService {
 
         // Fill with new items
         for (Item item : shelves) {
+            // See the comment @ addItems
+            item.setBranch(branchService.getBranch(item.getBranch().getName()));
             product.addToShelves(item);
             save(item);
         }
@@ -320,7 +334,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String sellItems(long id, int amount){
+    public String sellItems(long id, int amount, Branch branch){
 
         if(!doesProductExist(id)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
@@ -337,6 +351,8 @@ public class ProductServiceImpl implements ProductService {
         if(shelves.size() < amount){
             throw new ProductException("Not enough items in shelves", HttpStatus.BAD_REQUEST);
         }
+
+        branch = branchService.getBranch(branch.getName());
 
         String message = "Selling " + amount + " items from product " + id + ".\n";
 
@@ -357,7 +373,7 @@ public class ProductServiceImpl implements ProductService {
         product.reorderItems();
 
         if(product.getQuantity() < product.getMinimalQuantity()){
-            message += orderItems(id);
+            message += orderItems(id, branch);
         }
 
         product.setShelves(shelves);
@@ -367,13 +383,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean throwItem(long productId, long itemId){
+    public boolean throwItem(long productId, long itemId, Branch branch){
 
         boolean needToOrder = false;
 
         if(!doesProductExist(productId)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
+
+        // Checks whether the branch exists else will throw an error autonomously:
+        branch = branchService.getBranch(branch.getName());
 
         Product product = getProductByID(productId);
 
@@ -394,7 +413,7 @@ public class ProductServiceImpl implements ProductService {
         product.reorderItems();
 
         if (product.getQuantity() < product.getMinimalQuantity()){
-            needToOrder = !Objects.equals(orderItems(productId), "");
+            needToOrder = !Objects.equals(orderItems(productId, branch), "");
         }
 
         save(product);
@@ -403,10 +422,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String orderItems(long id){
+    public String orderItems(long id, Branch branch){
         if(!doesProductExist(id)){
             throw new ProductException("Product not found", HttpStatus.NOT_FOUND);
         }
+
+        // Checks whether the branch exists else will throw an error autonomously:
+        branch = branchService.getBranch(branch.getName());
 
         Product product = getProductByID(id);
 
@@ -415,27 +437,30 @@ public class ProductServiceImpl implements ProductService {
             return "";
         }
 
-        notifySupplier(id, shortage);
+        notifySupplier(id, shortage, branch.getName());
         return "WARNING: Product " + product.getProductName() +
                 " is at shortage - Ordered " + shortage + " items from supplier.";
     }
 
-    public String orderItems(){
+    public String orderItems(Branch branch){
         List<Product> products = productRepository.findAll();
         StringBuilder message = new StringBuilder();
         message.append("Ordering items from suppliers:\n");
+
+        branch = branchService.getBranch(branch.getName());
+
         for(Product product : products){
-            message.append(orderItems(product.getProductID())).append("\n");
+            message.append(orderItems(product.getProductID(), branch)).append("\n");
         }
         return message.toString();
     }
 
     // TODO: Replace with actual supplier notification
-    private void notifySupplier(long id, int amount){
+    private void notifySupplier(long id, int amount, String branch){
         String expirationDate = LocalDate.now().plusDays(
                 4 + (long)(Math.random() * 10)
         ).format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        RequestItemDto requestItemDto = new RequestItemDto(expirationDate, false, amount);
+        RequestItemDto requestItemDto = new RequestItemDto(expirationDate, false, amount, branch);
         List<Item> items = ItemMapper.map(requestItemDto);
         addItems(id, items);
     }
