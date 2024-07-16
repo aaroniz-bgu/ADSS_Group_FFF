@@ -1,6 +1,7 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.CategoryRepository;
+import bgu.adss.fff.dev.data.CategoryStarter;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -29,8 +31,8 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-//        Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
-//        this.categoryRepository.save(superCategory);
+
+        new CategoryStarter(this).loadCategories();
     }
 
     /**
@@ -42,12 +44,17 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category createCategory(Category category, String parent) {
 
-        if(parent == null){
-            throw new CategoryException("Parent cannot be null", HttpStatus.BAD_REQUEST);
-        }
-
         if(category == null){
             throw new CategoryException("Category cannot be null", HttpStatus.BAD_REQUEST);
+        }
+
+        if (Objects.equals(category.getCategoryName(), "Super") && parent == null) {
+            Category superCategory = new Category("Super", 0, new LinkedList<>(), new LinkedList<>());
+            return this.categoryRepository.save(superCategory);
+        }
+
+        if(parent == null){
+            throw new CategoryException("Parent cannot be null", HttpStatus.BAD_REQUEST);
         }
 
         if (categoryRepository.existsById(category.getCategoryName())) {
