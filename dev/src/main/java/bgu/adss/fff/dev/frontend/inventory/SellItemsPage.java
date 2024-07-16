@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.contracts.RequestAmountDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
@@ -8,7 +9,6 @@ import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
-import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
@@ -16,6 +16,7 @@ public class SellItemsPage extends AbstractUserComponent {
 
     private static final String ROUTE = URI_PATH + "/product";
     private final RestTemplate restTemplate;
+    private final EmployeeDto employee;
 
     private final InputComponent idInput;
     private final InputComponent amountInput;
@@ -23,8 +24,10 @@ public class SellItemsPage extends AbstractUserComponent {
     private long id;
     private int amount;
 
-    public SellItemsPage(PrintStream out) {
+    public SellItemsPage(PrintStream out, EmployeeDto employee) {
         super(out);
+
+        this.employee = employee;
 
         restTemplate = new RestTemplate();
 
@@ -70,7 +73,8 @@ public class SellItemsPage extends AbstractUserComponent {
 
             RequestAmountDto amountDto = new RequestAmountDto(this.amount);
 
-            String response = restTemplate.postForObject(ROUTE + "/sell/" + id, amountDto, String.class);
+            String response = restTemplate.postForObject(ROUTE + "/sell/" + id + "/branch/" + employee.branchName(),
+                    amountDto, String.class);
             out.println(response);
 
         } catch (Exception e) {

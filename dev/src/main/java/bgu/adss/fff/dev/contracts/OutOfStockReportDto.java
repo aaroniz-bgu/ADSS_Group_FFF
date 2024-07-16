@@ -17,5 +17,6 @@ public record OutOfStockReportDto(
         @JsonProperty("reportDate") String reportDate,
 
         @JsonProperty("title") String title,
-        @JsonProperty("content") String content
+        @JsonProperty("content") String content,
+        @JsonProperty("content") String branch
 ) { }

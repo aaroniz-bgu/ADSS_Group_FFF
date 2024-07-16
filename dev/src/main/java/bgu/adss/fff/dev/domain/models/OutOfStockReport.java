@@ -18,8 +18,8 @@ public class OutOfStockReport extends Report {
      * @param title report title
      * @param content report content
      */
-    public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content) {
-        super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK);
+    public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content, Branch branch) {
+        super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK, branch);
     }
 
     /**
@@ -35,10 +35,12 @@ public class OutOfStockReport extends Report {
 
         StringBuilder content = new StringBuilder();
         for (Product product : repository.findAll()) {
-            if (product.getQuantity() < product.getMinimalQuantity()) {
+            if (product.getQuantity(getBranch()) < product.getMinimalQuantity()) {
                 String productRow = product.getProductName() + " is about to run out of stock\n";
-                productRow += "\tQuantity: " + product.getQuantity() + " (" + product.getStorageQuantity()
-                        + " Storage, " + product.getShelvesQuantity() + " Shelves)\n";
+                productRow += "\tQuantity: " +
+                        product.getQuantity(getBranch()) + " (" +
+                        product.getStorageQuantity(getBranch()) + " Storage, " +
+                        product.getShelvesQuantity(getBranch()) + " Shelves)\n";
                 productRow += "\tMinimal Quantity: " + product.getMinimalQuantity() + "\n";
                 content.append(productRow);
             }

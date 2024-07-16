@@ -14,5 +14,7 @@ public record ItemDto(
         @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         @JsonProperty("expirationDate") String expirationDate,
 
-        @JsonProperty("isDefected") boolean isDefected
+        @JsonProperty("isDefected") boolean isDefected,
+
+        @JsonProperty("branch") String branch
 ) { }

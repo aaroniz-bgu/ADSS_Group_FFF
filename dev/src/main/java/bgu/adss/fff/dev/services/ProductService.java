@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.services;
 
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -21,9 +22,9 @@ public interface ProductService {
     List<Item> moveToShelves(long id, int amount);
     Discount addDiscount(long id, Discount discount);
     void setItemDefective(long id, long itemID, boolean isDefective);
-    String sellItems(long id, int amount);
-    boolean throwItem(long productId, long itemId);
-    String orderItems(long id);
-    String orderItems();
+    String sellItems(long id, int amount, Branch branch);
+    boolean throwItem(long productId, long itemId, Branch branch);
+    String orderItems(long id, Branch branch);
+    String orderItems(Branch branch);
 
 }

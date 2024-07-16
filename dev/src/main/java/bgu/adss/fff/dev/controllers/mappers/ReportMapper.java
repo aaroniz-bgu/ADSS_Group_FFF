@@ -23,7 +23,8 @@ public class ReportMapper {
                 inventoryReport.getReportDate().format(formatter),
                 inventoryReport.getTitle(),
                 inventoryReport.getContent(),
-                CategoryMapper.map(inventoryReport.getCategories())
+                CategoryMapper.map(inventoryReport.getCategories()),
+                inventoryReport.getBranch().getName()
         );
     }
 
@@ -38,7 +39,8 @@ public class ReportMapper {
                 LocalDateTime.parse(inventoryReportDto.reportDate(), formatter),
                 inventoryReportDto.title(),
                 inventoryReportDto.content(),
-                CategoryMapper.map(inventoryReportDto.categories())
+                CategoryMapper.map(inventoryReportDto.categories()),
+                new Branch(inventoryReportDto.branch())
         );
     }
 
@@ -52,7 +54,8 @@ public class ReportMapper {
                 outOfStockReport.getReportId(),
                 outOfStockReport.getReportDate().format(formatter),
                 outOfStockReport.getTitle(),
-                outOfStockReport.getContent()
+                outOfStockReport.getContent(),
+                outOfStockReport.getBranch().getName()
         );
     }
 
@@ -66,7 +69,8 @@ public class ReportMapper {
                 outOfStockReportDto.reportId(),
                 LocalDateTime.parse(outOfStockReportDto.reportDate(), formatter),
                 outOfStockReportDto.title(),
-                outOfStockReportDto.content()
+                outOfStockReportDto.content(),
+                new Branch(outOfStockReportDto.branch())
         );
     }
 
@@ -80,7 +84,8 @@ public class ReportMapper {
                 defectiveItemsReport.getReportId(),
                 defectiveItemsReport.getReportDate().format(formatter),
                 defectiveItemsReport.getTitle(),
-                defectiveItemsReport.getContent()
+                defectiveItemsReport.getContent(),
+                defectiveItemsReport.getBranch().getName()
         );
     }
 
@@ -94,7 +99,8 @@ public class ReportMapper {
                 defectiveItemsReportDto.reportId(),
                 LocalDateTime.parse(defectiveItemsReportDto.reportDate(), formatter),
                 defectiveItemsReportDto.title(),
-                defectiveItemsReportDto.content()
+                defectiveItemsReportDto.content(),
+                new Branch(defectiveItemsReportDto.branch())
         );
     }
 
@@ -104,14 +110,15 @@ public class ReportMapper {
      * @return Report
      */
     public static Report map(RequestReportDto requestReportDto){
+        Branch branch = new Branch(requestReportDto.branch());
         if (requestReportDto.reportType() == ReportType.INVENTORY) {
-            return new InventoryReport(0, LocalDateTime.now(), "Inventory Report", null);
+            return new InventoryReport(0, LocalDateTime.now(), "Inventory Report", null, branch);
         }
         if (requestReportDto.reportType() == ReportType.OUT_OF_STOCK) {
-            return new OutOfStockReport(0, LocalDateTime.now(), "Out of Stock Report", null);
+            return new OutOfStockReport(0, LocalDateTime.now(), "Out of Stock Report", null, branch);
         }
         if (requestReportDto.reportType() == ReportType.DEFECTIVE_ITEMS) {
-            return new DefectiveItemsReport(0, LocalDateTime.now(), "Defective Items Report", null);
+            return new DefectiveItemsReport(0, LocalDateTime.now(), "Defective Items Report", null, branch);
         }
 
         throw new ReportException("Invalid report type", HttpStatus.BAD_REQUEST);
@@ -128,7 +135,9 @@ public class ReportMapper {
                 report.getReportDate().format(formatter),
                 report.getTitle(),
                 report.getContent(),
-                report.getReportType());
+                report.getReportType(),
+                report.getBranch().getName()
+                );
     }
 
 }

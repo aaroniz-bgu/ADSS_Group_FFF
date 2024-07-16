@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.LabelComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
@@ -10,9 +11,12 @@ import java.io.PrintStream;
 public class InventoryMenuPage extends AbstractUserComponent {
 
     private final InputComponent chooseMenuOption;
+    private final EmployeeDto employee;
 
-    public InventoryMenuPage(PrintStream out) {
+    public InventoryMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
+
+        this.employee = employee;
 
         page.add(new LogoComponent("Inventory Menu"));
         page.add(new LabelComponent("1. Product Menu"));
@@ -31,7 +35,7 @@ public class InventoryMenuPage extends AbstractUserComponent {
             int menuOption = Integer.parseInt(event.getData());
             switch (menuOption) {
                 case 1:
-                    new ProductMenuPage(out).render();
+                    new ProductMenuPage(out, employee).render();
                     break;
                 case 2:
                     new CategoryMenuPage(out).render();

@@ -15,5 +15,6 @@ public record RequestItemDto(
 
         @JsonProperty("isDefected") boolean isDefected,
 
-        @JsonProperty("amount") int amount
+        @JsonProperty("amount") int amount,
+        @JsonProperty("branch") String branch
 ) { }

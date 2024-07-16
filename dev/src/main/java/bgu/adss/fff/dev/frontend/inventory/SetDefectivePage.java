@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ItemDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
@@ -15,6 +16,7 @@ public class SetDefectivePage extends AbstractUserComponent {
 
     private static final String ROUTE = URI_PATH + "/product";
     private final RestTemplate restTemplate;
+    private final EmployeeDto employee;
 
     private final InputComponent productIDInput;
     private final InputComponent itemIDInput;
@@ -22,8 +24,10 @@ public class SetDefectivePage extends AbstractUserComponent {
     private long productID;
     private long itemID;
 
-    public SetDefectivePage(PrintStream out) {
+    public SetDefectivePage(PrintStream out, EmployeeDto employee) {
         super(out);
+
+        this.employee = employee;
 
         restTemplate = new RestTemplate();
 
@@ -82,7 +86,8 @@ public class SetDefectivePage extends AbstractUserComponent {
     private void setItemDefective() {
 
         try {
-            restTemplate.put(ROUTE + "/item/defective/" + productID, new ItemDto(this.itemID, null, true));
+            restTemplate.put(ROUTE + "/item/defective/" + productID,
+                    new ItemDto(this.itemID, null, true, employee.branchName()));
             out.println("Item with ID " + itemID + " was set as defective.");
         } catch (Exception e) { out.println(e.getMessage()); }
     }

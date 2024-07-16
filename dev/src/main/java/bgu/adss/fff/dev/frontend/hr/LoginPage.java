@@ -70,7 +70,7 @@ public class LoginPage extends AbstractUserComponent {
                     menuTitles.add("HR Management Menu");
                 } else if (r.isShiftManager() && !smFound) {
                     smFound = true;
-                    menus.add(new InventoryMenuPage(out));
+                    menus.add(new InventoryMenuPage(out, response));
                     menuTitles.add("Inventory Management Options & Menu");
                 }
             }

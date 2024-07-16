@@ -1,6 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
-import bgu.adss.fff.dev.contracts.DiscountDto;
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ItemDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.contracts.RequestItemDto;
@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
@@ -21,6 +20,7 @@ public class AddItemBatchPage extends AbstractUserComponent {
     private static final String PRODUCT_ROUTE = URI_PATH + "/product";
     private static final String ITEM_ROUTE = URI_PATH + "/item";
     private final RestTemplate restTemplate;
+    private final EmployeeDto employee;
 
     private final InputComponent idInput;
     private final InputComponent expirationDateInput;
@@ -30,8 +30,11 @@ public class AddItemBatchPage extends AbstractUserComponent {
     private LocalDate expirationDate;
     private int amount;
 
-    public AddItemBatchPage(PrintStream out) {
+
+    public AddItemBatchPage(PrintStream out, EmployeeDto employee ) {
         super(out);
+
+        this.employee = employee;
 
         restTemplate = new RestTemplate();
 
@@ -90,7 +93,7 @@ public class AddItemBatchPage extends AbstractUserComponent {
                     PRODUCT_ROUTE + "/item/" + id,
                     new RequestItemDto(
                             expirationDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),
-                            false, amount),
+                            false, amount, employee.branchName()),
                     ItemDto[].class);
 
             out.println("Added " + amount + " items to product " + productDto.productName() +

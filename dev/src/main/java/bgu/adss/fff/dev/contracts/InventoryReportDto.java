@@ -19,5 +19,7 @@ public record InventoryReportDto(
 
         @JsonProperty("title") String title,
         @JsonProperty("content") String content,
-        @JsonProperty("categories") CategoryDto[] categories
+        @JsonProperty("categories") CategoryDto[] categories,
+
+        @JsonProperty("branch") String branch
 ) { }

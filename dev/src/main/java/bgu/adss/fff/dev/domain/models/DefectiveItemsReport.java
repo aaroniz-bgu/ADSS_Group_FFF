@@ -18,8 +18,8 @@ public class DefectiveItemsReport extends Report{
      * @param title report title
      * @param content report content
      */
-    public DefectiveItemsReport(long reportId, LocalDateTime reportDate, String title, String content){
-        super(reportId, reportDate, title, content, ReportType.DEFECTIVE_ITEMS);
+    public DefectiveItemsReport(long reportId, LocalDateTime reportDate, String title, String content, Branch branch){
+        super(reportId, reportDate, title, content, ReportType.DEFECTIVE_ITEMS, branch);
     }
 
     /**
@@ -35,8 +35,14 @@ public class DefectiveItemsReport extends Report{
 
         StringBuilder content = new StringBuilder();
         for (Product product : repository.findAll()) {
-            List<Item> shelveItems = product.getShelves();
-            List<Item> storageItems = product.getStorage();
+            List<Item> shelveItems = product.getShelves()
+                    .stream()
+                    .filter(i -> i.getBranch().equals(getBranch()))
+                    .toList();
+            List<Item> storageItems = product.getStorage()
+                    .stream()
+                    .filter(i -> i.getBranch().equals(getBranch()))
+                    .toList();
 
             String productRow = product.getProductName() + " defective and expired items:\n";
 

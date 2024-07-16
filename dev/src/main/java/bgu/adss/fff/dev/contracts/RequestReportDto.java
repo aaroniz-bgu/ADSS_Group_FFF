@@ -10,5 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record RequestReportDto(
         @JsonProperty("reportType") ReportType reportType,
-        @JsonProperty("categories") String[] categories
+        @JsonProperty("categories") String[] categories,
+
+        @JsonProperty("branch") String branch
 ) { }
