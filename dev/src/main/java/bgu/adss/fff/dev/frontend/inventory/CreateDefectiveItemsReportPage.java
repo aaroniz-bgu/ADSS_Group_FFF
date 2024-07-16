@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ReportDto;
 import bgu.adss.fff.dev.contracts.RequestReportDto;
 import bgu.adss.fff.dev.domain.models.ReportType;
@@ -15,10 +16,13 @@ public class CreateDefectiveItemsReportPage extends AbstractUserComponent {
 
     private static final String REPORT_ROUTE = URI_PATH + "/report";
     private final RestTemplate restTemplate;
+    private final EmployeeDto employee;
 
-    protected CreateDefectiveItemsReportPage(PrintStream out) {
+    protected CreateDefectiveItemsReportPage(PrintStream out, EmployeeDto employee) {
         super(out);
         restTemplate = new RestTemplate();
+
+        this.employee = employee;
 
         page.add(new LogoComponent("Create Defective Items Report"));
         page.add(new LabelComponent(createReport()));
@@ -27,7 +31,8 @@ public class CreateDefectiveItemsReportPage extends AbstractUserComponent {
     private String createReport() {
 
         try {
-            RequestReportDto requestReportDto = new RequestReportDto(ReportType.DEFECTIVE_ITEMS, new String[0]);
+            RequestReportDto requestReportDto = new RequestReportDto(
+                    ReportType.DEFECTIVE_ITEMS, new String[0], employee.branchName());
             ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
             if (report != null) {
                 return report.title() + "\n" + report.content() + "\n";

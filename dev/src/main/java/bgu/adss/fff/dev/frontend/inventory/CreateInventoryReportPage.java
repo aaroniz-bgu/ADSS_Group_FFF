@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ReportDto;
 import bgu.adss.fff.dev.contracts.RequestReportDto;
 import bgu.adss.fff.dev.domain.models.ReportType;
@@ -16,13 +17,16 @@ public class CreateInventoryReportPage extends AbstractUserComponent {
 
     private static final String REPORT_ROUTE = URI_PATH + "/report";
     private final RestTemplate restTemplate;
+    private EmployeeDto employee;
 
     private final InputComponent categoriesInput;
     private String[] categories;
 
-    protected CreateInventoryReportPage(PrintStream out) {
+    protected CreateInventoryReportPage(PrintStream out, EmployeeDto employee) {
         super(out);
         restTemplate = new RestTemplate();
+
+        this.employee = employee;
 
         categoriesInput = new InputComponent("Enter categories to include in the report (comma separated): ");
         categoriesInput.subscribe(this::onCategoriesInput);
@@ -48,7 +52,8 @@ public class CreateInventoryReportPage extends AbstractUserComponent {
     private void createReport() {
 
         try {
-            RequestReportDto requestReportDto = new RequestReportDto(ReportType.INVENTORY, categories);
+            RequestReportDto requestReportDto = new RequestReportDto(
+                    ReportType.INVENTORY, categories, employee.branchName());
             ReportDto report = restTemplate.postForObject(REPORT_ROUTE, requestReportDto, ReportDto.class);
             if (report != null) {
                 out.println("Inventory Report created successfully: ");

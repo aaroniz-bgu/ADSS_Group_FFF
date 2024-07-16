@@ -41,7 +41,7 @@ public class InventoryMenuPage extends AbstractUserComponent {
                     new CategoryMenuPage(out).render();
                     break;
                 case 3:
-                    new ReportMenuPage(out).render();
+                    new ReportMenuPage(out, employee).render();
                     break;
                 case 4:
                     rerender = false;
