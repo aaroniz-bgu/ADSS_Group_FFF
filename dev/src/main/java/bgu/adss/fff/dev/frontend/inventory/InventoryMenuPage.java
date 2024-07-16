@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.LabelComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
@@ -11,7 +12,7 @@ public class InventoryMenuPage extends AbstractUserComponent {
 
     private final InputComponent chooseMenuOption;
 
-    public InventoryMenuPage(PrintStream out) {
+    public InventoryMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
 
         page.add(new LogoComponent("Inventory Menu"));
