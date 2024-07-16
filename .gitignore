@@ -9,4 +9,3 @@ out/*
 
 /release/META-INF/
 #/mydatabase.db
-dev/src/main/java/META-INF
