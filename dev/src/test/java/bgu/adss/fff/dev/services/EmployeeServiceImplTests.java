@@ -83,12 +83,12 @@ public class EmployeeServiceImplTests {
 
     @Test
     void testCreate() {
-        when(employeeRepository.save(yonatan)).thenReturn(yonatan);
+        when(employeeRepository.saveAndFlush(yonatan)).thenReturn(yonatan);
         assertEquals(yonatan, service.createEmployee(yonatan));
         assertThrows(EmployeeException.class, () -> service.createEmployee(gal));
 
         when(employeeRepository.findById(yonatan.getId())).thenReturn(Optional.of(yonatan));
-        when(employeeRepository.save(gal)).thenReturn(gal);
+        when(employeeRepository.saveAndFlush(gal)).thenReturn(gal);
 
         gal.getTerms().setHourlyRate(1);
         gal.getTerms().setDaysOff(1);
@@ -100,8 +100,8 @@ public class EmployeeServiceImplTests {
     void testUpdate() {
         when(employeeRepository.findById(gal.getId())).thenReturn(Optional.of(gal));
         when(employeeRepository.findById(yonatan.getId())).thenReturn(Optional.of(yonatan));
-        when(employeeRepository.save(gal)).thenReturn(gal);
-        when(employeeRepository.save(yonatan)).thenReturn(yonatan);
+        when(employeeRepository.saveAndFlush(gal)).thenReturn(gal);
+        when(employeeRepository.saveAndFlush(yonatan)).thenReturn(yonatan);
 
         assertEquals(yonatan, service.updateEmployee(yonatan.getId(), yonatan));
         assertEquals(gal, service.updateEmployee(gal.getId(), gal));
@@ -134,7 +134,7 @@ public class EmployeeServiceImplTests {
         when(roleService.getRole("driver")).thenReturn(role);
         when(fieldRepository.findById(new RoleField.RoleFieldKey(driver, role, field.toLowerCase())))
                 .thenReturn(Optional.empty());
-        when(fieldRepository.save(any())).then(i -> i.getArguments()[0]);
+        when(fieldRepository.saveAndFlush(any())).then(i -> i.getArguments()[0]);
 
         RoleField output = service.updateCustomField(driver.getId(), role.getName(), field, value);
 

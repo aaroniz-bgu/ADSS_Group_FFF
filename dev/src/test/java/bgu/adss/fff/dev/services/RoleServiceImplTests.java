@@ -34,7 +34,7 @@ public class RoleServiceImplTests {
 
     @Test
     void testCreateRole() {
-        when(roleRepository.save(testRole)).thenReturn(testRole);
+        when(roleRepository.saveAndFlush(testRole)).thenReturn(testRole);
         assertEquals(testRole, roleService.createRole(testRole));
     }
 

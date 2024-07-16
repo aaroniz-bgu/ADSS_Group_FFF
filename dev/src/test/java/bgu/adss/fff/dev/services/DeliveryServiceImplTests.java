@@ -85,7 +85,7 @@ public class DeliveryServiceImplTests {
         );
 
         // mock repository:
-        when(repository.save(any(Delivery.class))).then(i -> {
+        when(repository.saveAndFlush(any(Delivery.class))).then(i -> {
             Delivery delivery = i.getArgument(0);
             repoMock.add(delivery);
             return delivery;
