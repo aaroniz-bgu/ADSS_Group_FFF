@@ -7,6 +7,7 @@ import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
 import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.controllers.mappers.ProductMapper;
 import bgu.adss.fff.dev.data.ProductRepository;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Item;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -61,7 +62,7 @@ public class ProductServiceImplTests {
 
     @Test
     void testUpdateAddItems() {
-        RequestItemDto requestItemDto = new RequestItemDto("31-07-2024", false, 10);
+        RequestItemDto requestItemDto = new RequestItemDto("31-07-2024", false, 10, "Main");
         List<Item> items = ItemMapper.map(requestItemDto);
 
         when(productRepository.existsById(product.getProductID())).thenReturn(true);
@@ -157,7 +158,7 @@ public class ProductServiceImplTests {
         testUpdateAddItems();
 
         int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
-        productService.sellItems(product.getProductID(), 5);
+        productService.sellItems(product.getProductID(), 5, new Branch("Main"));
         int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
         assertEquals(beforeAmount - 5, afterAmount);
     }
@@ -166,7 +167,7 @@ public class ProductServiceImplTests {
     void testSellItemsMoreThanCanSell() {
         testUpdateAddItems();
 
-        assertThrows(ProductException.class, () -> productService.sellItems(product.getProductID(), 100));
+        assertThrows(ProductException.class, () -> productService.sellItems(product.getProductID(), 100, new Branch("Main")));
     }
 
     @Test
@@ -178,7 +179,7 @@ public class ProductServiceImplTests {
 
         int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
         productService.setItemDefective(product.getProductID(), itemID, true);
-        productService.throwItem(product.getProductID(), itemID);
+        productService.throwItem(product.getProductID(), itemID, new Branch("Main"));
         int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
         assertEquals(beforeAmount - 1, afterAmount);
     }
@@ -191,7 +192,7 @@ public class ProductServiceImplTests {
 
         int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
         productService.setItemDefective(product.getProductID(), itemID, true);
-        productService.throwItem(product.getProductID(), itemID);
+        productService.throwItem(product.getProductID(), itemID, new Branch("Main"));
         int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
         assertEquals(beforeAmount - 1, afterAmount);
     }
@@ -202,7 +203,7 @@ public class ProductServiceImplTests {
 
         long itemID = productService.getProduct(product.getProductID()).getStorage().get(0).getItemID();
 
-        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), itemID));
+        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), itemID, new Branch("Main")));
     }
 
     @Test
@@ -210,7 +211,7 @@ public class ProductServiceImplTests {
         testUpdateAddItems();
 
         long fakeItemID = 100;
-        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), fakeItemID));
+        assertThrows(ProductException.class, () -> productService.throwItem(product.getProductID(), fakeItemID, new Branch("Main")));
     }
 
     @Test
@@ -221,7 +222,7 @@ public class ProductServiceImplTests {
         when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
         when(productRepository.save(product)).thenReturn(product);
 
-        productService.orderItems(product.getProductID());
+        productService.orderItems(product.getProductID(), new Branch("Main"));
         int afterAmount = productService.getProduct(product.getProductID()).getQuantity();
         assertTrue(afterAmount >= product.getMinimalQuantity());
     }
