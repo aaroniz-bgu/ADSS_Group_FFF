@@ -21,6 +21,7 @@ public class ReportServiceImpl implements ReportService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final BranchService branchService;
 
     /**
      * ReportServiceImpl constructor
@@ -36,12 +37,14 @@ public class ReportServiceImpl implements ReportService {
             OutOfStockReportRepository outOfStockReportRepository,
             DefectiveItemsReportRepository defectiveItemsReportRepository,
             ProductRepository productRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            BranchService branchService) {
         this.inventoryReportRepository = inventoryReportRepository;
         this.outOfStockReportRepository = outOfStockReportRepository;
         this.defectiveItemsReportRepository = defectiveItemsReportRepository;
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.branchService = branchService;
     }
 
     // Helper methods
@@ -69,6 +72,8 @@ public class ReportServiceImpl implements ReportService {
 
         if (report.getReportType() == null)
             throw new ReportException("Report type is null", HttpStatus.BAD_REQUEST);
+
+        report.setBranch(branchService.getBranch(report.getBranch().getName()));
 
         if (report.getReportType() == ReportType.INVENTORY) {
             return createInventoryReport((InventoryReport) report, categories);
@@ -122,7 +127,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     /**
-     * Create an out of stock report
+     * Create an out-of-stock report
      * @param outOfStockReport out of stock report to create
      * @return created out of stock report
      */
@@ -143,7 +148,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     /**
-     * Get an out of stock report by id
+     * Get an out-of-stock report by id
      * @param id out of stock report id
      * @return out of stock report
      */
