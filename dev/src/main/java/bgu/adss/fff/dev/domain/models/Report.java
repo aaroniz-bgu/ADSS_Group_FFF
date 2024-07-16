@@ -1,9 +1,7 @@
 package bgu.adss.fff.dev.domain.models;
 
 import bgu.adss.fff.dev.data.ProductRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,6 +24,11 @@ public abstract class Report implements Serializable {
     @Column
     private ReportType reportType;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch")
+    private Branch branch;
+
+
     public Report(){}
 
     /**
@@ -35,13 +38,15 @@ public abstract class Report implements Serializable {
      * @param title report title
      * @param content report content
      * @param reportType report type
+     * @param branch report branch
      */
-    public Report(long reportId, LocalDateTime reportDate, String title, String content, ReportType reportType) {
+    public Report(long reportId, LocalDateTime reportDate, String title, String content, ReportType reportType, Branch branch) {
         this.reportId = reportId;
         this.reportDate = reportDate;
         this.title = title;
         this.content = content;
         this.reportType = reportType;
+        this.branch = branch;
     }
 
     /**
@@ -104,6 +109,22 @@ public abstract class Report implements Serializable {
      */
     public ReportType getReportType() {
         return reportType;
+    }
+
+    /**
+     * Get report branch
+     * @return report branch
+     */
+    public Branch getBranch() {
+        return branch;
+    }
+
+    /**
+     * Set report branch
+     * @param branch report branch
+     */
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
 }

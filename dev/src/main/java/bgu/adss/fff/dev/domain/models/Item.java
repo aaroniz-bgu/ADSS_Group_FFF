@@ -1,8 +1,6 @@
 package bgu.adss.fff.dev.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,6 +17,10 @@ public class Item implements Serializable {
     @Column
     private boolean isDefected;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branchID")
+    private Branch branch;
+
     public Item() {
     }
 
@@ -27,11 +29,13 @@ public class Item implements Serializable {
      * @param itemID item id
      * @param expirationDate item expiration date
      * @param isDefected is item defected
+     * @param branch item branch
      */
-    public Item(long itemID, LocalDate expirationDate, boolean isDefected) {
+    public Item(long itemID, LocalDate expirationDate, boolean isDefected, Branch branch) {
         this.itemID = itemID;
         this.expirationDate = expirationDate;
         this.isDefected = isDefected;
+        this.branch = branch;
     }
 
     /**
@@ -76,6 +80,22 @@ public class Item implements Serializable {
      */
     public boolean isThrowable() {
         return isDefected || expirationDate.isBefore(LocalDate.now());
+    }
+
+    /**
+     * Get item branch
+     * @return item branch
+     */
+    public Branch getBranch() {
+        return branch;
+    }
+
+    /**
+     * Set item branch
+     * @param branch item branch
+     */
+    public void setBranch(Branch branch) {
+        this.branch = branch;
     }
 
     @Override
