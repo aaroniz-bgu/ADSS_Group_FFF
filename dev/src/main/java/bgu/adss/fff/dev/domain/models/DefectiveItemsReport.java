@@ -35,8 +35,14 @@ public class DefectiveItemsReport extends Report{
 
         StringBuilder content = new StringBuilder();
         for (Product product : repository.findAll()) {
-            List<Item> shelveItems = product.getShelves();
-            List<Item> storageItems = product.getStorage();
+            List<Item> shelveItems = product.getShelves()
+                    .stream()
+                    .filter(i -> i.getBranch().equals(getBranch()))
+                    .toList();
+            List<Item> storageItems = product.getStorage()
+                    .stream()
+                    .filter(i -> i.getBranch().equals(getBranch()))
+                    .toList();
 
             String productRow = product.getProductName() + " defective and expired items:\n";
 
