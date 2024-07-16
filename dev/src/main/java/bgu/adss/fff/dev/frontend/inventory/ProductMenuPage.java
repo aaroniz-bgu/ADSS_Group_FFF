@@ -57,7 +57,7 @@ public class ProductMenuPage extends AbstractUserComponent {
                     new MoveItemsToShelvesPage(out).render();
                     break;
                 case 5:
-                    new SetDefectivePage(out).render();
+                    new SetDefectivePage(out, employee).render();
                     break;
                 case 6:
                     new AddProductDiscountPage(out).render();
@@ -66,7 +66,7 @@ public class ProductMenuPage extends AbstractUserComponent {
                     new ChangeProductPricePage(out).render();
                     break;
                 case 8:
-                    new SellItemsPage(out).render();
+                    new SellItemsPage(out, employee).render();
                     break;
                 case 9:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage
