@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.LabelComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
@@ -10,9 +11,12 @@ import java.io.PrintStream;
 public class ReportMenuPage extends AbstractUserComponent {
 
     private final InputComponent chooseMenuOption;
+    private final EmployeeDto employee;
 
-    public ReportMenuPage(PrintStream out) {
+    public ReportMenuPage(PrintStream out, EmployeeDto employee) {
         super(out);
+
+        this.employee = employee;
 
         page.add(new LogoComponent("Report Menu"));
 
@@ -33,13 +37,13 @@ public class ReportMenuPage extends AbstractUserComponent {
 
             switch (menuOption) {
                 case 1:
-                    new CreateInventoryReportPage(out).render();
+                    new CreateInventoryReportPage(out, employee).render();
                     break;
                 case 2:
-                    new CreateStockReportPage(out).render();
+                    new CreateStockReportPage(out, employee).render();
                     break;
                 case 3:
-                    new CreateDefectiveItemsReportPage(out).render();
+                    new CreateDefectiveItemsReportPage(out, employee).render();
                     break;
                 case 4:
                     // By not rendering anything, we effectively go back to the InventoryMenuPage
