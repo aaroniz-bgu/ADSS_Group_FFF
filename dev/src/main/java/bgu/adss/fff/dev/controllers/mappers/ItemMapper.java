@@ -2,6 +2,7 @@ package bgu.adss.fff.dev.controllers.mappers;
 
 import bgu.adss.fff.dev.contracts.ItemDto;
 import bgu.adss.fff.dev.contracts.RequestItemDto;
+import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Item;
 
 import java.time.LocalDate;
@@ -24,7 +25,8 @@ public class ItemMapper {
         return new ItemDto(
                 item.getItemID(),
                 item.getExpirationDate().format(formatter),
-                item.isDefected()
+                item.isDefected(),
+                item.getBranch().getName()
         );
     }
 
@@ -46,7 +48,8 @@ public class ItemMapper {
         return new Item(
                 itemDto.itemID(),
                 LocalDate.parse(itemDto.expirationDate(), formatter),
-                itemDto.isDefected()
+                itemDto.isDefected(),
+                new Branch(itemDto.branch())
         );
     }
 
@@ -70,7 +73,8 @@ public class ItemMapper {
             itemList.add(new Item(
                     0,
                     LocalDate.parse(items.expirationDate(), formatter),
-                    items.isDefected()
+                    items.isDefected(),
+                    new Branch(items.branch())
             ));
         }
 
