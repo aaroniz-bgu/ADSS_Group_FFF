@@ -18,8 +18,8 @@ public class OutOfStockReport extends Report {
      * @param title report title
      * @param content report content
      */
-    public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content) {
-        super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK);
+    public OutOfStockReport(long reportId, LocalDateTime reportDate, String title, String content, Branch branch) {
+        super(reportId, reportDate, title, content, ReportType.OUT_OF_STOCK, branch);
     }
 
     /**

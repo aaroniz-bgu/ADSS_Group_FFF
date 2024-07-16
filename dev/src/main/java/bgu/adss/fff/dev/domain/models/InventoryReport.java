@@ -55,9 +55,9 @@ public class InventoryReport extends Report {
      * @param content report content
      * @param categories report categories
      */
-    public InventoryReport(
-            long reportId, LocalDateTime reportDate, String title, String content, List<Category> categories) {
-        super(reportId, reportDate, title, content, ReportType.INVENTORY);
+    public InventoryReport(long reportId, LocalDateTime reportDate, String title,
+                           String content, List<Category> categories, Branch branch) {
+        super(reportId, reportDate, title, content, ReportType.INVENTORY, branch);
         this.categories = categories;
     }
 
@@ -68,8 +68,8 @@ public class InventoryReport extends Report {
      * @param title report title
      * @param content report content
      */
-    public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content) {
-        super(reportId, reportDate, title, content, ReportType.INVENTORY);
+    public InventoryReport(long reportId, LocalDateTime reportDate, String title, String content, Branch branch) {
+        super(reportId, reportDate, title, content, ReportType.INVENTORY, branch);
         this.categories = new LinkedList<>();
     }
 
