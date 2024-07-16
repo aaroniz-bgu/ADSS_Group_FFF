@@ -6,7 +6,8 @@
 package bgu.adss.fff.dev.frontend.cli.components;
 
 import java.io.PrintStream;
-import java.util.Scanner;
+
+import static bgu.adss.fff.dev.frontend.cli.uikit.TerminalApp.SCANNER;
 
 public class InputComponent extends AbstractTerminalComponent {
 
@@ -22,11 +23,9 @@ public class InputComponent extends AbstractTerminalComponent {
 
     @Override
     public void render(PrintStream out) {
-        try (Scanner scn = new Scanner(System.in)) {
-            out.print(label + NEWLINE + "> ");
-            String input = scn.next();
-            notifyListeners(new StateEvent(input));
-        }
+        out.print(label + NEWLINE + "> ");
+        String input = SCANNER.nextLine();
+        notifyListeners(new StateEvent(input));
     }
 
     public void setLabel(String label) {
