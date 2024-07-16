@@ -39,7 +39,7 @@ public class InventoryReport extends Report {
         for (Category category : categories) {
             content.append("\n").append(category.getCategoryName()).append("\n");
             for (Product product : category.getProducts()) {
-                String productRow = "\t" + product.getProductName() + " - " + product.getQuantity() + " items\n";
+                String productRow = "\t" + product.getProductName() + " - " + product.getQuantity(getBranch()) + " items\n";
                 content.append(productRow);
             }
         }
