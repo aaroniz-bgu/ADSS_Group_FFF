@@ -26,9 +26,9 @@ public class InventoryMenuPage extends AbstractUserComponent {
     }
 
     private void onChooseMenuOption(StateEvent event) {
+        boolean rerender = true;
         try {
             int menuOption = Integer.parseInt(event.getData());
-
             switch (menuOption) {
                 case 1:
                     new ProductMenuPage(out).render();
@@ -40,12 +40,12 @@ public class InventoryMenuPage extends AbstractUserComponent {
                     new ReportMenuPage(out).render();
                     break;
                 case 4:
-                    System.exit(0);
+                    rerender = false;
                     break;
                 default:
                     throw new NumberFormatException("Invalid option");
             }
-
+            if(rerender) this.render();
         } catch (NumberFormatException e) {
             out.println(e.getMessage());
             chooseMenuOption.render(out);
