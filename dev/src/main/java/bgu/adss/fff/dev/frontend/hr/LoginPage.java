@@ -8,11 +8,14 @@ import bgu.adss.fff.dev.contracts.RoleDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
 import bgu.adss.fff.dev.frontend.cli.uikit.AbstractUserComponent;
+import bgu.adss.fff.dev.frontend.inventory.InventoryMenuPage;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.PrintStream;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 
 import static bgu.adss.fff.dev.frontend.FrontendApp.URI_PATH;
 
@@ -54,10 +57,29 @@ public class LoginPage extends AbstractUserComponent {
         String uri =  URI_PATH + ROUTE + "/" + ans;
         try {
             EmployeeDto response = restTemplate.getForEntity(uri, EmployeeDto.class).getBody();
-            AbstractUserComponent nextPage = isHr(response) ?
-                    new HrMenuChooseMenu(out, response) :
+
+            List<AbstractUserComponent> menus = new LinkedList<>();
+            List<String> menuTitles = new LinkedList<>();
+
+            boolean hrFound = false, smFound = false;
+
+            for(RoleDto r : response.roles()) {
+                if(r.isHrManager() && !hrFound) {
+                    hrFound = true;
+                    menus.add(new HrManagerMenuPage(out, response));
+                    menuTitles.add("HR Management Menu");
+                } else if (r.isShiftManager() && !smFound) {
+                    smFound = true;
+                    menus.add(new InventoryMenuPage(out));
+                    menuTitles.add("Inventory Management Options & Menu");
+                }
+            }
+
+            AbstractUserComponent nextPage = hrFound || smFound ?
+                    new MenuChooseMenu(out, response, menuTitles, menus) :
                     new EmployeeMenuPage(out, response);
             nextPage.render();
+
         } catch (RestClientResponseException e) {
             ErrorDetails err = e.getResponseBodyAs(ErrorDetails.class);
             out.println(err.message());
@@ -65,13 +87,6 @@ public class LoginPage extends AbstractUserComponent {
         } catch (Exception e) {
             out.println("an unexpected error occurred please try again later.");
         }
-    }
-
-    private boolean isHr(EmployeeDto emp) {
-        for(RoleDto r : emp.roles()) {
-            if(r.isHrManager()) return true;
-        }
-        return false;
     }
 
     private void loadTest() {
