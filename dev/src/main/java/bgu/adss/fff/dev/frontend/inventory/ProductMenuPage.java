@@ -48,7 +48,7 @@ public class ProductMenuPage extends AbstractUserComponent {
                     new AddProductPage(out).render();
                     break;
                 case 2:
-                    new GetProductPage(out).render();
+                    new GetProductPage(out, employee).render();
                     break;
                 case 3:
                     new AddItemBatchPage(out, employee).render();
