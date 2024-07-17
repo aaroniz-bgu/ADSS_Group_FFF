@@ -1,5 +1,6 @@
 package bgu.adss.fff.dev.frontend.inventory;
 
+import bgu.adss.fff.dev.contracts.EmployeeDto;
 import bgu.adss.fff.dev.contracts.ProductDto;
 import bgu.adss.fff.dev.frontend.cli.components.InputComponent;
 import bgu.adss.fff.dev.frontend.cli.components.StateEvent;
@@ -14,13 +15,16 @@ public class GetProductPage extends AbstractUserComponent {
 
     private static final String ROUTE = URI_PATH + "/product";
     private final RestTemplate restTemplate;
+    private final EmployeeDto employee;
 
     private final InputComponent idInput;
 
     private long id;
 
-    public GetProductPage(PrintStream out) {
+    public GetProductPage(PrintStream out, EmployeeDto employee) {
         super(out);
+
+        this.employee = employee;
 
         restTemplate = new RestTemplate();
 
@@ -45,7 +49,8 @@ public class GetProductPage extends AbstractUserComponent {
     private void getProduct() {
 
         try {
-            ProductDto response = restTemplate.getForObject(ROUTE + "/" + id, ProductDto.class);
+            String connection = ROUTE + "/" + id;
+            ProductDto response = restTemplate.getForObject(connection, ProductDto.class);
             if (response == null) {
                 out.println("Product with ID " + id + " not found.");
                 return;
@@ -60,12 +65,21 @@ public class GetProductPage extends AbstractUserComponent {
                         "Discount Percent: " + response.discount().discountPercent();
             }
 
+            // Counts the amount of items of this product in this branch.
+            int shelvesCount = 0, storageCount = 0;
+            for (var item : response.shelves()) {
+                if(item.branch().equals(employee.branchName())) shelvesCount++;
+            }
+            for (var item : response.storage()) {
+                if(item.branch().equals(employee.branchName())) storageCount++;
+            }
+
             String product = "Product ID: " + response.productID() + "\n" +
                     "Product Name: " + response.productName() + "\n" +
                     "Product Price: " + response.price() + "\n" +
                     "Minimal Amount: " + response.minimalQuantity() + "\n" +
-                    "Items on shelves: " + response.shelves().length + "\n" +
-                    "Items in storage: " + response.storage().length + "\n" +
+                    "Items on shelves: " + shelvesCount + "\n" +
+                    "Items in storage: " + storageCount + "\n" +
                     discountToString;
             out.println(product);
         } catch (Exception e) { out.println(e.getMessage()); }
