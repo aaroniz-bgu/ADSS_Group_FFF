@@ -6,6 +6,7 @@ import bgu.adss.fff.dev.contracts.RequestProductDto;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
 import bgu.adss.fff.dev.controllers.mappers.ItemMapper;
 import bgu.adss.fff.dev.controllers.mappers.ProductMapper;
+import bgu.adss.fff.dev.data.ItemRepository;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Branch;
 import bgu.adss.fff.dev.domain.models.Discount;
@@ -23,22 +24,34 @@ import java.util.Optional;
 
 import static bgu.adss.fff.dev.controllers.mappers.ProductMapper.map;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class ProductServiceImplTests {
 
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductService productService;
+
+    @MockBean
+    private BranchService branchService;
 
     @MockBean
     private ProductRepository productRepository;
+
+    @MockBean
+    private ItemRepository itemRepository;
 
     private Product product;
 
     @BeforeEach
     void before() {
         product = map(new RequestProductDto(123, "Milk", 10.0f, 5, 1, 3.0f));
+
+        when(branchService.getBranch("Main")).thenReturn(new Branch("Main"));
+
+        when(itemRepository.save(any(Item.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
@@ -62,7 +75,7 @@ public class ProductServiceImplTests {
 
     @Test
     void testUpdateAddItems() {
-        RequestItemDto requestItemDto = new RequestItemDto("31-07-2024", false, 10, "Main");
+        RequestItemDto requestItemDto = new RequestItemDto("31-08-2024", false, 10, "Main");
         List<Item> items = ItemMapper.map(requestItemDto);
 
         when(productRepository.existsById(product.getProductID())).thenReturn(true);
@@ -172,10 +185,17 @@ public class ProductServiceImplTests {
 
     @Test
     void testThrowStorageItem() {
-        testUpdateAddItems();
+        RequestItemDto requestItemDto = new RequestItemDto("31-06-2024", false, 10, "Main");
+        List<Item> items = ItemMapper.map(requestItemDto);
+
+        when(productRepository.existsById(product.getProductID())).thenReturn(true);
+        when(productRepository.findById(product.getProductID())).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        productService.addItems(product.getProductID(), items);
 
         long itemID = productService.getProduct(product.getProductID()).getStorage().get(0).getItemID();
-        System.out.println(itemID);
+        when(itemRepository.existsById(itemID)).thenReturn(true);
+        when(itemRepository.findById(itemID)).thenReturn(Optional.of(product.getShelves().get(0)));
 
         int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
         productService.setItemDefective(product.getProductID(), itemID, true);
@@ -189,6 +209,9 @@ public class ProductServiceImplTests {
         testUpdateAddItems();
 
         long itemID = productService.getProduct(product.getProductID()).getShelves().get(0).getItemID();
+        when(itemRepository.existsById(itemID)).thenReturn(true);
+        when(itemRepository.findById(itemID)).thenReturn(Optional.of(product.getShelves().get(0)));
+
 
         int beforeAmount = productService.getProduct(product.getProductID()).getQuantity();
         productService.setItemDefective(product.getProductID(), itemID, true);

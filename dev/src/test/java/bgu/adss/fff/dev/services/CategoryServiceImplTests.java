@@ -28,10 +28,10 @@ import static org.mockito.Mockito.when;
 public class CategoryServiceImplTests {
 
     @Autowired
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductService productService;
 
     @MockBean
     private CategoryRepository categoryRepository;
