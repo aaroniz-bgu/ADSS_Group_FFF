@@ -1,7 +1,6 @@
 package bgu.adss.fff.dev.services;
 
 import bgu.adss.fff.dev.data.CategoryRepository;
-import bgu.adss.fff.dev.data.CategoryStarter;
 import bgu.adss.fff.dev.data.ProductRepository;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
@@ -31,8 +30,6 @@ public class CategoryServiceImpl implements CategoryService{
     public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-
-        new CategoryStarter(this).loadCategories();
     }
 
     /**

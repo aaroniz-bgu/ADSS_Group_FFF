@@ -1,9 +1,14 @@
 package bgu.adss.fff.dev.controllers;
 
-import bgu.adss.fff.dev.contracts.*;
+import bgu.adss.fff.dev.contracts.CategoryDto;
+import bgu.adss.fff.dev.contracts.DiscountDto;
+import bgu.adss.fff.dev.contracts.ProductDto;
+import bgu.adss.fff.dev.contracts.RequestCategoriesDto;
+import bgu.adss.fff.dev.contracts.RequestCategoryDto;
 import bgu.adss.fff.dev.controllers.mappers.CategoryMapper;
 import bgu.adss.fff.dev.controllers.mappers.DiscountMapper;
 import bgu.adss.fff.dev.controllers.mappers.ProductMapper;
+import bgu.adss.fff.dev.data.CategoryStarter;
 import bgu.adss.fff.dev.domain.models.Category;
 import bgu.adss.fff.dev.domain.models.Discount;
 import bgu.adss.fff.dev.domain.models.Product;
@@ -11,7 +16,14 @@ import bgu.adss.fff.dev.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,9 +40,15 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PostMapping("/init-starter")
+    public ResponseEntity<?> starterInit() {
+        new CategoryStarter(categoryService).loadCategories();
+        return ResponseEntity.noContent().build();
+    }
+
     /**
      * Establish a new category in the system
-     * @param categoryDto The request containing the folowing data:
+     * @param categoryDto The request containing the following data:
      *                    - {@code String categoryName}: The name of the category
      * @param parent The name of the parent category
      * @return ResponseEntity containing teh created category if successful, or a bad request if the input is invalid

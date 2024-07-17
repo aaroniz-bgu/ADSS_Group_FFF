@@ -160,6 +160,7 @@ public class LoginPage extends AbstractUserComponent {
                     0,
                     2
             ));
+            template.postForLocation(URI_PATH+"/category/init-starter", null);
         } catch (RestClientResponseException e) {
             out.println(e.getResponseBodyAs(ErrorDetails.class).message());
         }
