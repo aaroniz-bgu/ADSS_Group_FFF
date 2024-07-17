@@ -50,10 +50,10 @@ public class ReportServiceImpl implements ReportService {
     // Helper methods
 
     private long generateRandomItemID(JpaRepository<? extends Report, Long> repository) {
-        long id =  new Random().nextLong();
+        long id =  Math.abs(new Random().nextLong());
 
         while (repository.existsById(id)) {
-            id = new Random().nextLong();
+            id = Math.abs(new Random().nextLong());
         }
 
         return id;
