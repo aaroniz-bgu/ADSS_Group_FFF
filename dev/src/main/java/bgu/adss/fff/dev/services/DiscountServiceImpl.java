@@ -28,10 +28,10 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     private long generateRandomDiscountID() {
-        long id =  new Random().nextLong();
+        long id =  Math.abs(new Random().nextLong());
 
         while (id == 0 || doesDiscountExist(id)) {
-            id = new Random().nextLong();
+            id = Math.abs(new Random().nextLong());
         }
 
         return id;

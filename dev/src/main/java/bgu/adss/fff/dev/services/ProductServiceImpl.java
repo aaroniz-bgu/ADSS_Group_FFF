@@ -66,10 +66,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private long generateRandomItemID() {
-        long id =  new Random().nextLong();
+        long id =  Math.abs(new Random().nextLong());
 
         while (itemRepository.existsById(id)) {
-            id = new Random().nextLong();
+            id = Math.abs(new Random().nextLong());
         }
 
         return id;
